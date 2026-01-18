@@ -132,7 +132,7 @@ export default function Home() {
                   render={<Link href="/sign-up" />}
                   className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-slate-900 px-10 text-lg font-bold text-white shadow-xl shadow-slate-900/20 transition-all hover:scale-105 hover:bg-slate-800"
                 >
-                  무료로 시작하기
+                  시작
                 </Button>
             </div>
         </div>
