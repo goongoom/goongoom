@@ -82,7 +82,7 @@ export function QuestionCard({ question, sender }: QuestionCardProps) {
         <div className="flex justify-end mt-3">
           <Button
             type="submit"
-            className="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-sm"
+            className="px-6 py-2 bg-orange-500 text-sm"
           >
             답변하기
           </Button>

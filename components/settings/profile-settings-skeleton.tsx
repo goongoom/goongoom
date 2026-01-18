@@ -25,6 +25,12 @@ export function ProfileSettingsSkeleton() {
           <Skeleton className="h-24 w-full rounded-lg" />
         </div>
         <div>
+          <Skeleton className="h-4 w-24 mb-2" />
+          <Skeleton className="h-10 w-full rounded-lg mb-2" />
+          <Skeleton className="h-10 w-full rounded-lg mb-2" />
+          <Skeleton className="h-10 w-full rounded-lg" />
+        </div>
+        <div>
           <Skeleton className="h-4 w-28 mb-2" />
           <Skeleton className="h-10 w-full rounded-lg mb-2" />
           <Skeleton className="h-10 w-full rounded-lg" />

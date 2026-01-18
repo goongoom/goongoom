@@ -1,10 +1,11 @@
 import type { User as DBUser, Question as DBQuestion, Answer as DBAnswer, SocialLinks } from '@/src/db/schema'
 import type { ClerkUserInfo } from '@/lib/clerk'
+import type { QuestionSecurityLevel } from '@/lib/question-security'
 
 export type User = DBUser
 export type Question = DBQuestion
 export type Answer = DBAnswer
-export type { SocialLinks, ClerkUserInfo }
+export type { SocialLinks, ClerkUserInfo, QuestionSecurityLevel }
 
 export type QuestionWithAnswers = Question & {
   answers: Answer[]
@@ -24,6 +25,7 @@ export type UserProfile = {
   avatarUrl: string | null
   bio: string | null
   socialLinks: SocialLinks | null
+  questionSecurityLevel: QuestionSecurityLevel
 }
 
 export type APIResponse<T> = {

@@ -4,6 +4,7 @@ import { auth } from '@clerk/nextjs/server'
 import { createQuestion as createQuestionDB, getOrCreateUser } from '@/lib/db/queries'
 import { getClerkUserById } from '@/lib/clerk'
 import type { Question } from '@/lib/types'
+import { DEFAULT_QUESTION_SECURITY_LEVEL } from '@/lib/question-security'
 
 export type QuestionActionResult<T = unknown> = 
   | { success: true; data: T }
@@ -15,7 +16,8 @@ export async function createQuestion(data: {
   isAnonymous: boolean
 }): Promise<QuestionActionResult<Question>> {
   try {
-    const { userId: senderClerkId } = await auth()
+    const { userId } = await auth()
+    const senderClerkId = userId ?? null
     
     const { recipientClerkId, content, isAnonymous } = data
     
@@ -28,11 +30,34 @@ export async function createQuestion(data: {
       return { success: false, error: '존재하지 않는 사용자입니다' }
     }
     
-    await getOrCreateUser(recipientClerkId)
+    const recipientDbUser = await getOrCreateUser(recipientClerkId)
+    const securityLevel =
+      recipientDbUser?.questionSecurityLevel || DEFAULT_QUESTION_SECURITY_LEVEL
+
+    if (!isAnonymous && !senderClerkId) {
+      return {
+        success: false,
+        error: '공개 질문은 로그인 후 보낼 수 있습니다',
+      }
+    }
+
+    if (securityLevel === 'public_only' && isAnonymous) {
+      return {
+        success: false,
+        error: '이 사용자는 공개 질문만 받을 수 있습니다',
+      }
+    }
+
+    if (securityLevel === 'verified_anonymous' && isAnonymous && !senderClerkId) {
+      return {
+        success: false,
+        error: '익명 질문은 로그인한 사용자만 보낼 수 있습니다',
+      }
+    }
     
     const [question] = await createQuestionDB({
       recipientClerkId,
-      senderClerkId: isAnonymous ? null : senderClerkId,
+      senderClerkId,
       content,
       isAnonymous: isAnonymous ? 1 : 0,
     })

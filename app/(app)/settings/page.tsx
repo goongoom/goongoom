@@ -7,6 +7,7 @@ import { getOrCreateUser } from "@/lib/db/queries";
 import { ProfileSettingsForm } from "./profile-settings-form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ProfileSettingsSkeleton } from "@/components/settings/profile-settings-skeleton";
+import { DEFAULT_QUESTION_SECURITY_LEVEL } from "@/lib/question-security";
 
 interface SettingsPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -56,6 +57,9 @@ async function SettingsForm() {
       clerkUser={clerkUser}
       bio={dbUser?.bio || null}
       socialLinks={dbUser?.socialLinks || null}
+      questionSecurityLevel={
+        dbUser?.questionSecurityLevel || DEFAULT_QUESTION_SECURITY_LEVEL
+      }
     />
   );
 }

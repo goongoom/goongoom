@@ -7,12 +7,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
+import { RadioGroup, Radio } from "@/components/ui/radio-group";
 import { updateProfile } from "@/lib/actions/profile";
+import {
+  DEFAULT_QUESTION_SECURITY_LEVEL,
+  QUESTION_SECURITY_LEVELS,
+  QUESTION_SECURITY_OPTIONS,
+  isQuestionSecurityLevel,
+} from "@/lib/question-security";
+import type { QuestionSecurityLevel } from "@/lib/question-security";
 
 interface ProfileSettingsFormProps {
   clerkUser: ClerkUserInfo;
   bio: string | null;
   socialLinks: SocialLinks | null;
+  questionSecurityLevel: QuestionSecurityLevel;
   status?: { type: "success" | "error"; message: string } | null;
 }
 
@@ -20,6 +29,7 @@ export function ProfileSettingsForm({
   clerkUser,
   bio: initialBio,
   socialLinks: initialSocialLinks,
+  questionSecurityLevel: initialQuestionSecurityLevel,
   status,
 }: ProfileSettingsFormProps) {
   async function submitProfile(formData: FormData) {
@@ -29,6 +39,13 @@ export function ProfileSettingsForm({
     const instagram = String(formData.get("instagram") || "").trim();
     const github = String(formData.get("github") || "").trim();
     const twitter = String(formData.get("twitter") || "").trim();
+    const securityLevel = String(
+      formData.get("questionSecurityLevel") || DEFAULT_QUESTION_SECURITY_LEVEL,
+    );
+
+    if (!isQuestionSecurityLevel(securityLevel)) {
+      redirect(`/settings?error=${encodeURIComponent("질문 보안 설정이 올바르지 않습니다")}`);
+    }
 
     const links: SocialLinks = {};
     if (instagram) links.instagram = instagram;
@@ -38,6 +55,7 @@ export function ProfileSettingsForm({
     const result = await updateProfile({
       bio: bio || null,
       socialLinks: Object.keys(links).length ? links : null,
+      questionSecurityLevel: securityLevel,
     });
 
     if (!result.success) {
@@ -89,6 +107,39 @@ export function ProfileSettingsForm({
             placeholder="자기소개를 입력하세요…"
             rows={4}
             defaultValue={initialBio || ""}
+          />
+        </Field>
+
+        <Field>
+          <FieldLabel>질문 보안 수준</FieldLabel>
+          <FieldDescription>
+            익명 질문을 제한해 악성 질문을 줄일 수 있습니다.
+          </FieldDescription>
+          <FieldControl
+            render={
+              <RadioGroup
+                name="questionSecurityLevel"
+                defaultValue={initialQuestionSecurityLevel}
+                className="w-full"
+              >
+                {QUESTION_SECURITY_LEVELS.map((level) => {
+                  const option = QUESTION_SECURITY_OPTIONS[level];
+                  return (
+                    <label
+                      key={level}
+                      htmlFor={`qsl-${level}`}
+                      className="flex items-start gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer transition-colors"
+                    >
+                      <Radio id={`qsl-${level}`} value={level} />
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">{option.label}</p>
+                        <p className="text-xs text-gray-500">{option.description}</p>
+                      </div>
+                    </label>
+                  );
+                })}
+              </RadioGroup>
+            }
           />
         </Field>
       
@@ -155,7 +206,7 @@ export function ProfileSettingsForm({
           </Alert>
         )}
         
-        <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600">
+        <Button type="submit" className="w-full bg-orange-500">
           저장하기
         </Button>
       </form>

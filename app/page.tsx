@@ -65,10 +65,10 @@ export default function Home() {
             <Button
               render={<Link href="/sign-up" />}
               size="xl"
-              className="w-full group sm:w-auto"
+              className="w-full sm:w-auto"
             >
               내 프로필 만들기
-              <HugeiconsIcon icon={ArrowRight01Icon} size={20} className="transition-transform group-hover:translate-x-1" />
+              <HugeiconsIcon icon={ArrowRight01Icon} size={20} className="transition-transform" />
             </Button>
             <Button
               render={<Link href="/sign-in" />}
@@ -84,18 +84,18 @@ export default function Home() {
         <div className="border-y border-slate-100 bg-slate-50/50 py-24">
           <div className="mx-auto max-w-5xl px-6">
             <div className="grid gap-8 sm:grid-cols-3">
-              <Card className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50 block">
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 group-hover:scale-110 transition-transform">
+              <Card className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all block">
+                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-transform">
                   <HugeiconsIcon icon={ShieldKeyIcon} size={24} />
                 </div>
-                <CardTitle className="mb-3 text-xl font-bold text-slate-900">완벽한 익명성</CardTitle>
+                <CardTitle className="mb-3 text-xl font-bold text-slate-900">안전한 익명성</CardTitle>
                 <CardDescription className="text-slate-500 leading-relaxed text-base">
                   질문하는 사람의 정보는 100% 비공개로 유지됩니다. 부담 없이 솔직한 대화를 시작해보세요.
                 </CardDescription>
               </Card>
 
-              <Card className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50 block">
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-600 group-hover:scale-110 transition-transform">
+              <Card className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all block">
+                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-600 transition-transform">
                   <HugeiconsIcon icon={Share01Icon} size={24} />
                 </div>
                 <CardTitle className="mb-3 text-xl font-bold text-slate-900">쉬운 공유</CardTitle>
@@ -104,13 +104,13 @@ export default function Home() {
                 </CardDescription>
               </Card>
 
-              <Card className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50 block">
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-pink-50 text-pink-600 group-hover:scale-110 transition-transform">
+              <Card className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all block">
+                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-pink-50 text-pink-600 transition-transform">
                   <HugeiconsIcon icon={SparklesIcon} size={24} />
                 </div>
-                <CardTitle className="mb-3 text-xl font-bold text-slate-900">나만의 스토리</CardTitle>
+                <CardTitle className="mb-3 text-xl font-bold text-slate-900">인스타그램 공유</CardTitle>
                 <CardDescription className="text-slate-500 leading-relaxed text-base">
-                  재치있는 답변을 이미지로 저장해 공유해보세요. 당신의 센스를 모두에게 보여줄 수 있습니다.
+                  재치있는 답변을 이미지로 저장해 인스타그램 스토리와 피드에 바로 공유해보세요.
                 </CardDescription>
               </Card>
             </div>
@@ -149,9 +149,9 @@ export default function Home() {
             <span className="text-sm font-bold text-slate-400">궁금닷컴</span>
           </div>
           <div className="flex gap-6 text-sm text-slate-500">
-            <Link href="#" className="hover:text-orange-500 transition-colors">이용약관</Link>
-            <Link href="#" className="hover:text-orange-500 transition-colors">개인정보처리방침</Link>
-            <Link href="#" className="hover:text-orange-500 transition-colors">문의하기</Link>
+            <Link href="#" className="transition-colors">이용약관</Link>
+            <Link href="#" className="transition-colors">개인정보처리방침</Link>
+            <Link href="#" className="transition-colors">문의하기</Link>
           </div>
           <div className="text-sm text-slate-400">
             © 2026 Goongoom. All rights reserved.

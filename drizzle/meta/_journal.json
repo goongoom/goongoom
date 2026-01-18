@@ -8,6 +8,13 @@
       "when": 1768748198081,
       "tag": "0000_eager_sage",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1768757910586,
+      "tag": "0001_equal_killer_shrike",
+      "breakpoints": true
     }
   ]
 }

@@ -21,6 +21,7 @@ export async function InboxList() {
   const senderIds = Array.from(
     new Set(
       unansweredQuestions
+        .filter((question) => question.isAnonymous !== 1)
         .map((question) => question.senderClerkId)
         .filter((id): id is string => Boolean(id)),
     ),
@@ -46,7 +47,7 @@ export async function InboxList() {
           key={question.id}
           question={question}
           sender={
-            question.senderClerkId
+            question.isAnonymous !== 1 && question.senderClerkId
               ? senderMap.get(question.senderClerkId) || null
               : null
           }

@@ -1,5 +1,6 @@
 import { Suspense, cache } from "react";
 import { notFound } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 import { MainContent } from "@/components/layout/main-content";
 import { RightPanel } from "@/components/layout/right-panel";
 import { ProfileHeader } from "@/components/profile/profile-header";
@@ -77,8 +78,13 @@ async function QAFeedSection({ params }: UserProfilePageProps) {
 
 async function QuestionFormSection({ params, searchParams }: UserProfilePageProps) {
   const { username } = await params;
-  const clerkUser = await getClerkUser(username);
-  if (!clerkUser) notFound();
+  const [data, authResult] = await Promise.all([
+    getProfileInfo(username),
+    auth(),
+  ]);
+  if (!data) notFound();
+  const { clerkUser, dbUser } = data;
+  const { userId } = authResult;
 
   const query = await searchParams;
   const error =
@@ -95,6 +101,8 @@ async function QuestionFormSection({ params, searchParams }: UserProfilePageProp
     <QuestionForm
       recipientClerkId={clerkUser.clerkId}
       recipientUsername={clerkUser.username || username}
+      questionSecurityLevel={dbUser?.questionSecurityLevel || null}
+      viewerIsVerified={Boolean(userId)}
       status={status}
     />
   );

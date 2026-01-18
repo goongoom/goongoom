@@ -1,6 +1,7 @@
 import { db } from '@/src/db'
 import { users, questions, answers } from '@/src/db/schema'
 import type { SocialLinks } from '@/src/db/schema'
+import type { QuestionSecurityLevel } from '@/lib/question-security'
 import { eq, desc, count } from 'drizzle-orm'
 
 export async function getOrCreateUser(clerkId: string) {
@@ -19,6 +20,7 @@ export async function updateUserProfile(
   data: {
     bio?: string | null
     socialLinks?: SocialLinks | null
+    questionSecurityLevel?: QuestionSecurityLevel | null
   }
 ) {
   return await db

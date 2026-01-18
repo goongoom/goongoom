@@ -47,7 +47,7 @@ export function ProfileHeader({
                 href={socialLinks.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-1 text-gray-500 hover:text-orange-500 transition-colors"
+                className="flex flex-col items-center gap-1 text-gray-500 transition-colors"
               >
                 <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
                   <HugeiconsIcon icon={InstagramIcon} className="w-5 h-5" />
@@ -60,7 +60,7 @@ export function ProfileHeader({
                 href={socialLinks.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-1 text-gray-500 hover:text-orange-500 transition-colors"
+                className="flex flex-col items-center gap-1 text-gray-500 transition-colors"
               >
                 <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
                   <HugeiconsIcon icon={FacebookIcon} className="w-5 h-5" />
@@ -73,7 +73,7 @@ export function ProfileHeader({
                 href={socialLinks.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-1 text-gray-500 hover:text-orange-500 transition-colors"
+                className="flex flex-col items-center gap-1 text-gray-500 transition-colors"
               >
                 <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
                   <HugeiconsIcon icon={GithubIcon} className="w-5 h-5" />

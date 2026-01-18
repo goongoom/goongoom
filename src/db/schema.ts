@@ -1,5 +1,6 @@
 import { pgSchema, text, timestamp, integer, jsonb, index } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
+import type { QuestionSecurityLevel } from '../../lib/question-security'
 
 export const goongoom = pgSchema('goongoom')
 
@@ -14,6 +15,10 @@ export const users = goongoom.table('users', {
   clerkId: text('clerk_id').primaryKey(),
   bio: text('bio'),
   socialLinks: jsonb('social_links').$type<SocialLinks>(),
+  questionSecurityLevel: text('question_security_level')
+    .$type<QuestionSecurityLevel>()
+    .notNull()
+    .default('anyone'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })

@@ -5,6 +5,10 @@ import { getClerkUserById } from '@/lib/clerk'
 import { updateUserProfile, getOrCreateUser } from '@/lib/db/queries'
 import type { SocialLinks } from '@/src/db/schema'
 import type { UserProfile } from '@/lib/types'
+import {
+  DEFAULT_QUESTION_SECURITY_LEVEL,
+  isQuestionSecurityLevel,
+} from '@/lib/question-security'
 
 export type ProfileActionResult<T = unknown> = 
   | { success: true; data: T }
@@ -34,6 +38,8 @@ export async function getProfile(): Promise<ProfileActionResult<UserProfile>> {
         avatarUrl: clerkUser.avatarUrl,
         bio: dbUser?.bio || null,
         socialLinks: dbUser?.socialLinks || null,
+        questionSecurityLevel:
+          dbUser?.questionSecurityLevel || DEFAULT_QUESTION_SECURITY_LEVEL,
       },
     }
   } catch (error) {
@@ -45,6 +51,7 @@ export async function getProfile(): Promise<ProfileActionResult<UserProfile>> {
 export async function updateProfile(data: {
   bio?: string | null
   socialLinks?: SocialLinks | null
+  questionSecurityLevel?: string | null
 }): Promise<ProfileActionResult<UserProfile>> {
   try {
     const { userId: clerkId } = await auth()
@@ -54,10 +61,18 @@ export async function updateProfile(data: {
     }
     
     await getOrCreateUser(clerkId)
+
+    if (
+      data.questionSecurityLevel &&
+      !isQuestionSecurityLevel(data.questionSecurityLevel)
+    ) {
+      return { success: false, error: '잘못된 질문 보안 설정입니다' }
+    }
     
     const updated = await updateUserProfile(clerkId, {
       bio: data.bio,
       socialLinks: data.socialLinks,
+      questionSecurityLevel: data.questionSecurityLevel || undefined,
     })
     
     const clerkUser = await getClerkUserById(clerkId)
@@ -71,6 +86,8 @@ export async function updateProfile(data: {
         avatarUrl: clerkUser?.avatarUrl || null,
         bio: updated[0]?.bio || null,
         socialLinks: updated[0]?.socialLinks || null,
+        questionSecurityLevel:
+          updated[0]?.questionSecurityLevel || DEFAULT_QUESTION_SECURITY_LEVEL,
       },
     }
   } catch (error) {

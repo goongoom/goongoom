@@ -16,6 +16,25 @@ function formatRelativeTime(date: Date): string {
   return new Date(date).toLocaleDateString("ko-KR");
 }
 
+function buildShareUrl({
+  question,
+  answer,
+  name,
+}: {
+  question: string;
+  answer: string;
+  name: string;
+}) {
+  const normalize = (value: string, max: number) =>
+    value.length > max ? `${value.slice(0, max - 1)}…` : value;
+  const params = new URLSearchParams({
+    question: normalize(question, 160),
+    answer: normalize(answer, 260),
+    name: normalize(name, 40),
+  });
+  return `/api/instagram?${params.toString()}`;
+}
+
 type RecentQAItem = {
   question: {
     id: number
@@ -51,6 +70,11 @@ export function QAFeed({ items, recentItems, recipientName, recipientAvatar }: Q
         {recentItems.map((item) => {
           const displayName = item.recipientInfo?.displayName || item.recipientInfo?.username || "사용자";
           const avatarUrl = item.recipientInfo?.avatarUrl || null;
+          const shareUrl = buildShareUrl({
+            question: item.question.content,
+            answer: item.answer.content,
+            name: displayName,
+          });
           
           return (
             <div key={item.question.id} className="space-y-4">
@@ -65,6 +89,7 @@ export function QAFeed({ items, recentItems, recipientName, recipientAvatar }: Q
                 username={displayName}
                 content={item.answer.content}
                 timestamp={formatRelativeTime(item.answer.createdAt)}
+                shareUrl={shareUrl}
               />
             </div>
           );
@@ -79,6 +104,12 @@ export function QAFeed({ items, recentItems, recipientName, recipientAvatar }: Q
         {items.map((qa) => {
           const answer = qa.answers[0];
           if (!answer) return null;
+          const displayName = recipientName || "사용자";
+          const shareUrl = buildShareUrl({
+            question: qa.content,
+            answer: answer.content,
+            name: displayName,
+          });
           
           return (
             <div key={qa.id} className="space-y-4">
@@ -90,9 +121,10 @@ export function QAFeed({ items, recentItems, recipientName, recipientAvatar }: Q
               />
               <AnswerBubble
                 avatar={recipientAvatar || null}
-                username={recipientName || "사용자"}
+                username={displayName}
                 content={answer.content}
                 timestamp={formatRelativeTime(answer.createdAt)}
+                shareUrl={shareUrl}
               />
             </div>
           );
