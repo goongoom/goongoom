@@ -5,11 +5,11 @@
       "name": "goongoom",
       "dependencies": {
         "@base-ui/react": "^1.1.0",
+        "@clerk/localizations": "^3.35.0",
         "@clerk/nextjs": "^6.36.8",
         "@hugeicons/core-free-icons": "^3.1.1",
         "@hugeicons/react": "^1.1.4",
         "@planetscale/database": "^1.19.0",
-        "@types/pg": "^8.16.0",
         "@vercel/analytics": "^1.6.1",
         "@vercel/speed-insights": "^1.3.1",
         "class-variance-authority": "^0.7.1",
@@ -30,6 +30,7 @@
       "devDependencies": {
         "@tailwindcss/postcss": "^4",
         "@types/node": "^20",
+        "@types/pg": "^8.16.0",
         "@types/react": "^19",
         "@types/react-dom": "^19",
         "dotenv-cli": "^11.0.0",
@@ -86,6 +87,8 @@
     "@clerk/backend": ["@clerk/backend@2.29.3", "", { "dependencies": { "@clerk/shared": "^3.43.0", "@clerk/types": "^4.101.11", "standardwebhooks": "^1.0.0", "tslib": "2.8.1" } }, "sha512-BLepnFJRsnkqqXu2a79pgbzZz+veecB2bqMrqcmzLl+nBdUPPdeCTRazcmIifKB/424nyT8eX9ADqOz5iySoug=="],
 
     "@clerk/clerk-react": ["@clerk/clerk-react@5.59.4", "", { "dependencies": { "@clerk/shared": "^3.43.0", "tslib": "2.8.1" }, "peerDependencies": { "react": "^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0", "react-dom": "^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0" } }, "sha512-CNr9n7uJT4cRx+cc3fzWr4l4x47+3S5j32HPOP5oUGeIF8O0QHHaoIQ8BHc3lnr4zJJpZxAyrLfwYPv3krtYIw=="],
+
+    "@clerk/localizations": ["@clerk/localizations@3.35.0", "", { "dependencies": { "@clerk/types": "^4.101.11" } }, "sha512-ylF6IB+Z8jjpIdzb0zBRYUKcG3nPKYN1YF2QKIaeNYW9mjzSFktoQTPsDO8qs9+dYFgGuNJd2ZRxzyATE0nTSA=="],
 
     "@clerk/nextjs": ["@clerk/nextjs@6.36.8", "", { "dependencies": { "@clerk/backend": "^2.29.3", "@clerk/clerk-react": "^5.59.4", "@clerk/shared": "^3.43.0", "@clerk/types": "^4.101.11", "server-only": "0.0.1", "tslib": "2.8.1" }, "peerDependencies": { "next": "^13.5.7 || ^14.2.25 || ^15.2.3 || ^16", "react": "^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0", "react-dom": "^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0" } }, "sha512-Hipw/B/AqdkkcrLPVfVOW47YT+Nt8PwYzpxQv0iMWezdP9u4RWkQ0OfrhluvC7eSOLk/YCCljjaP+S4+VPfHig=="],
 
