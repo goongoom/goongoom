@@ -64,7 +64,7 @@ export function QuestionForm({ recipientClerkId, recipientUsername }: QuestionFo
       </h2>
       
       <Field>
-        <FieldControl render={<Textarea {...register("question", { required: true })} placeholder="질문을 입력하세요" className="h-32" />} />
+        <FieldControl render={<Textarea {...register("question", { required: true })} placeholder="질문을 입력하세요…" className="h-32" />} />
       </Field>
       
       <div className="space-y-2">
@@ -106,9 +106,9 @@ export function QuestionForm({ recipientClerkId, recipientUsername }: QuestionFo
         disabled={!questionValue.trim() || isSubmitting}
         className="w-full bg-orange-500 hover:bg-orange-600"
       >
-        <Lock className="w-4 h-4" />
+        <Lock className="w-4 h-4" aria-hidden="true" />
         {isSubmitting 
-          ? "전송 중..." 
+          ? "전송 중…" 
           : questionType === "anonymous" ? "익명으로 질문하기" : "공개로 질문하기"}
       </Button>
       

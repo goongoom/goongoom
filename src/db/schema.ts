@@ -1,4 +1,4 @@
-import { pgSchema, text, timestamp, integer, jsonb } from 'drizzle-orm/pg-core'
+import { pgSchema, text, timestamp, integer, jsonb, index } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 
 export const goongoom = pgSchema('goongoom')
@@ -25,14 +25,18 @@ export const questions = goongoom.table('questions', {
   content: text('content').notNull(),
   isAnonymous: integer('is_anonymous').notNull().default(1),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-})
+}, (table) => [
+  index('questions_recipient_clerk_id_idx').on(table.recipientClerkId),
+])
 
 export const answers = goongoom.table('answers', {
   id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
   questionId: integer('question_id').notNull(),
   content: text('content').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-})
+}, (table) => [
+  index('answers_question_id_idx').on(table.questionId),
+])
 
 export const usersRelations = relations(users, ({ many }) => ({
   receivedQuestions: many(questions, { relationName: 'recipient' }),

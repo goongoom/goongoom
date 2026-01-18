@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { MainContent } from "@/components/layout/main-content";
 import { getClerkUserById } from "@/lib/clerk";
-import { getUserByClerkId, getOrCreateUser } from "@/lib/db/queries";
+import { getOrCreateUser } from "@/lib/db/queries";
 import { ProfileSettingsForm } from "./profile-settings-form";
 
 export default async function SettingsPage() {
@@ -25,8 +25,7 @@ export default async function SettingsPage() {
     );
   }
   
-  await getOrCreateUser(clerkId);
-  const dbUser = await getUserByClerkId(clerkId);
+  const dbUser = await getOrCreateUser(clerkId);
   
   return (
     <MainContent>

@@ -11,8 +11,10 @@ export default async function InboxPage() {
     redirect("/");
   }
   
-  await getOrCreateUser(clerkId);
-  const unansweredQuestions = await getUnansweredQuestions(clerkId);
+  const [, unansweredQuestions] = await Promise.all([
+    getOrCreateUser(clerkId),
+    getUnansweredQuestions(clerkId),
+  ]);
   
   return (
     <MainContent>

@@ -1,12 +1,12 @@
 {
-  "id": "d963c758-3158-46d9-9a4d-d29889ec04cd",
+  "id": "0b495d8d-1c6c-4573-b999-8c815b19b336",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "my_project.answers": {
+    "goongoom.answers": {
       "name": "answers",
-      "schema": "my_project",
+      "schema": "goongoom",
       "columns": {
         "id": {
           "name": "id",
@@ -16,7 +16,7 @@
           "identity": {
             "type": "always",
             "name": "answers_id_seq",
-            "schema": "my_project",
+            "schema": "goongoom",
             "increment": "1",
             "startWith": "1",
             "minValue": "1",
@@ -45,7 +45,23 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "answers_question_id_idx": {
+          "name": "answers_question_id_idx",
+          "columns": [
+            {
+              "expression": "question_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
@@ -53,9 +69,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "my_project.questions": {
+    "goongoom.questions": {
       "name": "questions",
-      "schema": "my_project",
+      "schema": "goongoom",
       "columns": {
         "id": {
           "name": "id",
@@ -65,7 +81,7 @@
           "identity": {
             "type": "always",
             "name": "questions_id_seq",
-            "schema": "my_project",
+            "schema": "goongoom",
             "increment": "1",
             "startWith": "1",
             "minValue": "1",
@@ -74,14 +90,14 @@
             "cycle": false
           }
         },
-        "recipient_id": {
-          "name": "recipient_id",
+        "recipient_clerk_id": {
+          "name": "recipient_clerk_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "sender_id": {
-          "name": "sender_id",
+        "sender_clerk_id": {
+          "name": "sender_clerk_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -107,7 +123,23 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "questions_recipient_clerk_id_idx": {
+          "name": "questions_recipient_clerk_id_idx",
+          "columns": [
+            {
+              "expression": "recipient_clerk_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
@@ -115,30 +147,37 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "my_project.users": {
+    "goongoom.users": {
       "name": "users",
-      "schema": "my_project",
+      "schema": "goongoom",
       "columns": {
-        "id": {
-          "name": "id",
+        "clerk_id": {
+          "name": "clerk_id",
           "type": "text",
           "primaryKey": true,
           "notNull": true
         },
-        "username": {
-          "name": "username",
+        "bio": {
+          "name": "bio",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "clerk_id": {
-          "name": "clerk_id",
-          "type": "text",
+        "social_links": {
+          "name": "social_links",
+          "type": "jsonb",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -148,22 +187,7 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "users_username_unique": {
-          "name": "users_username_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "username"
-          ]
-        },
-        "users_clerk_id_unique": {
-          "name": "users_clerk_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "clerk_id"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -171,7 +195,7 @@
   },
   "enums": {},
   "schemas": {
-    "my_project": "my_project"
+    "goongoom": "goongoom"
   },
   "sequences": {},
   "roles": {},

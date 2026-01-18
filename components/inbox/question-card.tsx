@@ -70,7 +70,7 @@ export function QuestionCard({ question, onAnswered }: QuestionCardProps) {
       <form onSubmit={handleSubmit(onSubmit)} className="border-t border-gray-100 pt-4">
         <Textarea
           {...register("answer", { required: true })}
-          placeholder="답변을 입력하세요..."
+          placeholder="답변을 입력하세요…"
           className="h-24 text-sm"
         />
         
@@ -84,7 +84,7 @@ export function QuestionCard({ question, onAnswered }: QuestionCardProps) {
             disabled={isSubmitting}
             className="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-sm"
           >
-            {isSubmitting ? "전송 중..." : "답변하기"}
+            {isSubmitting ? "전송 중…" : "답변하기"}
           </Button>
         </div>
       </form>

@@ -46,7 +46,7 @@ export function Sidebar() {
                     : "text-gray-500 hover:bg-gray-50"
                 )}
               >
-                <Icon className="w-5 h-5" />
+                <Icon className="w-5 h-5" aria-hidden="true" />
                 <span>{item.label}</span>
               </Link>
             );

@@ -1,7 +1,10 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { getClerkUserByUsername } from '@/lib/clerk'
-import { getQuestionsByRecipient, getAnswersForQuestion } from '@/lib/db/queries'
+import { getQuestionsWithAnswers } from '@/lib/db/queries'
+
+const DEFAULT_LIMIT = 20
+const MAX_LIMIT = 100
 
 export async function GET(
   request: NextRequest,
@@ -9,6 +12,13 @@ export async function GET(
 ) {
   try {
     const { username } = await params
+    const { searchParams } = new URL(request.url)
+    
+    const limit = Math.min(
+      Number(searchParams.get('limit')) || DEFAULT_LIMIT,
+      MAX_LIMIT
+    )
+    const offset = Number(searchParams.get('offset')) || 0
     
     const clerkUser = await getClerkUserByUsername(username)
     if (!clerkUser) {
@@ -18,16 +28,15 @@ export async function GET(
       )
     }
     
-    const questions = await getQuestionsByRecipient(clerkUser.clerkId)
-    
-    const questionsWithAnswers = await Promise.all(
-      questions.map(async (q) => {
-        const answers = await getAnswersForQuestion(q.id)
-        return { ...q, answers }
-      })
+    const questionsWithAnswers = await getQuestionsWithAnswers(
+      clerkUser.clerkId,
+      { limit, offset }
     )
     
-    return NextResponse.json(questionsWithAnswers)
+    return NextResponse.json({
+      data: questionsWithAnswers,
+      pagination: { limit, offset, hasMore: questionsWithAnswers.length === limit }
+    })
   } catch (error) {
     console.error('Questions fetch error:', error)
     return NextResponse.json(

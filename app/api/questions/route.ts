@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { createQuestion, getOrCreateUser } from '@/lib/db/queries'
+import { getClerkUserById } from '@/lib/clerk'
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,6 +15,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: '수신자와 질문 내용은 필수입니다' },
         { status: 400 }
+      )
+    }
+    
+    const recipientUser = await getClerkUserById(recipientClerkId)
+    if (!recipientUser) {
+      return NextResponse.json(
+        { error: '존재하지 않는 사용자입니다' },
+        { status: 404 }
       )
     }
     

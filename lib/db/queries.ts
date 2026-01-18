@@ -14,12 +14,6 @@ export async function getOrCreateUser(clerkId: string) {
   return newUser
 }
 
-export async function getUserByClerkId(clerkId: string) {
-  return await db.query.users.findFirst({
-    where: eq(users.clerkId, clerkId),
-  })
-}
-
 export async function updateUserProfile(
   clerkId: string,
   data: {
@@ -43,23 +37,11 @@ export async function createQuestion(data: {
   return await db.insert(questions).values(data).returning()
 }
 
-export async function getQuestionsByRecipient(recipientClerkId: string) {
-  return await db.query.questions.findMany({
-    where: eq(questions.recipientClerkId, recipientClerkId),
-    orderBy: [desc(questions.createdAt)],
-  })
-}
-
-export async function getUnansweredQuestions(recipientClerkId: string) {
-  const allQuestions = await db.query.questions.findMany({
-    where: eq(questions.recipientClerkId, recipientClerkId),
-    orderBy: [desc(questions.createdAt)],
-    with: {
-      answers: true,
-    },
-  })
-  
-  return allQuestions.filter(q => q.answers.length === 0)
+export async function createAnswer(data: {
+  questionId: number
+  content: string
+}) {
+  return await db.insert(answers).values(data).returning()
 }
 
 export async function getQuestionById(id: number) {
@@ -68,30 +50,36 @@ export async function getQuestionById(id: number) {
   })
 }
 
-export async function createAnswer(data: {
-  questionId: number
-  content: string
-}) {
-  return await db.insert(answers).values(data).returning()
+export async function getUserWithAnsweredQuestions(clerkId: string) {
+  const [user, allQuestions] = await Promise.all([
+    db.query.users.findFirst({
+      where: eq(users.clerkId, clerkId),
+    }),
+    db.query.questions.findMany({
+      where: eq(questions.recipientClerkId, clerkId),
+      orderBy: [desc(questions.createdAt)],
+      with: {
+        answers: true,
+      },
+    }),
+  ])
+  
+  return {
+    user,
+    answeredQuestions: allQuestions.filter(q => q.answers.length > 0),
+  }
 }
 
-export async function getAnswersForQuestion(questionId: number) {
-  return await db.query.answers.findMany({
-    where: eq(answers.questionId, questionId),
-    orderBy: [desc(answers.createdAt)],
-  })
-}
-
-export async function getAnsweredQuestionsForUser(recipientClerkId: string) {
+export async function getUnansweredQuestions(clerkId: string) {
   const allQuestions = await db.query.questions.findMany({
-    where: eq(questions.recipientClerkId, recipientClerkId),
+    where: eq(questions.recipientClerkId, clerkId),
     orderBy: [desc(questions.createdAt)],
     with: {
       answers: true,
     },
   })
   
-  return allQuestions.filter(q => q.answers.length > 0)
+  return allQuestions.filter(q => q.answers.length === 0)
 }
 
 export async function getRecentAnsweredQuestions(limit = 20) {
@@ -108,4 +96,19 @@ export async function getRecentAnsweredQuestions(limit = 20) {
     answer: a,
     recipientClerkId: a.question.recipientClerkId,
   }))
+}
+
+export async function getQuestionsWithAnswers(
+  recipientClerkId: string,
+  options?: { limit?: number; offset?: number }
+) {
+  return await db.query.questions.findMany({
+    where: eq(questions.recipientClerkId, recipientClerkId),
+    orderBy: [desc(questions.createdAt)],
+    with: {
+      answers: true,
+    },
+    limit: options?.limit,
+    offset: options?.offset,
+  })
 }

@@ -5,7 +5,7 @@ import { ProfileHeader } from "@/components/profile/profile-header";
 import { QuestionForm } from "@/components/profile/question-form";
 import { QAFeed } from "@/components/home/qa-feed";
 import { getClerkUserByUsername } from "@/lib/clerk";
-import { getUserByClerkId, getAnsweredQuestionsForUser, getOrCreateUser } from "@/lib/db/queries";
+import { getOrCreateUser, getUserWithAnsweredQuestions } from "@/lib/db/queries";
 import type { QuestionWithAnswers } from "@/lib/types";
 
 interface UserProfilePageProps {
@@ -23,10 +23,10 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
     notFound();
   }
   
-  await getOrCreateUser(clerkUser.clerkId);
-  
-  const dbUser = await getUserByClerkId(clerkUser.clerkId);
-  const questionsWithAnswers = await getAnsweredQuestionsForUser(clerkUser.clerkId);
+  const [, { user: dbUser, answeredQuestions }] = await Promise.all([
+    getOrCreateUser(clerkUser.clerkId),
+    getUserWithAnsweredQuestions(clerkUser.clerkId),
+  ]);
   
   const defaultAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`;
   
@@ -42,7 +42,7 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
         />
         
         <QAFeed 
-          items={questionsWithAnswers as QuestionWithAnswers[]}
+          items={answeredQuestions as QuestionWithAnswers[]}
           recipientName={clerkUser.displayName || clerkUser.username || username}
           recipientAvatar={clerkUser.avatarUrl || defaultAvatar}
         />

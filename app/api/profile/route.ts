@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { getClerkUserById } from '@/lib/clerk'
-import { getUserByClerkId, updateUserProfile, getOrCreateUser } from '@/lib/db/queries'
+import { updateUserProfile, getOrCreateUser } from '@/lib/db/queries'
 import type { SocialLinks } from '@/src/db/schema'
 
 export async function GET() {
@@ -24,8 +24,7 @@ export async function GET() {
       )
     }
     
-    await getOrCreateUser(clerkId)
-    const dbUser = await getUserByClerkId(clerkId)
+    const dbUser = await getOrCreateUser(clerkId)
     
     return NextResponse.json({
       clerkId: clerkUser.clerkId,
@@ -55,9 +54,10 @@ export async function PATCH(request: NextRequest) {
       )
     }
     
-    await getOrCreateUser(clerkId)
-    
-    const body = await request.json()
+    const [, body] = await Promise.all([
+      getOrCreateUser(clerkId),
+      request.json(),
+    ])
     const { bio, socialLinks } = body as {
       bio?: string | null
       socialLinks?: SocialLinks | null

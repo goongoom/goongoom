@@ -1,9 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import dynamic from "next/dynamic";
 import localFont from "next/font/local";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
+
+const Analytics = dynamic(
+  () => import("@vercel/analytics/react").then((mod) => mod.Analytics),
+  { ssr: false }
+);
+const SpeedInsights = dynamic(
+  () => import("@vercel/speed-insights/next").then((mod) => mod.SpeedInsights),
+  { ssr: false }
+);
 
 const pretendard = localFont({
   src: [
@@ -30,12 +38,18 @@ const pretendard = localFont({
   ],
   variable: "--font-pretendard",
   display: "swap",
-  fallback: ["Apple SD Gothic Neo", "system-ui", "sans-serif"],
 });
 
 export const metadata: Metadata = {
   title: "궁금닷컴 - 익명 질문 답변 플랫폼",
   description: "궁금한 것을 물어보고 답변을 받아보세요",
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
 export default function RootLayout({
@@ -45,7 +59,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider dynamic>
-      <html lang="ko">
+      <html lang="ko" className="[color-scheme:light_dark]">
         <body className={`${pretendard.variable} font-sans antialiased`}>
           {children}
           <Analytics />

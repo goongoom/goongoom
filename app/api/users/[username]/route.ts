@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { getClerkUserByUsername } from '@/lib/clerk'
-import { getUserByClerkId, getAnsweredQuestionsForUser } from '@/lib/db/queries'
+import { getUserWithAnsweredQuestions } from '@/lib/db/queries'
 
 export async function GET(
   request: NextRequest,
@@ -18,8 +18,7 @@ export async function GET(
       )
     }
     
-    const dbUser = await getUserByClerkId(clerkUser.clerkId)
-    const questionsWithAnswers = await getAnsweredQuestionsForUser(clerkUser.clerkId)
+    const { user: dbUser, answeredQuestions } = await getUserWithAnsweredQuestions(clerkUser.clerkId)
     
     return NextResponse.json({
       user: {
@@ -30,7 +29,7 @@ export async function GET(
         bio: dbUser?.bio || null,
         socialLinks: dbUser?.socialLinks || null,
       },
-      questionsWithAnswers,
+      questionsWithAnswers: answeredQuestions,
     })
   } catch (error) {
     console.error('User fetch error:', error)

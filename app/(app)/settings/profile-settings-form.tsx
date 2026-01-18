@@ -77,7 +77,7 @@ export function ProfileSettingsForm({ clerkUser, bio: initialBio, socialLinks: i
         
         <Field>
           <FieldLabel htmlFor="bio">소개</FieldLabel>
-          <Textarea id="bio" {...register("bio")} placeholder="자기소개를 입력하세요" rows={4} />
+          <Textarea id="bio" {...register("bio")} placeholder="자기소개를 입력하세요…" rows={4} />
         </Field>
       
         <div className="border-t border-gray-100 pt-6">
@@ -114,7 +114,7 @@ export function ProfileSettingsForm({ clerkUser, bio: initialBio, socialLinks: i
         )}
         
         <Button type="submit" disabled={isSubmitting} className="w-full bg-orange-500 hover:bg-orange-600">
-          {isSubmitting ? "저장 중..." : "저장하기"}
+          {isSubmitting ? "저장 중…" : "저장하기"}
         </Button>
       </form>
     </Card>
