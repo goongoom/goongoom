@@ -1,33 +1,27 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { createQuestion, getUser } from '@/lib/db/queries'
+import { createQuestion, getOrCreateUser } from '@/lib/db/queries'
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth()
+    const { userId: senderClerkId } = await auth()
     const body = await request.json()
     
-    const { recipientUsername, content, isAnonymous } = body
+    const { recipientClerkId, content, isAnonymous } = body
     
-    if (!recipientUsername || !content) {
+    if (!recipientClerkId || !content) {
       return NextResponse.json(
         { error: '수신자와 질문 내용은 필수입니다' },
         { status: 400 }
       )
     }
     
-    const recipient = await getUser(recipientUsername)
-    if (!recipient) {
-      return NextResponse.json(
-        { error: '사용자를 찾을 수 없습니다' },
-        { status: 404 }
-      )
-    }
+    await getOrCreateUser(recipientClerkId)
     
     const question = await createQuestion({
-      recipientId: recipient.id,
-      senderId: isAnonymous ? null : userId,
+      recipientClerkId,
+      senderClerkId: isAnonymous ? null : senderClerkId,
       content,
       isAnonymous: isAnonymous ? 1 : 0,
     })

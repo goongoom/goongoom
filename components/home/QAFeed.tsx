@@ -1,60 +1,109 @@
 import { QuestionBubble } from "@/components/questions/QuestionBubble";
 import { AnswerBubble } from "@/components/questions/AnswerBubble";
+import type { QuestionWithAnswers } from "@/lib/types";
 
-const qaData = [
-  {
-    question: {
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=anonymous1",
-      content: "개발자로 일하면서 가장 보람찬 순간은 언제인가요?",
-      isAnonymous: true,
-      timestamp: "5시간 전",
-    },
-    answer: {
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=juno",
-      username: "주노",
-      content: "처음 만든 서비스가 실제 사용자들에게 도움이 되었을 때입니다. 특히 사용자들의 긍정적인 피드백을 받았을 때 정말 뿌듯했어요.",
-      timestamp: "5시간 전",
-    },
-  },
-  {
-    question: {
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=anonymous2",
-      content: "요즘 어떤 기술 스택을 공부하고 계신가요?",
-      isAnonymous: true,
-      timestamp: "1일 전",
-    },
-    answer: {
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=juno",
-      username: "주노",
-      content: "Next.js 16과 React 19를 주로 공부하고 있어요. 서버 컴포넌트와 새로운 훅들이 정말 흥미롭더라고요!",
-      timestamp: "1일 전",
-    },
-  },
-  {
-    question: {
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=anonymous3",
-      content: "프로그래밍을 처음 시작하는 사람에게 조언 한마디 해주신다면?",
-      isAnonymous: true,
-      timestamp: "2일 전",
-    },
-    answer: {
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=juno",
-      username: "주노",
-      content: "작은 프로젝트부터 시작해서 직접 만들어보는 게 가장 중요해요. 튜토리얼만 따라하지 말고 자신만의 아이디어를 구현해보세요!",
-      timestamp: "2일 전",
-    },
-  },
-];
+function formatRelativeTime(date: Date): string {
+  const now = new Date();
+  const diffMs = now.getTime() - new Date(date).getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  
+  if (diffMins < 1) return "방금 전";
+  if (diffMins < 60) return `${diffMins}분 전`;
+  if (diffHours < 24) return `${diffHours}시간 전`;
+  if (diffDays < 7) return `${diffDays}일 전`;
+  return new Date(date).toLocaleDateString("ko-KR");
+}
 
-export function QAFeed() {
+type RecentQAItem = {
+  question: {
+    id: number
+    content: string
+    isAnonymous: number
+    createdAt: Date
+    recipientClerkId: string
+  }
+  answer: {
+    id: number
+    content: string
+    createdAt: Date
+  }
+  recipientClerkId: string
+  recipientInfo?: {
+    displayName: string | null
+    avatarUrl: string | null
+    username: string | null
+  }
+}
+
+interface QAFeedProps {
+  items?: QuestionWithAnswers[];
+  recentItems?: RecentQAItem[];
+  recipientName?: string;
+  recipientAvatar?: string;
+}
+
+export function QAFeed({ items, recentItems, recipientName, recipientAvatar }: QAFeedProps) {
+  if (recentItems && recentItems.length > 0) {
+    return (
+      <div className="space-y-6">
+        {recentItems.map((item) => {
+          const displayName = item.recipientInfo?.displayName || item.recipientInfo?.username || "사용자";
+          const avatarUrl = item.recipientInfo?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.recipientClerkId}`;
+          
+          return (
+            <div key={item.question.id} className="space-y-4">
+              <QuestionBubble
+                avatar={`https://api.dicebear.com/7.x/avataaars/svg?seed=anon_${item.question.id}`}
+                content={item.question.content}
+                isAnonymous={item.question.isAnonymous === 1}
+                timestamp={formatRelativeTime(item.question.createdAt)}
+              />
+              <AnswerBubble
+                avatar={avatarUrl}
+                username={displayName}
+                content={item.answer.content}
+                timestamp={formatRelativeTime(item.answer.createdAt)}
+              />
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  
+  if (items && items.length > 0) {
+    return (
+      <div className="space-y-6">
+        {items.map((qa) => {
+          const answer = qa.answers[0];
+          if (!answer) return null;
+          
+          return (
+            <div key={qa.id} className="space-y-4">
+              <QuestionBubble
+                avatar={`https://api.dicebear.com/7.x/avataaars/svg?seed=anon_${qa.id}`}
+                content={qa.content}
+                isAnonymous={qa.isAnonymous === 1}
+                timestamp={formatRelativeTime(qa.createdAt)}
+              />
+              <AnswerBubble
+                avatar={recipientAvatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=user"}
+                username={recipientName || "사용자"}
+                content={answer.content}
+                timestamp={formatRelativeTime(answer.createdAt)}
+              />
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  
   return (
-    <div className="space-y-6">
-      {qaData.map((qa) => (
-        <div key={qa.question.content} className="space-y-4">
-          <QuestionBubble {...qa.question} />
-          <AnswerBubble {...qa.answer} />
-        </div>
-      ))}
+    <div className="text-center py-12">
+      <p className="text-gray-500">아직 답변된 질문이 없습니다.</p>
     </div>
   );
 }

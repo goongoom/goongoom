@@ -1,58 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Lock } from "lucide-react";
 
 interface QuestionFormProps {
-  username: string;
+  recipientClerkId: string;
+  recipientUsername: string;
 }
 
-export function QuestionForm({ username }: QuestionFormProps) {
-  const [questionType, setQuestionType] = useState<"anonymous" | "public">("anonymous");
-  const [question, setQuestion] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+interface QuestionFormData {
+  question: string;
+  questionType: "anonymous" | "public";
+}
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    setError("");
-    
+export function QuestionForm({ recipientClerkId, recipientUsername }: QuestionFormProps) {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    setError,
+    formState: { isSubmitting, isSubmitSuccessful, errors },
+  } = useForm<QuestionFormData>({
+    defaultValues: { question: "", questionType: "anonymous" },
+  });
+
+  const questionType = watch("questionType");
+  const questionValue = watch("question");
+
+  const onSubmit = async (data: QuestionFormData) => {
     try {
       const response = await fetch("/api/questions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          recipientUsername: username,
-          content: question,
-          isAnonymous: questionType === "anonymous",
+          recipientClerkId,
+          content: data.question,
+          isAnonymous: data.questionType === "anonymous",
         }),
       });
       
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "질문 전송 실패");
+        const result = await response.json();
+        throw new Error(result.error || "질문 전송 실패");
       }
       
-      setSuccess(true);
-      setQuestion("");
-      setTimeout(() => setSuccess(false), 3000);
+      reset();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "질문 전송 실패");
-    } finally {
-      setIsSubmitting(false);
+      setError("root", { message: err instanceof Error ? err.message : "질문 전송 실패" });
     }
   };
 
   return (
-    <div className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <h2 className="text-lg font-semibold text-gray-900">
-        {username} 님에게 새 질문을 남겨보세요
+        {recipientUsername} 님에게 새 질문을 남겨보세요
       </h2>
       
       <textarea
-        value={question}
-        onChange={(e) => setQuestion(e.target.value)}
+        {...register("question", { required: true })}
         placeholder="질문을 입력하세요"
         className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
       />
@@ -63,10 +69,8 @@ export function QuestionForm({ username }: QuestionFormProps) {
         <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
           <input
             type="radio"
-            name="questionType"
+            {...register("questionType")}
             value="anonymous"
-            checked={questionType === "anonymous"}
-            onChange={(e) => setQuestionType(e.target.value as "anonymous")}
             className="w-4 h-4 text-orange-500 focus:ring-orange-500"
           />
           <div className="flex-1">
@@ -78,10 +82,8 @@ export function QuestionForm({ username }: QuestionFormProps) {
         <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
           <input
             type="radio"
-            name="questionType"
+            {...register("questionType")}
             value="public"
-            checked={questionType === "public"}
-            onChange={(e) => setQuestionType(e.target.value as "public")}
             className="w-4 h-4 text-orange-500 focus:ring-orange-500"
           />
           <div className="flex-1">
@@ -91,24 +93,23 @@ export function QuestionForm({ username }: QuestionFormProps) {
         </label>
       </div>
       
-      {success && (
+      {isSubmitSuccessful && (
         <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm text-center">
           질문이 전송되었습니다!
         </div>
       )}
       
-      {error && (
+      {errors.root && (
         <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm text-center">
-          {error}
+          {errors.root.message}
         </div>
       )}
       
       <button
-        type="button"
-        onClick={handleSubmit}
-        disabled={!question.trim() || isSubmitting}
+        type="submit"
+        disabled={!questionValue.trim() || isSubmitting}
         className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
-          question.trim() && !isSubmitting ? "bg-orange-500 hover:bg-orange-600" : "bg-gray-400"
+          questionValue.trim() && !isSubmitting ? "bg-orange-500 hover:bg-orange-600" : "bg-gray-400"
         }`}
       >
         <Lock className="w-4 h-4" />
@@ -120,6 +121,6 @@ export function QuestionForm({ username }: QuestionFormProps) {
       <p className="text-xs text-gray-500 text-center">
         질문 시 사용 약관에 동의하게 됩니다
       </p>
-    </div>
+    </form>
   );
 }

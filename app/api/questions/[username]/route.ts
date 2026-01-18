@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
-import { getUser, getQuestionsByRecipient, getAnswersForQuestion } from '@/lib/db/queries'
+import { getClerkUserByUsername } from '@/lib/clerk'
+import { getQuestionsByRecipient, getAnswersForQuestion } from '@/lib/db/queries'
 
 export async function GET(
   request: NextRequest,
@@ -9,15 +10,15 @@ export async function GET(
   try {
     const { username } = await params
     
-    const user = await getUser(username)
-    if (!user) {
+    const clerkUser = await getClerkUserByUsername(username)
+    if (!clerkUser) {
       return NextResponse.json(
         { error: '사용자를 찾을 수 없습니다' },
         { status: 404 }
       )
     }
     
-    const questions = await getQuestionsByRecipient(user.id)
+    const questions = await getQuestionsByRecipient(clerkUser.clerkId)
     
     const questionsWithAnswers = await Promise.all(
       questions.map(async (q) => {

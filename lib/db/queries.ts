@@ -1,41 +1,65 @@
 import { db } from '@/src/db'
 import { users, questions, answers } from '@/src/db/schema'
+import type { SocialLinks } from '@/src/db/schema'
 import { eq, desc } from 'drizzle-orm'
 
-export async function createUser(data: {
-  id: string
-  username: string
-  clerkId: string
-}) {
-  return await db.insert(users).values(data).returning()
+export async function getOrCreateUser(clerkId: string) {
+  const existing = await db.query.users.findFirst({
+    where: eq(users.clerkId, clerkId),
+  })
+  
+  if (existing) return existing
+  
+  const [newUser] = await db.insert(users).values({ clerkId }).returning()
+  return newUser
 }
 
-export async function getUser(username: string) {
+export async function getUserByClerkId(clerkId: string) {
   return await db.query.users.findFirst({
-    where: eq(users.username, username),
+    where: eq(users.clerkId, clerkId),
   })
 }
 
-export async function getUserById(id: string) {
-  return await db.query.users.findFirst({
-    where: eq(users.id, id),
-  })
+export async function updateUserProfile(
+  clerkId: string,
+  data: {
+    bio?: string | null
+    socialLinks?: SocialLinks | null
+  }
+) {
+  return await db
+    .update(users)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(users.clerkId, clerkId))
+    .returning()
 }
 
 export async function createQuestion(data: {
-  recipientId: string
-  senderId?: string | null
+  recipientClerkId: string
+  senderClerkId?: string | null
   content: string
   isAnonymous: number
 }) {
   return await db.insert(questions).values(data).returning()
 }
 
-export async function getQuestionsByRecipient(recipientId: string) {
+export async function getQuestionsByRecipient(recipientClerkId: string) {
   return await db.query.questions.findMany({
-    where: eq(questions.recipientId, recipientId),
+    where: eq(questions.recipientClerkId, recipientClerkId),
     orderBy: [desc(questions.createdAt)],
   })
+}
+
+export async function getUnansweredQuestions(recipientClerkId: string) {
+  const allQuestions = await db.query.questions.findMany({
+    where: eq(questions.recipientClerkId, recipientClerkId),
+    orderBy: [desc(questions.createdAt)],
+    with: {
+      answers: true,
+    },
+  })
+  
+  return allQuestions.filter(q => q.answers.length === 0)
 }
 
 export async function getQuestionById(id: number) {
@@ -58,18 +82,30 @@ export async function getAnswersForQuestion(questionId: number) {
   })
 }
 
-export async function getAllAnsweredQuestions(recipientId: string) {
-  const allQuestions = await getQuestionsByRecipient(recipientId)
+export async function getAnsweredQuestionsForUser(recipientClerkId: string) {
+  const allQuestions = await db.query.questions.findMany({
+    where: eq(questions.recipientClerkId, recipientClerkId),
+    orderBy: [desc(questions.createdAt)],
+    with: {
+      answers: true,
+    },
+  })
   
-  const questionsWithAnswers = await Promise.all(
-    allQuestions.map(async (question) => {
-      const questionAnswers = await getAnswersForQuestion(question.id)
-      return {
-        ...question,
-        answers: questionAnswers,
-      }
-    })
-  )
+  return allQuestions.filter(q => q.answers.length > 0)
+}
+
+export async function getRecentAnsweredQuestions(limit = 20) {
+  const recentAnswers = await db.query.answers.findMany({
+    orderBy: [desc(answers.createdAt)],
+    limit,
+    with: {
+      question: true,
+    },
+  })
   
-  return questionsWithAnswers.filter(q => q.answers.length > 0)
+  return recentAnswers.map(a => ({
+    question: a.question,
+    answer: a,
+    recipientClerkId: a.question.recipientClerkId,
+  }))
 }

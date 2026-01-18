@@ -1,19 +1,27 @@
-import { pgSchema, text, timestamp, uuid, integer } from 'drizzle-orm/pg-core'
+import { pgSchema, text, timestamp, integer, jsonb } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 
 export const goongoom = pgSchema('goongoom')
 
+export type SocialLinks = {
+  instagram?: string
+  facebook?: string
+  github?: string
+  twitter?: string
+}
+
 export const users = goongoom.table('users', {
-  id: text('id').primaryKey(),
-  username: text('username').notNull().unique(),
-  clerkId: text('clerk_id').notNull().unique(),
+  clerkId: text('clerk_id').primaryKey(),
+  bio: text('bio'),
+  socialLinks: jsonb('social_links').$type<SocialLinks>(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
 
 export const questions = goongoom.table('questions', {
   id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-  recipientId: text('recipient_id').notNull(),
-  senderId: text('sender_id'),
+  recipientClerkId: text('recipient_clerk_id').notNull(),
+  senderClerkId: text('sender_clerk_id'),
   content: text('content').notNull(),
   isAnonymous: integer('is_anonymous').notNull().default(1),
   createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -26,7 +34,6 @@ export const answers = goongoom.table('answers', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 })
 
-// Relations
 export const usersRelations = relations(users, ({ many }) => ({
   receivedQuestions: many(questions, { relationName: 'recipient' }),
   sentQuestions: many(questions, { relationName: 'sender' }),
@@ -34,13 +41,13 @@ export const usersRelations = relations(users, ({ many }) => ({
 
 export const questionsRelations = relations(questions, ({ one, many }) => ({
   recipient: one(users, {
-    fields: [questions.recipientId],
-    references: [users.id],
+    fields: [questions.recipientClerkId],
+    references: [users.clerkId],
     relationName: 'recipient',
   }),
   sender: one(users, {
-    fields: [questions.senderId],
-    references: [users.id],
+    fields: [questions.senderClerkId],
+    references: [users.clerkId],
     relationName: 'sender',
   }),
   answers: many(answers),

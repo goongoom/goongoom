@@ -1,15 +1,29 @@
-import type { Question as DBQuestion, Answer as DBAnswer, User as DBUser } from '@/src/db/schema'
-
-export type Question = DBQuestion & {
-  answers?: Answer[]
-}
-
-export type Answer = DBAnswer
+import type { User as DBUser, Question as DBQuestion, Answer as DBAnswer, SocialLinks } from '@/src/db/schema'
+import type { ClerkUserInfo } from '@/lib/clerk'
 
 export type User = DBUser
+export type Question = DBQuestion
+export type Answer = DBAnswer
+export type { SocialLinks, ClerkUserInfo }
 
 export type QuestionWithAnswers = Question & {
   answers: Answer[]
+}
+
+export type QAItem = {
+  question: Question
+  answer: Answer
+  recipientClerkId: string
+  recipientInfo?: ClerkUserInfo
+}
+
+export type UserProfile = {
+  clerkId: string
+  username: string | null
+  displayName: string | null
+  avatarUrl: string | null
+  bio: string | null
+  socialLinks: SocialLinks | null
 }
 
 export type APIResponse<T> = {
@@ -18,7 +32,7 @@ export type APIResponse<T> = {
 }
 
 export type CreateQuestionRequest = {
-  recipientUsername: string
+  recipientClerkId: string
   content: string
   isAnonymous: boolean
 }

@@ -5,9 +5,9 @@ import { createAnswer, getQuestionById } from '@/lib/db/queries'
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth()
+    const { userId: clerkId } = await auth()
     
-    if (!userId) {
+    if (!clerkId) {
       return NextResponse.json(
         { error: '로그인이 필요합니다' },
         { status: 401 }
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    const question = await getQuestionById(Number.parseInt(questionId))
+    const question = await getQuestionById(Number(questionId))
     if (!question) {
       return NextResponse.json(
         { error: '질문을 찾을 수 없습니다' },
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    if (question.recipientId !== userId) {
+    if (question.recipientClerkId !== clerkId) {
       return NextResponse.json(
         { error: '본인에게 온 질문만 답변할 수 있습니다' },
         { status: 403 }
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     }
     
     const answer = await createAnswer({
-      questionId: Number.parseInt(questionId),
+      questionId: Number(questionId),
       content,
     })
     
