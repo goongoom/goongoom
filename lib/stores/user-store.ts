@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { UserProfile } from '@/lib/types'
+import { getProfile, updateProfile } from '@/lib/actions/profile'
 
 interface UserState {
   currentUser: UserProfile | null
@@ -20,18 +21,17 @@ export const useUserStore = create<UserState>((set, get) => ({
     set({ isLoading: true, error: null })
     
     try {
-      const response = await fetch('/api/profile')
+      const result = await getProfile()
       
-      if (!response.ok) {
-        if (response.status === 401) {
+      if (!result.success) {
+        if (result.error === '로그인이 필요합니다') {
           set({ currentUser: null, isLoading: false })
           return
         }
-        throw new Error('Failed to fetch user')
+        throw new Error(result.error)
       }
       
-      const user = await response.json()
-      set({ currentUser: user, isLoading: false })
+      set({ currentUser: result.data, isLoading: false })
     } catch (error) {
       set({ 
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -47,19 +47,17 @@ export const useUserStore = create<UserState>((set, get) => ({
     set({ isLoading: true, error: null })
     
     try {
-      const response = await fetch('/api/profile', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+      const result = await updateProfile({
+        bio: data.bio,
+        socialLinks: data.socialLinks,
       })
       
-      if (!response.ok) {
-        throw new Error('Failed to update profile')
+      if (!result.success) {
+        throw new Error(result.error)
       }
       
-      const updated = await response.json()
       set({ 
-        currentUser: { ...currentUser, ...updated },
+        currentUser: { ...currentUser, ...result.data },
         isLoading: false 
       })
     } catch (error) {

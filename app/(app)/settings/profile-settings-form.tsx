@@ -26,7 +26,7 @@ interface ProfileFormData {
 
 export function ProfileSettingsForm({ clerkUser, bio: initialBio, socialLinks: initialSocialLinks }: ProfileSettingsFormProps) {
   const router = useRouter();
-  const { updateProfile } = useUserStore();
+  const updateProfile = useUserStore((state) => state.updateProfile);
   
   const {
     register,

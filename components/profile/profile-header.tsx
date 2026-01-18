@@ -1,4 +1,5 @@
-import { Instagram, Facebook, Github } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { InstagramIcon, FacebookIcon, GithubIcon } from "@hugeicons/core-free-icons";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
@@ -49,7 +50,7 @@ export function ProfileHeader({
                 className="flex flex-col items-center gap-1 text-gray-500 hover:text-orange-500 transition-colors"
               >
                 <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-                  <Instagram className="w-5 h-5" />
+                  <HugeiconsIcon icon={InstagramIcon} className="w-5 h-5" />
                 </div>
                 <span className="text-xs">Instagram</span>
               </a>
@@ -62,7 +63,7 @@ export function ProfileHeader({
                 className="flex flex-col items-center gap-1 text-gray-500 hover:text-orange-500 transition-colors"
               >
                 <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-                  <Facebook className="w-5 h-5" />
+                  <HugeiconsIcon icon={FacebookIcon} className="w-5 h-5" />
                 </div>
                 <span className="text-xs">Facebook</span>
               </a>
@@ -75,7 +76,7 @@ export function ProfileHeader({
                 className="flex flex-col items-center gap-1 text-gray-500 hover:text-orange-500 transition-colors"
               >
                 <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-                  <Github className="w-5 h-5" />
+                  <HugeiconsIcon icon={GithubIcon} className="w-5 h-5" />
                 </div>
                 <span className="text-xs">GitHub</span>
               </a>

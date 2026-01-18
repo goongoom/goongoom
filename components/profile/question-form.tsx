@@ -1,12 +1,14 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Lock } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { LockIcon } from "@hugeicons/core-free-icons";
 import { Field, FieldControl } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, Radio } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { createQuestion } from "@/lib/actions/questions";
 
 interface QuestionFormProps {
   recipientClerkId: string;
@@ -36,19 +38,14 @@ export function QuestionForm({ recipientClerkId, recipientUsername }: QuestionFo
 
   const onSubmit = async (data: QuestionFormData) => {
     try {
-      const response = await fetch("/api/questions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          recipientClerkId,
-          content: data.question,
-          isAnonymous: data.questionType === "anonymous",
-        }),
+      const result = await createQuestion({
+        recipientClerkId,
+        content: data.question,
+        isAnonymous: data.questionType === "anonymous",
       });
       
-      if (!response.ok) {
-        const result = await response.json();
-        throw new Error(result.error || "질문 전송 실패");
+      if (!result.success) {
+        throw new Error(result.error);
       }
       
       reset();
@@ -106,7 +103,7 @@ export function QuestionForm({ recipientClerkId, recipientUsername }: QuestionFo
         disabled={!questionValue.trim() || isSubmitting}
         className="w-full bg-orange-500 hover:bg-orange-600"
       >
-        <Lock className="w-4 h-4" aria-hidden="true" />
+        <HugeiconsIcon icon={LockIcon} className="w-4 h-4" aria-hidden="true" />
         {isSubmitting 
           ? "전송 중…" 
           : questionType === "anonymous" ? "익명으로 질문하기" : "공개로 질문하기"}

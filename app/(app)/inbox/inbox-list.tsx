@@ -12,7 +12,9 @@ interface InboxListProps {
 
 export function InboxList({ initialQuestions }: InboxListProps) {
   const router = useRouter();
-  const { questions, setQuestions, removeQuestion } = useInboxStore();
+  const questions = useInboxStore((state) => state.questions);
+  const setQuestions = useInboxStore((state) => state.setQuestions);
+  const removeQuestion = useInboxStore((state) => state.removeQuestion);
 
   useEffect(() => {
     setQuestions(initialQuestions);

@@ -32,7 +32,7 @@ function formatRelativeTime(date: Date): string {
 }
 
 export function QuestionCard({ question, onAnswered }: QuestionCardProps) {
-  const { answerQuestion } = useInboxStore();
+  const answerQuestion = useInboxStore((state) => state.answerQuestion);
   const {
     register,
     handleSubmit,

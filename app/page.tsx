@@ -1,5 +1,6 @@
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
-import { MessageCircle, Share2, Shield, ArrowRight, Sparkles, Send } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Message01Icon, Share01Icon, ShieldKeyIcon, ArrowRight01Icon, SparklesIcon, SentIcon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle, CardDescription } from "@/components/ui/card";
@@ -11,7 +12,7 @@ export default function Home() {
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30">
-              <MessageCircle size={18} strokeWidth={3} />
+              <HugeiconsIcon icon={Message01Icon} size={18} strokeWidth={3} />
             </div>
             <span className="text-lg font-bold tracking-tight text-slate-900">궁금닷컴</span>
           </Link>
@@ -54,7 +55,7 @@ export default function Home() {
             <SignUpButton mode="modal">
               <Button className="group flex h-14 w-full items-center justify-center gap-2 rounded-full bg-orange-500 px-8 text-lg font-bold text-white shadow-xl shadow-orange-500/30 transition-all hover:scale-105 hover:bg-orange-600 sm:w-auto">
                 내 프로필 만들기
-                <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />
+                <HugeiconsIcon icon={ArrowRight01Icon} size={20} className="transition-transform group-hover:translate-x-1" />
               </Button>
             </SignUpButton>
             <SignInButton mode="modal">
@@ -70,7 +71,7 @@ export default function Home() {
             <div className="grid gap-8 sm:grid-cols-3">
               <Card className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50 block">
                 <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 group-hover:scale-110 transition-transform">
-                  <Shield size={24} />
+                  <HugeiconsIcon icon={ShieldKeyIcon} size={24} />
                 </div>
                 <CardTitle className="mb-3 text-xl font-bold text-slate-900">완벽한 익명성</CardTitle>
                 <CardDescription className="text-slate-500 leading-relaxed text-base">
@@ -80,7 +81,7 @@ export default function Home() {
 
               <Card className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50 block">
                 <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-600 group-hover:scale-110 transition-transform">
-                  <Share2 size={24} />
+                  <HugeiconsIcon icon={Share01Icon} size={24} />
                 </div>
                 <CardTitle className="mb-3 text-xl font-bold text-slate-900">쉬운 공유</CardTitle>
                 <CardDescription className="text-slate-500 leading-relaxed text-base">
@@ -90,7 +91,7 @@ export default function Home() {
 
               <Card className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50 block">
                 <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-pink-50 text-pink-600 group-hover:scale-110 transition-transform">
-                  <Sparkles size={24} />
+                  <HugeiconsIcon icon={SparklesIcon} size={24} />
                 </div>
                 <CardTitle className="mb-3 text-xl font-bold text-slate-900">나만의 스토리</CardTitle>
                 <CardDescription className="text-slate-500 leading-relaxed text-base">
@@ -104,7 +105,7 @@ export default function Home() {
         <div className="relative overflow-hidden py-24">
             <div className="mx-auto max-w-5xl px-6 text-center">
                 <div className="mb-4 inline-flex items-center justify-center rounded-full bg-orange-100 p-3 text-orange-600 mb-8">
-                    <Send size={24} />
+                    <HugeiconsIcon icon={SentIcon} size={24} />
                 </div>
                 <h2 className="mb-6 text-3xl font-bold text-slate-900 sm:text-4xl">지금 바로 시작해보세요</h2>
                 <p className="mb-10 text-slate-600 text-lg">
@@ -123,7 +124,7 @@ export default function Home() {
         <div className="mx-auto max-w-5xl px-6 flex flex-col items-center justify-between gap-6 sm:flex-row">
           <div className="flex items-center gap-2">
             <div className="flex h-6 w-6 items-center justify-center rounded bg-slate-200 text-slate-500">
-              <MessageCircle size={14} strokeWidth={3} />
+              <HugeiconsIcon icon={Message01Icon} size={14} strokeWidth={3} />
             </div>
             <span className="text-sm font-bold text-slate-400">궁금닷컴</span>
           </div>

@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    optimizePackageImports: ['@hugeicons/react'],
+    optimizePackageImports: ['@hugeicons/react', '@hugeicons/core-free-icons'],
   },
 };
 

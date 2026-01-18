@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { Home, User, Inbox, Settings, LogIn } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Home01Icon, UserIcon, InboxIcon, Settings01Icon, LoginSquare01Icon } from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 
 export function Sidebar() {
@@ -11,16 +12,16 @@ export function Sidebar() {
   const { user, isSignedIn } = useUser();
 
   const navItems = [
-    { href: "/", label: "홈", icon: Home },
+    { href: "/", label: "홈", icon: Home01Icon },
     ...(isSignedIn && user?.username
-      ? [{ href: `/${user.username}`, label: "내 프로필", icon: User }]
+      ? [{ href: `/${user.username}`, label: "내 프로필", icon: UserIcon }]
       : []),
     ...(isSignedIn
       ? [
-          { href: "/inbox", label: "받은 질문", icon: Inbox },
-          { href: "/settings", label: "설정", icon: Settings },
+          { href: "/inbox", label: "받은 질문", icon: InboxIcon },
+          { href: "/settings", label: "설정", icon: Settings01Icon },
         ]
-      : [{ href: "/sign-in", label: "로그인", icon: LogIn }]),
+      : [{ href: "/sign-in", label: "로그인", icon: LoginSquare01Icon }]),
   ];
 
   return (
@@ -46,7 +47,7 @@ export function Sidebar() {
                     : "text-gray-500 hover:bg-gray-50"
                 )}
               >
-                <Icon className="w-5 h-5" aria-hidden="true" />
+                <HugeiconsIcon icon={Icon} className="w-5 h-5" aria-hidden="true" />
                 <span>{item.label}</span>
               </Link>
             );

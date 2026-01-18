@@ -10,8 +10,6 @@ const isPublicRoute = createRouteMatcher([
 const isProtectedRoute = createRouteMatcher([
   "/inbox(.*)",
   "/settings(.*)",
-  "/api/profile(.*)",
-  "/api/answers(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, request) => {

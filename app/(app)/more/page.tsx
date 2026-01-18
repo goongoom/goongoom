@@ -1,11 +1,12 @@
 import { MainContent } from "@/components/layout/main-content";
-import { Megaphone, Gift, Headset, Settings } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Megaphone02Icon, GiftIcon, CustomerServiceIcon, Settings01Icon } from "@hugeicons/core-free-icons";
 
 const moreOptions = [
-  { icon: Megaphone, label: "공지사항" },
-  { icon: Gift, label: "이벤트" },
-  { icon: Headset, label: "문의하기" },
-  { icon: Settings, label: "환경설정" },
+  { icon: Megaphone02Icon, label: "공지사항" },
+  { icon: GiftIcon, label: "이벤트" },
+  { icon: CustomerServiceIcon, label: "문의하기" },
+  { icon: Settings01Icon, label: "환경설정" },
 ];
 
 export default function MorePage() {
@@ -22,7 +23,7 @@ export default function MorePage() {
               type="button"
               className="w-full flex items-center gap-4 p-4 bg-white rounded-xl hover:bg-gray-50 transition-colors text-left"
             >
-              <Icon className="w-6 h-6 text-gray-500" />
+              <HugeiconsIcon icon={Icon} className="w-6 h-6 text-gray-500" />
               <span className="text-lg text-gray-500">{option.label}</span>
             </button>
           );

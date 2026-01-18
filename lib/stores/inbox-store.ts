@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { Question } from '@/lib/types'
+import { createAnswer } from '@/lib/actions/answers'
 
 interface InboxState {
   questions: Question[]
@@ -30,15 +31,10 @@ export const useInboxStore = create<InboxState>((set, get) => ({
     set({ isLoading: true, error: null })
     
     try {
-      const response = await fetch('/api/answers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ questionId, content }),
-      })
+      const result = await createAnswer({ questionId, content })
       
-      if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.error || 'Failed to submit answer')
+      if (!result.success) {
+        throw new Error(result.error)
       }
       
       get().removeQuestion(questionId)
