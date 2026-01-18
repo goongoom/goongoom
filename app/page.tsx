@@ -27,13 +27,13 @@ export default function Home() {
             <Button
               render={<Link href="/sign-in" />}
               variant="ghost"
-              className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-600 h-auto"
+              size="sm"
             >
               로그인
             </Button>
             <Button
               render={<Link href="/sign-up" />}
-              className="rounded-full bg-slate-900 px-4 py-2 text-sm font-bold text-white transition-all hover:bg-slate-800 hover:shadow-lg h-auto"
+              size="sm"
             >
               시작하기
             </Button>
@@ -64,7 +64,8 @@ export default function Home() {
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button
               render={<Link href="/sign-up" />}
-              className="group flex h-14 w-full items-center justify-center gap-2 rounded-full bg-orange-500 px-8 text-lg font-bold text-white shadow-xl shadow-orange-500/30 transition-all hover:scale-105 hover:bg-orange-600 sm:w-auto"
+              size="xl"
+              className="w-full group sm:w-auto"
             >
               내 프로필 만들기
               <HugeiconsIcon icon={ArrowRight01Icon} size={20} className="transition-transform group-hover:translate-x-1" />
@@ -72,7 +73,8 @@ export default function Home() {
             <Button
               render={<Link href="/sign-in" />}
               variant="outline"
-              className="flex h-14 w-full items-center justify-center rounded-full border-2 border-slate-200 bg-white px-8 text-lg font-bold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 sm:w-auto"
+              size="xl"
+              className="w-full sm:w-auto"
             >
               로그인하기
             </Button>
@@ -130,7 +132,7 @@ export default function Home() {
                 </p>
                 <Button
                   render={<Link href="/sign-up" />}
-                  className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-slate-900 px-10 text-lg font-bold text-white shadow-xl shadow-slate-900/20 transition-all hover:scale-105 hover:bg-slate-800"
+                  size="xl"
                 >
                   시작
                 </Button>
