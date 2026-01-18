@@ -139,7 +139,7 @@ social_links
 - [ ] Configure TypeScript strict mode
 - [ ] Set up project structure:
   ```
-  orange-question/
+  goongoom/
   ├── app/
   │   ├── layout.tsx
   │   ├── page.tsx

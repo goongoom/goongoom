@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "orange-question",
+      "name": "goongoom",
       "dependencies": {
         "@base-ui/react": "^1.1.0",
         "@clerk/nextjs": "^6.36.8",
