@@ -1,46 +1,55 @@
-"use client";
-
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 import { QuestionCard } from "@/components/inbox/question-card";
-import { useInboxStore } from "@/lib/stores/inbox-store";
+import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
+import { getClerkUsersByIds } from "@/lib/clerk";
+import { getOrCreateUser, getUnansweredQuestions } from "@/lib/db/queries";
 import type { Question } from "@/lib/types";
 
-interface InboxListProps {
-  initialQuestions: Question[];
-}
+export async function InboxList() {
+  const { userId: clerkId } = await auth();
 
-export function InboxList({ initialQuestions }: InboxListProps) {
-  const router = useRouter();
-  const questions = useInboxStore((state) => state.questions);
-  const setQuestions = useInboxStore((state) => state.setQuestions);
-  const removeQuestion = useInboxStore((state) => state.removeQuestion);
+  if (!clerkId) {
+    redirect("/");
+  }
 
-  useEffect(() => {
-    setQuestions(initialQuestions);
-  }, [initialQuestions, setQuestions]);
+  const [, unansweredQuestions] = await Promise.all([
+    getOrCreateUser(clerkId),
+    getUnansweredQuestions(clerkId),
+  ]);
 
-  const handleAnswered = (questionId: number) => {
-    removeQuestion(questionId);
-    router.refresh();
-  };
+  const senderIds = Array.from(
+    new Set(
+      unansweredQuestions
+        .map((question) => question.senderClerkId)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  );
 
-  if (questions.length === 0) {
+  const senderMap = await getClerkUsersByIds(senderIds);
+
+  if (unansweredQuestions.length === 0) {
     return (
-      <div className="text-center py-12 bg-white rounded-xl">
-        <p className="text-gray-500">새로운 질문이 없습니다.</p>
-        <p className="text-gray-400 text-sm mt-2">질문이 오면 여기에 표시됩니다.</p>
-      </div>
+      <Empty>
+        <EmptyHeader>
+          <EmptyTitle>새로운 질문이 없습니다</EmptyTitle>
+          <EmptyDescription>질문이 오면 여기에 표시됩니다.</EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     );
   }
 
   return (
     <div className="space-y-4">
-      {questions.map((question) => (
+      {unansweredQuestions.map((question: Question) => (
         <QuestionCard
           key={question.id}
           question={question}
-          onAnswered={() => handleAnswered(question.id)}
+          sender={
+            question.senderClerkId
+              ? senderMap.get(question.senderClerkId) || null
+              : null
+          }
         />
       ))}
     </div>

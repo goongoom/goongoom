@@ -1,9 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Suspense } from "react";
-import { ClerkProvider } from "@clerk/nextjs";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const pretendard = localFont({
@@ -45,6 +41,7 @@ export const viewport: Viewport = {
   ],
 };
 
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -53,13 +50,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className="[color-scheme:light_dark]">
       <body className={`${pretendard.variable} font-sans antialiased`}>
-        <Suspense fallback={null}>
-          <ClerkProvider dynamic>
-            {children}
-            <Analytics />
-            <SpeedInsights />
-          </ClerkProvider>
-        </Suspense>
+        {children}
       </body>
     </html>
   );

@@ -2,13 +2,12 @@
 
 import { Toast } from "@base-ui/react/toast";
 import {
-  Alert02Icon,
-  AlertCircleIcon,
-  CheckmarkCircle01Icon,
-  InformationCircleIcon,
-  Loading02Icon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+  CircleAlertIcon,
+  CircleCheckIcon,
+  InfoIcon,
+  LoaderCircleIcon,
+  TriangleAlertIcon,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -17,11 +16,11 @@ const toastManager = Toast.createToastManager();
 const anchoredToastManager = Toast.createToastManager();
 
 const TOAST_ICONS = {
-  error: AlertCircleIcon,
-  info: InformationCircleIcon,
-  loading: Loading02Icon,
-  success: CheckmarkCircle01Icon,
-  warning: Alert02Icon,
+  error: CircleAlertIcon,
+  info: InfoIcon,
+  loading: LoaderCircleIcon,
+  success: CircleCheckIcon,
+  warning: TriangleAlertIcon,
 } as const;
 
 type ToastPosition =
@@ -135,10 +134,7 @@ function Toasts({ position = "bottom-right" }: { position: ToastPosition }) {
                       className="[&>svg]:h-lh [&>svg]:w-4 [&_svg]:pointer-events-none [&_svg]:shrink-0"
                       data-slot="toast-icon"
                     >
-                      <HugeiconsIcon
-                        icon={Icon}
-                        className="in-data-[type=loading]:animate-spin in-data-[type=error]:text-destructive in-data-[type=info]:text-info in-data-[type=success]:text-success in-data-[type=warning]:text-warning in-data-[type=loading]:opacity-80"
-                      />
+                      <Icon className="in-data-[type=loading]:animate-spin in-data-[type=error]:text-destructive in-data-[type=info]:text-info in-data-[type=success]:text-success in-data-[type=warning]:text-warning in-data-[type=loading]:opacity-80" />
                     </div>
                   )}
 
@@ -230,10 +226,7 @@ function AnchoredToasts() {
                           className="[&>svg]:h-lh [&>svg]:w-4 [&_svg]:pointer-events-none [&_svg]:shrink-0"
                           data-slot="toast-icon"
                         >
-                          <HugeiconsIcon
-                            icon={Icon}
-                            className="in-data-[type=loading]:animate-spin in-data-[type=error]:text-destructive in-data-[type=info]:text-info in-data-[type=success]:text-success in-data-[type=warning]:text-warning in-data-[type=loading]:opacity-80"
-                          />
+                          <Icon className="in-data-[type=loading]:animate-spin in-data-[type=error]:text-destructive in-data-[type=info]:text-info in-data-[type=success]:text-success in-data-[type=warning]:text-warning in-data-[type=loading]:opacity-80" />
                         </div>
                       )}
 

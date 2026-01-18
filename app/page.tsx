@@ -1,13 +1,18 @@
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Message01Icon, Share01Icon, ShieldKeyIcon, ArrowRight01Icon, SparklesIcon, SentIcon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getTotalUserCount } from "@/lib/db/queries";
 
-export default async function Home() {
+async function UserCount() {
   const userCount = await getTotalUserCount();
+  return <span>{userCount.toLocaleString()}</span>;
+}
+
+export default function Home() {
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-orange-200 selection:text-orange-900">
       <nav className="fixed top-0 z-50 w-full border-b border-orange-100 bg-white/80 backdrop-blur-md">
@@ -19,16 +24,19 @@ export default async function Home() {
             <span className="text-lg font-bold tracking-tight text-slate-900">궁금닷컴</span>
           </Link>
           <div className="flex items-center gap-3">
-            <SignInButton mode="modal">
-              <Button variant="ghost" className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-600 h-auto">
-                로그인
-              </Button>
-            </SignInButton>
-            <SignUpButton mode="modal">
-              <Button className="rounded-full bg-slate-900 px-4 py-2 text-sm font-bold text-white transition-all hover:bg-slate-800 hover:shadow-lg h-auto">
-                시작하기
-              </Button>
-            </SignUpButton>
+            <Button
+              render={<Link href="/sign-in" />}
+              variant="ghost"
+              className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-600 h-auto"
+            >
+              로그인
+            </Button>
+            <Button
+              render={<Link href="/sign-up" />}
+              className="rounded-full bg-slate-900 px-4 py-2 text-sm font-bold text-white transition-all hover:bg-slate-800 hover:shadow-lg h-auto"
+            >
+              시작하기
+            </Button>
           </div>
         </div>
       </nav>
@@ -54,17 +62,20 @@ export default async function Home() {
           </p>
 
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <SignUpButton mode="modal">
-              <Button className="group flex h-14 w-full items-center justify-center gap-2 rounded-full bg-orange-500 px-8 text-lg font-bold text-white shadow-xl shadow-orange-500/30 transition-all hover:scale-105 hover:bg-orange-600 sm:w-auto">
-                내 프로필 만들기
-                <HugeiconsIcon icon={ArrowRight01Icon} size={20} className="transition-transform group-hover:translate-x-1" />
-              </Button>
-            </SignUpButton>
-            <SignInButton mode="modal">
-              <Button variant="outline" className="flex h-14 w-full items-center justify-center rounded-full border-2 border-slate-200 bg-white px-8 text-lg font-bold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 sm:w-auto">
-                로그인하기
-              </Button>
-            </SignInButton>
+            <Button
+              render={<Link href="/sign-up" />}
+              className="group flex h-14 w-full items-center justify-center gap-2 rounded-full bg-orange-500 px-8 text-lg font-bold text-white shadow-xl shadow-orange-500/30 transition-all hover:scale-105 hover:bg-orange-600 sm:w-auto"
+            >
+              내 프로필 만들기
+              <HugeiconsIcon icon={ArrowRight01Icon} size={20} className="transition-transform group-hover:translate-x-1" />
+            </Button>
+            <Button
+              render={<Link href="/sign-in" />}
+              variant="outline"
+              className="flex h-14 w-full items-center justify-center rounded-full border-2 border-slate-200 bg-white px-8 text-lg font-bold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 sm:w-auto"
+            >
+              로그인하기
+            </Button>
           </div>
         </div>
 
@@ -111,13 +122,18 @@ export default async function Home() {
                 </div>
                 <h2 className="mb-6 text-3xl font-bold text-slate-900 sm:text-4xl">지금 바로 시작해보세요</h2>
                 <p className="mb-10 text-slate-600 text-lg">
-                    이미 {userCount.toLocaleString()}명의 유저가 궁금닷컴을 사용하고 있어요.
+                    이미{" "}
+                    <Suspense fallback={<Skeleton className="inline-block h-5 w-16 align-middle rounded" />}>
+                      <UserCount />
+                    </Suspense>
+                    명의 유저가 궁금닷컴을 사용하고 있어요.
                 </p>
-                <SignUpButton mode="modal">
-                    <Button className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-slate-900 px-10 text-lg font-bold text-white shadow-xl shadow-slate-900/20 transition-all hover:scale-105 hover:bg-slate-800">
-                        무료로 시작하기
-                    </Button>
-                </SignUpButton>
+                <Button
+                  render={<Link href="/sign-up" />}
+                  className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-slate-900 px-10 text-lg font-bold text-white shadow-xl shadow-slate-900/20 transition-all hover:scale-105 hover:bg-slate-800"
+                >
+                  무료로 시작하기
+                </Button>
             </div>
         </div>
       </main>

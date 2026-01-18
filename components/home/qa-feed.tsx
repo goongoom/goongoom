@@ -41,7 +41,7 @@ interface QAFeedProps {
   items?: QuestionWithAnswers[];
   recentItems?: RecentQAItem[];
   recipientName?: string;
-  recipientAvatar?: string;
+  recipientAvatar?: string | null;
 }
 
 export function QAFeed({ items, recentItems, recipientName, recipientAvatar }: QAFeedProps) {
@@ -50,7 +50,7 @@ export function QAFeed({ items, recentItems, recipientName, recipientAvatar }: Q
       <div className="space-y-6">
         {recentItems.map((item) => {
           const displayName = item.recipientInfo?.displayName || item.recipientInfo?.username || "사용자";
-          const avatarUrl = item.recipientInfo?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${item.recipientClerkId}`;
+          const avatarUrl = item.recipientInfo?.avatarUrl || null;
           
           return (
             <div key={item.question.id} className="space-y-4">
@@ -89,7 +89,7 @@ export function QAFeed({ items, recentItems, recipientName, recipientAvatar }: Q
                 timestamp={formatRelativeTime(qa.createdAt)}
               />
               <AnswerBubble
-                avatar={recipientAvatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=user"}
+                avatar={recipientAvatar || null}
                 username={recipientName || "사용자"}
                 content={answer.content}
                 timestamp={formatRelativeTime(answer.createdAt)}

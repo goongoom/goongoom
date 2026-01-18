@@ -5,7 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 
 interface ProfileHeaderProps {
-  avatar: string;
+  avatar?: string | null;
   name: string;
   username: string;
   bio?: string;
@@ -28,8 +28,8 @@ export function ProfileHeader({
       <div className="flex flex-col items-center text-center">
         <div className="relative mb-4">
           <Avatar className="w-[124px] h-[124px] ring-4 ring-orange-500">
-            <AvatarImage src={avatar} alt={name} />
-            <AvatarFallback>{name[0]}</AvatarFallback>
+            {avatar ? <AvatarImage src={avatar} alt={name} /> : null}
+            <AvatarFallback>{name[0] || "?"}</AvatarFallback>
           </Avatar>
         </div>
         

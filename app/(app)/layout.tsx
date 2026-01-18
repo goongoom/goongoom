@@ -1,5 +1,6 @@
 import { Suspense } from "react";
-import AppShell from "./app-shell";
+import { Sidebar } from "@/components/layout/sidebar";
+import { SidebarSkeleton } from "@/components/layout/sidebar-skeleton";
 
 export default function AppLayout({
   children,
@@ -7,8 +8,11 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Suspense fallback={null}>
-      <AppShell>{children}</AppShell>
-    </Suspense>
+    <div className="flex min-h-screen">
+      <Suspense fallback={<SidebarSkeleton />}>
+        <Sidebar />
+      </Suspense>
+      {children}
+    </div>
   );
 }

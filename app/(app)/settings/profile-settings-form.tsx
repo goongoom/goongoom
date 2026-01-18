@@ -1,8 +1,5 @@
-"use client";
-
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { useUserStore } from "@/lib/stores/user-store";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import type { ClerkUserInfo, SocialLinks } from "@/lib/types";
 import { Field, FieldLabel, FieldControl, FieldDescription } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -10,74 +7,89 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
+import { updateProfile } from "@/lib/actions/profile";
 
 interface ProfileSettingsFormProps {
   clerkUser: ClerkUserInfo;
   bio: string | null;
   socialLinks: SocialLinks | null;
+  status?: { type: "success" | "error"; message: string } | null;
 }
 
-interface ProfileFormData {
-  bio: string;
-  instagram: string;
-  github: string;
-  twitter: string;
-}
+export function ProfileSettingsForm({
+  clerkUser,
+  bio: initialBio,
+  socialLinks: initialSocialLinks,
+  status,
+}: ProfileSettingsFormProps) {
+  async function submitProfile(formData: FormData) {
+    "use server";
 
-export function ProfileSettingsForm({ clerkUser, bio: initialBio, socialLinks: initialSocialLinks }: ProfileSettingsFormProps) {
-  const router = useRouter();
-  const updateProfile = useUserStore((state) => state.updateProfile);
-  
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { isSubmitting, isSubmitSuccessful, errors },
-  } = useForm<ProfileFormData>({
-    defaultValues: {
-      bio: initialBio || "",
-      instagram: initialSocialLinks?.instagram || "",
-      github: initialSocialLinks?.github || "",
-      twitter: initialSocialLinks?.twitter || "",
-    },
-  });
+    const bio = String(formData.get("bio") || "").trim();
+    const instagram = String(formData.get("instagram") || "").trim();
+    const github = String(formData.get("github") || "").trim();
+    const twitter = String(formData.get("twitter") || "").trim();
 
-  const onSubmit = async (data: ProfileFormData) => {
-    const socialLinks: SocialLinks = {};
-    if (data.instagram) socialLinks.instagram = data.instagram;
-    if (data.github) socialLinks.github = data.github;
-    if (data.twitter) socialLinks.twitter = data.twitter;
-    
-    try {
-      await updateProfile({
-        bio: data.bio || null,
-        socialLinks: Object.keys(socialLinks).length > 0 ? socialLinks : null,
-      });
-      
-      router.refresh();
-    } catch {
-      setError("root", { message: "프로필 수정에 실패했습니다" });
+    const links: SocialLinks = {};
+    if (instagram) links.instagram = instagram;
+    if (github) links.github = github;
+    if (twitter) links.twitter = twitter;
+
+    const result = await updateProfile({
+      bio: bio || null,
+      socialLinks: Object.keys(links).length ? links : null,
+    });
+
+    if (!result.success) {
+      redirect(`/settings?error=${encodeURIComponent(result.error)}`);
     }
-  };
+
+    revalidatePath("/settings");
+    redirect("/settings?updated=1");
+  }
 
   return (
     <Card className="p-6">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form action={submitProfile} className="space-y-6">
         <Field>
           <FieldLabel htmlFor="username">사용자 이름</FieldLabel>
-          <FieldControl render={<Input id="username" value={clerkUser.username || ""} disabled className="bg-gray-50 text-gray-500" />} />
+          <FieldControl
+            render={
+              <Input
+                id="username"
+                value={clerkUser.username || ""}
+                disabled
+                className="bg-gray-50 text-gray-500"
+              />
+            }
+          />
           <FieldDescription>사용자 이름은 Clerk에서 관리됩니다</FieldDescription>
         </Field>
         
         <Field>
           <FieldLabel htmlFor="displayName">표시 이름</FieldLabel>
-          <FieldControl render={<Input id="displayName" value={clerkUser.displayName || ""} disabled className="bg-gray-50 text-gray-500" />} />
+          <FieldControl
+            render={
+              <Input
+                id="displayName"
+                value={clerkUser.displayName || ""}
+                disabled
+                className="bg-gray-50 text-gray-500"
+              />
+            }
+          />
           <FieldDescription>표시 이름은 Clerk에서 관리됩니다</FieldDescription>
         </Field>
         
         <Field>
           <FieldLabel htmlFor="bio">소개</FieldLabel>
-          <Textarea id="bio" {...register("bio")} placeholder="자기소개를 입력하세요…" rows={4} />
+          <Textarea
+            id="bio"
+            name="bio"
+            placeholder="자기소개를 입력하세요…"
+            rows={4}
+            defaultValue={initialBio || ""}
+          />
         </Field>
       
         <div className="border-t border-gray-100 pt-6">
@@ -86,35 +98,65 @@ export function ProfileSettingsForm({ clerkUser, bio: initialBio, socialLinks: i
           <div className="space-y-4">
             <Field>
               <FieldLabel htmlFor="instagram">Instagram</FieldLabel>
-              <FieldControl render={<Input type="url" id="instagram" {...register("instagram")} placeholder="https://instagram.com/username" />} />
+              <FieldControl
+                render={
+                  <Input
+                    type="url"
+                    id="instagram"
+                    name="instagram"
+                    placeholder="https://instagram.com/username"
+                    defaultValue={initialSocialLinks?.instagram || ""}
+                  />
+                }
+              />
             </Field>
             
             <Field>
               <FieldLabel htmlFor="github">GitHub</FieldLabel>
-              <FieldControl render={<Input type="url" id="github" {...register("github")} placeholder="https://github.com/username" />} />
+              <FieldControl
+                render={
+                  <Input
+                    type="url"
+                    id="github"
+                    name="github"
+                    placeholder="https://github.com/username"
+                    defaultValue={initialSocialLinks?.github || ""}
+                  />
+                }
+              />
             </Field>
             
             <Field>
               <FieldLabel htmlFor="twitter">Twitter / X</FieldLabel>
-              <FieldControl render={<Input type="url" id="twitter" {...register("twitter")} placeholder="https://twitter.com/username" />} />
+              <FieldControl
+                render={
+                  <Input
+                    type="url"
+                    id="twitter"
+                    name="twitter"
+                    placeholder="https://twitter.com/username"
+                    defaultValue={initialSocialLinks?.twitter || ""}
+                  />
+                }
+              />
             </Field>
           </div>
         </div>
         
-        {isSubmitSuccessful && (
+        {status?.type === "success" && (
           <Alert variant="success">
-            <AlertDescription className="text-center">프로필이 수정되었습니다!</AlertDescription>
+            <AlertDescription className="text-center">{status.message}</AlertDescription>
           </Alert>
         )}
         
-        {errors.root && (
+        {status?.type === "error" && (
           <Alert variant="error">
-            <AlertDescription className="text-center">{errors.root.message}</AlertDescription>
+            <AlertDescription className="text-center">{status.message}</AlertDescription>
           </Alert>
         )}
         
-        <Button type="submit" disabled={isSubmitting} className="w-full bg-orange-500 hover:bg-orange-600">
-          {isSubmitting ? "저장 중…" : "저장하기"}
+        <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600">
+          저장하기
         </Button>
       </form>
     </Card>

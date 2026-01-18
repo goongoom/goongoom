@@ -1,22 +1,19 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Home01Icon, UserIcon, InboxIcon, Settings01Icon, LoginSquare01Icon } from "@hugeicons/core-free-icons";
-import { cn } from "@/lib/utils";
+import { auth } from "@clerk/nextjs/server";
+import { getClerkUserById } from "@/lib/clerk";
 
-export function Sidebar() {
-  const pathname = usePathname();
-  const { user, isSignedIn } = useUser();
+export async function Sidebar() {
+  const { userId } = await auth();
+  const user = userId ? await getClerkUserById(userId) : null;
 
   const navItems = [
     { href: "/", label: "홈", icon: Home01Icon },
-    ...(isSignedIn && user?.username
+    ...(user?.username
       ? [{ href: `/${user.username}`, label: "내 프로필", icon: UserIcon }]
       : []),
-    ...(isSignedIn
+    ...(userId
       ? [
           { href: "/inbox", label: "받은 질문", icon: InboxIcon },
           { href: "/settings", label: "설정", icon: Settings01Icon },
@@ -33,19 +30,11 @@ export function Sidebar() {
         <nav className="space-y-2">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href || 
-              (item.href !== "/" && pathname.startsWith(item.href));
-            
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-full transition-colors",
-                  isActive
-                    ? "bg-orange-100 text-orange-500 font-medium"
-                    : "text-gray-500 hover:bg-gray-50"
-                )}
+                className="flex items-center gap-3 px-4 py-3 rounded-full transition-colors text-gray-500 hover:bg-gray-50"
               >
                 <HugeiconsIcon icon={Icon} className="w-5 h-5" aria-hidden="true" />
                 <span>{item.label}</span>

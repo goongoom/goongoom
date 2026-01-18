@@ -1,8 +1,8 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface AnswerBubbleProps {
-  avatar: string;
+  avatar?: string | null;
   username: string;
   content: string;
   timestamp: string;
@@ -25,8 +25,8 @@ export function AnswerBubble({
         </p>
       </div>
       <Avatar className="w-10 h-10 flex-shrink-0">
-        <AvatarImage src={avatar} alt={username} />
-        <AvatarFallback>{username[0]}</AvatarFallback>
+        {avatar ? <AvatarImage src={avatar} alt={username} /> : null}
+        <AvatarFallback>{username[0] || "?"}</AvatarFallback>
       </Avatar>
     </div>
   );

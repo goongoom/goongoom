@@ -1,20 +1,16 @@
-"use client";
-
-import { useForm } from "react-hook-form";
-import { useInboxStore } from "@/lib/stores/inbox-store";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import type { ClerkUserInfo } from "@/lib/clerk";
 import type { Question } from "@/lib/types";
 import { Card } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { createAnswer } from "@/lib/actions/answers";
 
 interface QuestionCardProps {
   question: Question;
-  onAnswered: () => void;
-}
-
-interface AnswerFormData {
-  answer: string;
+  sender?: ClerkUserInfo | null;
 }
 
 function formatRelativeTime(date: Date): string {
@@ -31,60 +27,64 @@ function formatRelativeTime(date: Date): string {
   return new Date(date).toLocaleDateString("ko-KR");
 }
 
-export function QuestionCard({ question, onAnswered }: QuestionCardProps) {
-  const answerQuestion = useInboxStore((state) => state.answerQuestion);
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setError,
-    formState: { isSubmitting, errors },
-  } = useForm<AnswerFormData>({ defaultValues: { answer: "" } });
+export function QuestionCard({ question, sender }: QuestionCardProps) {
+  const isAnonymous = question.isAnonymous === 1 || !sender;
+  const senderName = isAnonymous
+    ? "익명"
+    : sender.displayName || sender.username || "사용자";
 
-  const onSubmit = async (data: AnswerFormData) => {
-    const success = await answerQuestion(question.id, data.answer);
-    
-    if (success) {
-      reset();
-      onAnswered();
-    } else {
-      setError("root", { message: "답변 전송에 실패했습니다" });
+  async function submitAnswer(formData: FormData) {
+    "use server";
+
+    const content = String(formData.get("answer") || "").trim();
+    if (!content) {
+      redirect(`/inbox?error=${encodeURIComponent("답변을 입력해주세요")}`);
     }
-  };
+
+    const result = await createAnswer({
+      questionId: question.id,
+      content,
+    });
+
+    if (!result.success) {
+      redirect(`/inbox?error=${encodeURIComponent(result.error)}`);
+    }
+
+    revalidatePath("/inbox");
+    redirect("/inbox");
+  }
 
   return (
     <Card className="p-6">
       <div className="flex gap-3 items-start mb-4">
         <Avatar className="w-10 h-10 flex-shrink-0">
-          <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=anon_${question.id}`} alt="Anonymous" />
-          <AvatarFallback>?</AvatarFallback>
+          {isAnonymous ? null : sender?.avatarUrl ? (
+            <AvatarImage src={sender.avatarUrl} alt={senderName} />
+          ) : null}
+          <AvatarFallback>{senderName[0] || "?"}</AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <p className="text-gray-900 leading-relaxed">{question.content}</p>
           <p className="text-xs text-gray-500 mt-1">
-            {question.isAnonymous === 1 ? "익명" : "공개"} · {formatRelativeTime(question.createdAt)}
+            {isAnonymous ? "익명" : "공개"} · {formatRelativeTime(question.createdAt)}
           </p>
         </div>
       </div>
       
-      <form onSubmit={handleSubmit(onSubmit)} className="border-t border-gray-100 pt-4">
+      <form action={submitAnswer} className="border-t border-gray-100 pt-4">
         <Textarea
-          {...register("answer", { required: true })}
+          name="answer"
+          required
           placeholder="답변을 입력하세요…"
           className="h-24 text-sm"
         />
         
-        {errors.root && (
-          <p className="text-red-500 text-sm mt-2">{errors.root.message}</p>
-        )}
-        
         <div className="flex justify-end mt-3">
           <Button
             type="submit"
-            disabled={isSubmitting}
             className="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-sm"
           >
-            {isSubmitting ? "전송 중…" : "답변하기"}
+            답변하기
           </Button>
         </div>
       </form>
