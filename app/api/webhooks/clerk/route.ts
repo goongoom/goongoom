@@ -4,7 +4,7 @@ import type { WebhookEvent } from '@clerk/nextjs/server'
 import { db } from '@/src/db'
 import { users } from '@/src/db/schema'
 import { eq } from 'drizzle-orm'
-import { serverEnv } from '@/lib/env'
+import { serverEnv } from '@/lib/env.server'
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = serverEnv.CLERK_WEBHOOK_SECRET
