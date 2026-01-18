@@ -13,6 +13,7 @@
     "db:studio": "bun --env-file=.env.local drizzle-kit studio"
   },
   "dependencies": {
+    "@base-ui/react": "^1.1.0",
     "@clerk/nextjs": "^6.36.8",
     "@planetscale/database": "^1.19.0",
     "@types/pg": "^8.16.0",
