@@ -1,11 +1,13 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { MainContent } from "@/components/layout/main-content";
 import { getClerkUserById } from "@/lib/clerk";
 import { getOrCreateUser } from "@/lib/db/queries";
 import { ProfileSettingsForm } from "./profile-settings-form";
+import AppLoading from "../loading";
 
-export default async function SettingsPage() {
+async function SettingsPageContent() {
   const { userId: clerkId } = await auth();
   
   if (!clerkId) {
@@ -38,5 +40,13 @@ export default async function SettingsPage() {
         socialLinks={dbUser?.socialLinks || null} 
       />
     </MainContent>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <Suspense fallback={<AppLoading />}>
+      <SettingsPageContent />
+    </Suspense>
   );
 }

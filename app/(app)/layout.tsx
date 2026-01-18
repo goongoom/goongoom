@@ -1,22 +1,14 @@
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import { Sidebar } from "@/components/layout/sidebar";
+import { Suspense } from "react";
+import AppShell from "./app-shell";
 
-export default async function AppLayout({
+export default function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
-  
-  if (!userId) {
-    redirect("/");
-  }
-
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      {children}
-    </div>
+    <Suspense fallback={null}>
+      <AppShell>{children}</AppShell>
+    </Suspense>
   );
 }

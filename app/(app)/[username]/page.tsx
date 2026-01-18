@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { MainContent } from "@/components/layout/main-content";
 import { RightPanel } from "@/components/layout/right-panel";
@@ -7,6 +8,7 @@ import { QAFeed } from "@/components/home/qa-feed";
 import { getClerkUserByUsername } from "@/lib/clerk";
 import { getOrCreateUser, getUserWithAnsweredQuestions } from "@/lib/db/queries";
 import type { QuestionWithAnswers } from "@/lib/types";
+import AppLoading from "../loading";
 
 interface UserProfilePageProps {
   params: Promise<{
@@ -14,7 +16,7 @@ interface UserProfilePageProps {
   }>;
 }
 
-export default async function UserProfilePage({ params }: UserProfilePageProps) {
+async function UserProfilePageContent({ params }: UserProfilePageProps) {
   const { username } = await params;
   
   const clerkUser = await getClerkUserByUsername(username);
@@ -52,5 +54,13 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
         <QuestionForm recipientClerkId={clerkUser.clerkId} recipientUsername={clerkUser.username || username} />
       </RightPanel>
     </>
+  );
+}
+
+export default function UserProfilePage({ params }: UserProfilePageProps) {
+  return (
+    <Suspense fallback={<AppLoading />}>
+      <UserProfilePageContent params={params} />
+    </Suspense>
   );
 }

@@ -1,10 +1,12 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { MainContent } from "@/components/layout/main-content";
 import { getOrCreateUser, getUnansweredQuestions } from "@/lib/db/queries";
 import { InboxList } from "./inbox-list";
+import AppLoading from "../loading";
 
-export default async function InboxPage() {
+async function InboxPageContent() {
   const { userId: clerkId } = await auth();
   
   if (!clerkId) {
@@ -23,5 +25,13 @@ export default async function InboxPage() {
       
       <InboxList initialQuestions={unansweredQuestions} />
     </MainContent>
+  );
+}
+
+export default function InboxPage() {
+  return (
+    <Suspense fallback={<AppLoading />}>
+      <InboxPageContent />
+    </Suspense>
   );
 }
