@@ -1,5 +1,7 @@
-import Image from "next/image";
 import { Instagram, Facebook, Github } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 
 interface ProfileHeaderProps {
   avatar: string;
@@ -21,16 +23,13 @@ export function ProfileHeader({
   socialLinks,
 }: ProfileHeaderProps) {
   return (
-    <div className="bg-white rounded-2xl p-8 shadow-sm mb-6">
+    <Card className="p-8 mb-6">
       <div className="flex flex-col items-center text-center">
         <div className="relative mb-4">
-          <Image
-            src={avatar}
-            alt={name}
-            width={124}
-            height={124}
-            className="rounded-full ring-4 ring-orange-500"
-          />
+          <Avatar className="w-[124px] h-[124px] ring-4 ring-orange-500">
+            <AvatarImage src={avatar} alt={name} />
+            <AvatarFallback>{name[0]}</AvatarFallback>
+          </Avatar>
         </div>
         
         <h1 className="text-2xl font-bold text-gray-900 mb-1">{name}</h1>
@@ -85,7 +84,9 @@ export function ProfileHeader({
         )}
       </div>
       
-      <div className="mt-8 pt-6 border-t border-gray-200" />
-    </div>
+      <div className="mt-8 pt-6">
+        <Separator />
+      </div>
+    </Card>
   );
 }

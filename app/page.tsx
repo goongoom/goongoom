@@ -1,6 +1,8 @@
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { MessageCircle, Share2, Shield, ArrowRight, Sparkles, Send } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 
 export default function Home() {
   return (
@@ -15,14 +17,14 @@ export default function Home() {
           </Link>
           <div className="flex items-center gap-3">
             <SignInButton mode="modal">
-              <button className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-600">
+              <Button variant="ghost" className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-600 h-auto">
                 로그인
-              </button>
+              </Button>
             </SignInButton>
             <SignUpButton mode="modal">
-              <button className="rounded-full bg-slate-900 px-4 py-2 text-sm font-bold text-white transition-all hover:bg-slate-800 hover:shadow-lg">
+              <Button className="rounded-full bg-slate-900 px-4 py-2 text-sm font-bold text-white transition-all hover:bg-slate-800 hover:shadow-lg h-auto">
                 시작하기
-              </button>
+              </Button>
             </SignUpButton>
           </div>
         </div>
@@ -50,15 +52,15 @@ export default function Home() {
 
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <SignUpButton mode="modal">
-              <button className="group flex h-14 w-full items-center justify-center gap-2 rounded-full bg-orange-500 px-8 text-lg font-bold text-white shadow-xl shadow-orange-500/30 transition-all hover:scale-105 hover:bg-orange-600 sm:w-auto">
+              <Button className="group flex h-14 w-full items-center justify-center gap-2 rounded-full bg-orange-500 px-8 text-lg font-bold text-white shadow-xl shadow-orange-500/30 transition-all hover:scale-105 hover:bg-orange-600 sm:w-auto">
                 내 프로필 만들기
                 <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />
-              </button>
+              </Button>
             </SignUpButton>
             <SignInButton mode="modal">
-              <button className="flex h-14 w-full items-center justify-center rounded-full border-2 border-slate-200 bg-white px-8 text-lg font-bold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 sm:w-auto">
+              <Button variant="outline" className="flex h-14 w-full items-center justify-center rounded-full border-2 border-slate-200 bg-white px-8 text-lg font-bold text-slate-700 transition-all hover:border-slate-300 hover:bg-slate-50 sm:w-auto">
                 로그인하기
-              </button>
+              </Button>
             </SignInButton>
           </div>
         </div>
@@ -66,35 +68,35 @@ export default function Home() {
         <div className="border-y border-slate-100 bg-slate-50/50 py-24">
           <div className="mx-auto max-w-5xl px-6">
             <div className="grid gap-8 sm:grid-cols-3">
-              <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50">
+              <Card className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50 block">
                 <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 group-hover:scale-110 transition-transform">
                   <Shield size={24} />
                 </div>
-                <h3 className="mb-3 text-xl font-bold text-slate-900">완벽한 익명성</h3>
-                <p className="text-slate-500 leading-relaxed">
+                <CardTitle className="mb-3 text-xl font-bold text-slate-900">완벽한 익명성</CardTitle>
+                <CardDescription className="text-slate-500 leading-relaxed text-base">
                   질문하는 사람의 정보는 100% 비공개로 유지됩니다. 부담 없이 솔직한 대화를 시작해보세요.
-                </p>
-              </div>
+                </CardDescription>
+              </Card>
 
-              <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50">
+              <Card className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50 block">
                 <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-600 group-hover:scale-110 transition-transform">
                   <Share2 size={24} />
                 </div>
-                <h3 className="mb-3 text-xl font-bold text-slate-900">쉬운 공유</h3>
-                <p className="text-slate-500 leading-relaxed">
+                <CardTitle className="mb-3 text-xl font-bold text-slate-900">쉬운 공유</CardTitle>
+                <CardDescription className="text-slate-500 leading-relaxed text-base">
                   인스타그램, 트위터 어디든 링크를 공유하세요. 클릭 한 번으로 질문을 받을 수 있습니다.
-                </p>
-              </div>
+                </CardDescription>
+              </Card>
 
-              <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50">
+              <Card className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50 block">
                 <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-pink-50 text-pink-600 group-hover:scale-110 transition-transform">
                   <Sparkles size={24} />
                 </div>
-                <h3 className="mb-3 text-xl font-bold text-slate-900">나만의 스토리</h3>
-                <p className="text-slate-500 leading-relaxed">
+                <CardTitle className="mb-3 text-xl font-bold text-slate-900">나만의 스토리</CardTitle>
+                <CardDescription className="text-slate-500 leading-relaxed text-base">
                   재치있는 답변을 이미지로 저장해 공유해보세요. 당신의 센스를 모두에게 보여줄 수 있습니다.
-                </p>
-              </div>
+                </CardDescription>
+              </Card>
             </div>
           </div>
         </div>
@@ -109,9 +111,9 @@ export default function Home() {
                     이미 10,000명 이상의 유저가 궁금닷컴을 사용하고 있어요.
                 </p>
                 <SignUpButton mode="modal">
-                    <button className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-slate-900 px-10 text-lg font-bold text-white shadow-xl shadow-slate-900/20 transition-all hover:scale-105 hover:bg-slate-800">
+                    <Button className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-slate-900 px-10 text-lg font-bold text-white shadow-xl shadow-slate-900/20 transition-all hover:scale-105 hover:bg-slate-800">
                         무료로 시작하기
-                    </button>
+                    </Button>
                 </SignUpButton>
             </div>
         </div>

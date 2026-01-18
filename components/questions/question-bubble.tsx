@@ -1,4 +1,5 @@
-import Image from "next/image";
+import { Card } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface QuestionBubbleProps {
   avatar: string;
@@ -15,17 +16,14 @@ export function QuestionBubble({
 }: QuestionBubbleProps) {
   return (
     <div className="flex gap-3 items-start">
-      <Image
-        src={avatar}
-        alt="Avatar"
-        width={40}
-        height={40}
-        className="rounded-full flex-shrink-0"
-      />
+      <Avatar className="w-10 h-10 flex-shrink-0">
+        <AvatarImage src={avatar} alt="Avatar" />
+        <AvatarFallback>?</AvatarFallback>
+      </Avatar>
       <div className="flex-1">
-        <div className="bg-white rounded-xl px-4 py-3 shadow-sm">
+        <Card className="px-4 py-3">
           <p className="text-gray-900 leading-relaxed">{content}</p>
-        </div>
+        </Card>
         <p className="text-xs text-gray-500 mt-1 ml-1">
           {isAnonymous ? "익명" : "공개"} · {timestamp} 질문
         </p>

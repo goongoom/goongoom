@@ -4,6 +4,12 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/lib/stores/user-store";
 import type { ClerkUserInfo, SocialLinks } from "@/lib/types";
+import { Field, FieldLabel, FieldControl, FieldDescription } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card } from "@/components/ui/card";
 
 interface ProfileSettingsFormProps {
   clerkUser: ClerkUserInfo;
@@ -55,112 +61,62 @@ export function ProfileSettingsForm({ clerkUser, bio: initialBio, socialLinks: i
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-xl p-6 shadow-sm space-y-6">
-      <div>
-        <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-          사용자 이름
-        </label>
-        <input
-          type="text"
-          id="username"
-          value={clerkUser.username || ""}
-          disabled
-          className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-500"
-        />
-        <p className="text-xs text-gray-500 mt-1">사용자 이름은 Clerk에서 관리됩니다</p>
-      </div>
-      
-      <div>
-        <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 mb-2">
-          표시 이름
-        </label>
-        <input
-          type="text"
-          id="displayName"
-          value={clerkUser.displayName || ""}
-          disabled
-          className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-500"
-        />
-        <p className="text-xs text-gray-500 mt-1">표시 이름은 Clerk에서 관리됩니다</p>
-      </div>
-      
-      <div>
-        <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2">
-          소개
-        </label>
-        <textarea
-          id="bio"
-          {...register("bio")}
-          placeholder="자기소개를 입력하세요"
-          rows={4}
-          className="w-full px-4 py-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-        />
-      </div>
-      
-      <div className="border-t border-gray-100 pt-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">소셜 링크</h3>
+    <Card className="p-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <Field>
+          <FieldLabel htmlFor="username">사용자 이름</FieldLabel>
+          <FieldControl render={<Input id="username" value={clerkUser.username || ""} disabled className="bg-gray-50 text-gray-500" />} />
+          <FieldDescription>사용자 이름은 Clerk에서 관리됩니다</FieldDescription>
+        </Field>
         
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="instagram" className="block text-sm font-medium text-gray-700 mb-2">
-              Instagram
-            </label>
-            <input
-              type="url"
-              id="instagram"
-              {...register("instagram")}
-              placeholder="https://instagram.com/username"
-              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            />
-          </div>
+        <Field>
+          <FieldLabel htmlFor="displayName">표시 이름</FieldLabel>
+          <FieldControl render={<Input id="displayName" value={clerkUser.displayName || ""} disabled className="bg-gray-50 text-gray-500" />} />
+          <FieldDescription>표시 이름은 Clerk에서 관리됩니다</FieldDescription>
+        </Field>
+        
+        <Field>
+          <FieldLabel htmlFor="bio">소개</FieldLabel>
+          <Textarea id="bio" {...register("bio")} placeholder="자기소개를 입력하세요" rows={4} />
+        </Field>
+      
+        <div className="border-t border-gray-100 pt-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">소셜 링크</h3>
           
-          <div>
-            <label htmlFor="github" className="block text-sm font-medium text-gray-700 mb-2">
-              GitHub
-            </label>
-            <input
-              type="url"
-              id="github"
-              {...register("github")}
-              placeholder="https://github.com/username"
-              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="twitter" className="block text-sm font-medium text-gray-700 mb-2">
-              Twitter / X
-            </label>
-            <input
-              type="url"
-              id="twitter"
-              {...register("twitter")}
-              placeholder="https://twitter.com/username"
-              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            />
+          <div className="space-y-4">
+            <Field>
+              <FieldLabel htmlFor="instagram">Instagram</FieldLabel>
+              <FieldControl render={<Input type="url" id="instagram" {...register("instagram")} placeholder="https://instagram.com/username" />} />
+            </Field>
+            
+            <Field>
+              <FieldLabel htmlFor="github">GitHub</FieldLabel>
+              <FieldControl render={<Input type="url" id="github" {...register("github")} placeholder="https://github.com/username" />} />
+            </Field>
+            
+            <Field>
+              <FieldLabel htmlFor="twitter">Twitter / X</FieldLabel>
+              <FieldControl render={<Input type="url" id="twitter" {...register("twitter")} placeholder="https://twitter.com/username" />} />
+            </Field>
           </div>
         </div>
-      </div>
-      
-      {isSubmitSuccessful && (
-        <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm text-center">
-          프로필이 수정되었습니다!
-        </div>
-      )}
-      
-      {errors.root && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm text-center">
-          {errors.root.message}
-        </div>
-      )}
-      
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full px-4 py-3 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-      >
-        {isSubmitting ? "저장 중..." : "저장하기"}
-      </button>
-    </form>
+        
+        {isSubmitSuccessful && (
+          <Alert variant="success">
+            <AlertDescription className="text-center">프로필이 수정되었습니다!</AlertDescription>
+          </Alert>
+        )}
+        
+        {errors.root && (
+          <Alert variant="error">
+            <AlertDescription className="text-center">{errors.root.message}</AlertDescription>
+          </Alert>
+        )}
+        
+        <Button type="submit" disabled={isSubmitting} className="w-full bg-orange-500 hover:bg-orange-600">
+          {isSubmitting ? "저장 중..." : "저장하기"}
+        </Button>
+      </form>
+    </Card>
   );
 }

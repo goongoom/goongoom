@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const recentPeople = [
   {
@@ -33,13 +33,10 @@ export function PeopleList() {
       <div className="space-y-6">
         {recentPeople.map((person) => (
           <div key={person.username} className="flex items-center gap-3">
-            <Image
-              src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${person.seed}`}
-              alt={person.name}
-              width={62}
-              height={62}
-              className="rounded-full"
-            />
+            <Avatar className="w-[62px] h-[62px]">
+              <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${person.seed}`} alt={person.name} />
+              <AvatarFallback>{person.name[0]}</AvatarFallback>
+            </Avatar>
             <div>
               <p className="font-medium text-gray-900">{person.name}</p>
               <p className="text-sm text-gray-500">@{person.username}</p>

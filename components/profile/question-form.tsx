@@ -2,6 +2,11 @@
 
 import { useForm } from "react-hook-form";
 import { Lock } from "lucide-react";
+import { Field, FieldControl } from "@/components/ui/field";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, Radio } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface QuestionFormProps {
   recipientClerkId: string;
@@ -20,6 +25,7 @@ export function QuestionForm({ recipientClerkId, recipientUsername }: QuestionFo
     watch,
     reset,
     setError,
+    setValue,
     formState: { isSubmitting, isSubmitSuccessful, errors },
   } = useForm<QuestionFormData>({
     defaultValues: { question: "", questionType: "anonymous" },
@@ -57,66 +63,54 @@ export function QuestionForm({ recipientClerkId, recipientUsername }: QuestionFo
         {recipientUsername} 님에게 새 질문을 남겨보세요
       </h2>
       
-      <textarea
-        {...register("question", { required: true })}
-        placeholder="질문을 입력하세요"
-        className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-      />
+      <Field>
+        <FieldControl render={<Textarea {...register("question", { required: true })} placeholder="질문을 입력하세요" className="h-32" />} />
+      </Field>
       
       <div className="space-y-2">
         <p className="text-sm font-medium text-gray-700">누구로 질문할까요?</p>
         
-        <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
-          <input
-            type="radio"
-            {...register("questionType")}
-            value="anonymous"
-            className="w-4 h-4 text-orange-500 focus:ring-orange-500"
-          />
-          <div className="flex-1">
-            <p className="font-medium text-gray-900">익명</p>
-            <p className="text-xs text-gray-500">익명으로 질문합니다</p>
-          </div>
-        </label>
-        
-        <label className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
-          <input
-            type="radio"
-            {...register("questionType")}
-            value="public"
-            className="w-4 h-4 text-orange-500 focus:ring-orange-500"
-          />
-          <div className="flex-1">
-            <p className="font-medium text-gray-900">공개</p>
-            <p className="text-xs text-gray-500">내 이름으로 질문합니다</p>
-          </div>
-        </label>
+        <RadioGroup value={questionType} onValueChange={(val) => setValue("questionType", val as "anonymous" | "public")}>
+          <label htmlFor="r-anonymous" className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
+            <Radio id="r-anonymous" value="anonymous" />
+            <div className="flex-1">
+              <p className="font-medium text-gray-900">익명</p>
+              <p className="text-xs text-gray-500">익명으로 질문합니다</p>
+            </div>
+          </label>
+          
+          <label htmlFor="r-public" className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
+            <Radio id="r-public" value="public" />
+            <div className="flex-1">
+              <p className="font-medium text-gray-900">공개</p>
+              <p className="text-xs text-gray-500">내 이름으로 질문합니다</p>
+            </div>
+          </label>
+        </RadioGroup>
       </div>
       
       {isSubmitSuccessful && (
-        <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm text-center">
-          질문이 전송되었습니다!
-        </div>
+        <Alert variant="success">
+          <AlertDescription className="text-center">질문이 전송되었습니다!</AlertDescription>
+        </Alert>
       )}
       
       {errors.root && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm text-center">
-          {errors.root.message}
-        </div>
+        <Alert variant="error">
+          <AlertDescription className="text-center">{errors.root.message}</AlertDescription>
+        </Alert>
       )}
       
-      <button
+      <Button
         type="submit"
         disabled={!questionValue.trim() || isSubmitting}
-        className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
-          questionValue.trim() && !isSubmitting ? "bg-orange-500 hover:bg-orange-600" : "bg-gray-400"
-        }`}
+        className="w-full bg-orange-500 hover:bg-orange-600"
       >
         <Lock className="w-4 h-4" />
         {isSubmitting 
           ? "전송 중..." 
           : questionType === "anonymous" ? "익명으로 질문하기" : "공개로 질문하기"}
-      </button>
+      </Button>
       
       <p className="text-xs text-gray-500 text-center">
         질문 시 사용 약관에 동의하게 됩니다

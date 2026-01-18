@@ -1,9 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { useInboxStore } from "@/lib/stores/inbox-store";
 import type { Question } from "@/lib/types";
+import { Card } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 interface QuestionCardProps {
   question: Question;
@@ -50,15 +53,12 @@ export function QuestionCard({ question, onAnswered }: QuestionCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm">
+    <Card className="p-6">
       <div className="flex gap-3 items-start mb-4">
-        <Image
-          src={`https://api.dicebear.com/7.x/avataaars/svg?seed=anon_${question.id}`}
-          alt="Anonymous"
-          width={40}
-          height={40}
-          className="rounded-full flex-shrink-0"
-        />
+        <Avatar className="w-10 h-10 flex-shrink-0">
+          <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=anon_${question.id}`} alt="Anonymous" />
+          <AvatarFallback>?</AvatarFallback>
+        </Avatar>
         <div className="flex-1">
           <p className="text-gray-900 leading-relaxed">{question.content}</p>
           <p className="text-xs text-gray-500 mt-1">
@@ -68,10 +68,10 @@ export function QuestionCard({ question, onAnswered }: QuestionCardProps) {
       </div>
       
       <form onSubmit={handleSubmit(onSubmit)} className="border-t border-gray-100 pt-4">
-        <textarea
+        <Textarea
           {...register("answer", { required: true })}
           placeholder="답변을 입력하세요..."
-          className="w-full h-24 px-4 py-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
+          className="h-24 text-sm"
         />
         
         {errors.root && (
@@ -79,15 +79,15 @@ export function QuestionCard({ question, onAnswered }: QuestionCardProps) {
         )}
         
         <div className="flex justify-end mt-3">
-          <button
+          <Button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-2 bg-orange-500 text-white rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-orange-600 transition-colors"
+            className="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-sm"
           >
             {isSubmitting ? "전송 중..." : "답변하기"}
-          </button>
+          </Button>
         </div>
       </form>
-    </div>
+    </Card>
   );
 }
