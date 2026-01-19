@@ -21,6 +21,7 @@ import {
   isQuestionSecurityLevel,
 } from "@/lib/question-security";
 import type { SocialLinks } from "@/lib/types";
+import { PasskeyNudge } from "@/components/auth/passkey-nudge";
 
 interface SettingsPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -143,6 +144,8 @@ async function SettingsContent({ searchParamsPromise }: { searchParamsPromise?: 
           </AlertDescription>
         </Alert>
       )}
+
+      <PasskeyNudge />
 
       <Card className="p-6">
         <form action={submitProfile} className="space-y-6">

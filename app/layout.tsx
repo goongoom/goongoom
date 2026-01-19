@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "next-themes";
 import { GlobalNav } from "@/components/layout/global-nav";
+import { PasskeySetupModal } from "@/components/auth/passkey-setup-modal";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -36,6 +37,7 @@ export default function RootLayout({
           >
             <GlobalNav />
             {children}
+            <PasskeySetupModal />
           </ThemeProvider>
           <Analytics />
           <SpeedInsights />
