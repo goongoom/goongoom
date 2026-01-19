@@ -2,7 +2,6 @@ import { QuestionBubble } from "@/components/questions/question-bubble";
 import { AnswerBubble } from "@/components/questions/answer-bubble";
 import { Empty, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
 import { Card, CardPanel } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import type { QuestionWithAnswers } from "@/lib/types";
 
 function formatRelativeTime(date: Date): string {
@@ -100,7 +99,6 @@ function ChatPair({
           isAnonymous={question.isAnonymous === 1}
           timestamp={formatRelativeTime(question.createdAt)}
         />
-        <Separator />
         <AnswerBubble
           avatar={recipientAvatar || null}
           username={recipientName}

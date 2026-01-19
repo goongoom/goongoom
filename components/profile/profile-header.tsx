@@ -3,7 +3,6 @@ import { InstagramIcon, FacebookIcon, GithubIcon } from "@hugeicons/core-free-ic
 import { Card, CardPanel } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 
 interface ProfileHeaderProps {
   avatar?: string | null;
@@ -79,7 +78,6 @@ export function ProfileHeader({
 
       {links.length > 0 ? (
         <>
-          <Separator className="mx-6" />
           <CardPanel className="flex flex-wrap gap-4">
             {links.map((link) => {
               const Icon = link.icon;

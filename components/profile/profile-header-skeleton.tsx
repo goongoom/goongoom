@@ -13,11 +13,9 @@ export function ProfileHeaderSkeleton() {
             <Skeleton className="h-5 w-32" />
           </div>
           <Skeleton className="h-6 w-full max-w-md" />
-          <Skeleton className="h-6 w-2/3 max-w-md" />
         </div>
       </CardPanel>
       
-      <Separator className="mx-6" />
       <CardPanel className="flex flex-wrap gap-4">
         <div className="flex flex-col items-center gap-2">
           <Skeleton className="size-9 rounded-full sm:size-8" />
