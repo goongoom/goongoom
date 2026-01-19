@@ -20,7 +20,7 @@ export function NavAuthButtons() {
   return (
     <>
       <ClerkLoading>
-          <Skeleton className="h-8 w-36 rounded-lg" />
+          <Skeleton className="h-11 w-36 rounded-lg sm:h-12" />
       </ClerkLoading>
       <ClerkLoaded>
         <SignedOut>
@@ -50,7 +50,7 @@ export function HeroAuthButtons() {
   return (
     <>
       <ClerkLoading>
-          <Skeleton className="h-10 w-full rounded-lg sm:w-64" />
+          <Skeleton className="h-11 w-full rounded-lg sm:h-12 sm:w-64" />
       </ClerkLoading>
       <ClerkLoaded>
         <SignedOut>
@@ -84,7 +84,7 @@ export function BottomCTAButton() {
   return (
     <>
       <ClerkLoading>
-        <Skeleton className="mx-auto h-11 w-32 rounded-lg" />
+        <Skeleton className="mx-auto h-11 w-32 rounded-lg sm:h-12" />
       </ClerkLoading>
       <ClerkLoaded>
         <SignedOut>

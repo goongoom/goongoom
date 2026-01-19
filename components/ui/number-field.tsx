@@ -94,7 +94,7 @@ function NumberFieldInput({
   return (
     <NumberFieldPrimitive.Input
       className={cn(
-        "h-8.5 in-data-[size=lg]:h-9.5 in-data-[size=sm]:h-7.5 w-full min-w-0 grow bg-transparent in-data-[size=sm]:px-[calc(--spacing(2.5)-1px)] px-[calc(--spacing(3)-1px)] text-center tabular-nums in-data-[size=lg]:leading-9.5 in-data-[size=sm]:leading-7.5 leading-8.5 outline-none sm:h-7.5 sm:in-data-[size=lg]:h-8.5 sm:in-data-[size=sm]:h-6.5 sm:in-data-[size=lg]:leading-8.5 sm:in-data-[size=sm]:leading-8.5 sm:leading-7.5",
+        "h-11 in-data-[size=lg]:h-12 in-data-[size=sm]:h-11 w-full min-w-0 grow bg-transparent in-data-[size=sm]:px-[calc(--spacing(2.5)-1px)] px-[calc(--spacing(3)-1px)] text-center tabular-nums in-data-[size=lg]:leading-12 in-data-[size=sm]:leading-11 leading-11 outline-none sm:h-12 sm:in-data-[size=lg]:h-13 sm:in-data-[size=sm]:h-12 sm:in-data-[size=lg]:leading-13 sm:in-data-[size=sm]:leading-12 sm:leading-12",
         className,
       )}
       data-slot="number-field-input"

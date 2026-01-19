@@ -38,7 +38,7 @@ function SubmitButton() {
   return (
     <Button 
       type="submit" 
-      className="w-full h-12 rounded-xl bg-electric-blue text-white shadow-lg shadow-electric-blue/20 transition-all hover:bg-electric-blue/90 hover:shadow-electric-blue/30 hover:scale-[1.01] active:scale-[0.99]" 
+      className="w-full h-12 rounded-xl border-electric-blue bg-electric-blue text-white shadow-lg shadow-electric-blue/20 transition-all hover:bg-electric-blue/90 hover:shadow-electric-blue/30 hover:scale-[1.01] active:scale-[0.99] focus-visible:ring-electric-blue sm:h-13" 
       size="lg" 
       disabled={pending}
     >
@@ -99,28 +99,28 @@ export function QuestionDrawer({
                <Label className="text-sm font-semibold text-foreground/90 ml-1">누구로 질문할까요?</Label>
                <RadioGroup name="questionType" defaultValue={canAskAnonymously ? "anonymous" : "public"} className="grid grid-cols-2 gap-3">
                  {canAskAnonymously && (
-                   <Label className="cursor-pointer group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-border/60 bg-background p-4 transition-all hover:border-electric-blue/50 hover:bg-muted/30 has-[[data-state=checked]]:border-electric-blue has-[[data-state=checked]]:bg-electric-blue/5 has-[[data-state=checked]]:shadow-[0_0_0_1px_rgba(59,130,246,1)]">
-                     <Radio id="r-anonymous" value="anonymous" className="sr-only" />
-                     <div className="rounded-full bg-gradient-to-br from-muted to-muted/50 p-3 text-muted-foreground transition-colors group-has-[[data-state=checked]]:from-electric-blue group-has-[[data-state=checked]]:to-electric-blue/90 group-has-[[data-state=checked]]:text-white">
-                        <HugeiconsIcon icon={AnonymousIcon} className="size-6" strokeWidth={2} />
-                     </div>
-                     <div className="text-center space-y-0.5">
-                       <p className="text-sm font-bold text-foreground group-has-[[data-state=checked]]:text-electric-blue">익명</p>
-                       <p className="text-[11px] font-medium text-muted-foreground/70">익명으로 질문합니다</p>
-                     </div>
-                   </Label>
+                   <Label className="cursor-pointer group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-border/60 bg-background p-4 transition-all hover:border-electric-blue/50 hover:bg-muted/30 has-data-checked:border-electric-blue has-data-checked:bg-electric-blue/5">
+                      <Radio id="r-anonymous" value="anonymous" className="absolute opacity-0 pointer-events-none" />
+                      <div className="rounded-full bg-gradient-to-br from-muted to-muted/50 p-3 text-muted-foreground transition-colors group-has-data-checked:from-electric-blue group-has-data-checked:to-electric-blue/90 group-has-data-checked:text-white">
+                         <HugeiconsIcon icon={AnonymousIcon} className="size-6" strokeWidth={2} />
+                      </div>
+                      <div className="text-center space-y-0.5">
+                        <p className="text-sm font-bold text-foreground group-has-data-checked:text-electric-blue">익명</p>
+                        <p className="text-[11px] font-medium text-muted-foreground/70">익명으로 질문합니다</p>
+                      </div>
+                    </Label>
                  )}
                  {canAskPublic && (
-                   <Label className="cursor-pointer group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-border/60 bg-background p-4 transition-all hover:border-electric-blue/50 hover:bg-muted/30 has-[[data-state=checked]]:border-electric-blue has-[[data-state=checked]]:bg-electric-blue/5 has-[[data-state=checked]]:shadow-[0_0_0_1px_rgba(59,130,246,1)]">
-                     <Radio id="r-public" value="public" className="sr-only" />
-                     <div className="rounded-full bg-gradient-to-br from-muted to-muted/50 p-3 text-muted-foreground transition-colors group-has-[[data-state=checked]]:from-electric-blue group-has-[[data-state=checked]]:to-electric-blue/90 group-has-[[data-state=checked]]:text-white">
-                        <HugeiconsIcon icon={UserIcon} className="size-6" strokeWidth={2} />
-                     </div>
-                     <div className="text-center space-y-0.5">
-                       <p className="text-sm font-bold text-foreground group-has-[[data-state=checked]]:text-electric-blue">공개</p>
-                       <p className="text-[11px] font-medium text-muted-foreground/70">내 이름으로 질문합니다</p>
-                     </div>
-                   </Label>
+                   <Label className="cursor-pointer group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-border/60 bg-background p-4 transition-all hover:border-electric-blue/50 hover:bg-muted/30 has-data-checked:border-electric-blue has-data-checked:bg-electric-blue/5">
+                      <Radio id="r-public" value="public" className="absolute opacity-0 pointer-events-none" />
+                      <div className="rounded-full bg-gradient-to-br from-muted to-muted/50 p-3 text-muted-foreground transition-colors group-has-data-checked:from-electric-blue group-has-data-checked:to-electric-blue/90 group-has-data-checked:text-white">
+                         <HugeiconsIcon icon={UserIcon} className="size-6" strokeWidth={2} />
+                      </div>
+                      <div className="text-center space-y-0.5">
+                        <p className="text-sm font-bold text-foreground group-has-data-checked:text-electric-blue">공개</p>
+                        <p className="text-[11px] font-medium text-muted-foreground/70">내 이름으로 질문합니다</p>
+                      </div>
+                    </Label>
                  )}
                </RadioGroup>
              </div>

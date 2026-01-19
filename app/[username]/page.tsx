@@ -4,13 +4,13 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { InstagramIcon, FacebookIcon, GithubIcon } from "@hugeicons/core-free-icons";
 
 // Required for Cache Components with dynamic routes
 export function generateStaticParams() {
   return [{ username: "__placeholder__" }];
 }
-import { HugeiconsIcon } from "@hugeicons/react";
-import { InstagramIcon, FacebookIcon, GithubIcon } from "@hugeicons/core-free-icons";
 import { MainContent } from "@/components/layout/main-content";
 import { Card, CardPanel } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -246,14 +246,17 @@ async function UserProfileContent({
             if (!answer) return null;
             const shareUrl = buildShareUrl({ question: qa.content, answer: answer.content, name: displayName });
             return (
-              <Card key={qa.id}>
+              <Card key={qa.id} className="relative">
+                <div className="absolute right-4 top-4">
+                  <ShareInstagramButton shareUrl={shareUrl} />
+                </div>
                 <CardPanel className="flex flex-col gap-4">
                   <div className="flex w-full items-start gap-3">
                     <Avatar className="size-10 flex-shrink-0">
                       <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=anon_${qa.id}`} alt="Avatar" />
                       <AvatarFallback>?</AvatarFallback>
                     </Avatar>
-                    <div className="flex-1">
+                    <div className="flex flex-col">
                       <Card className="max-w-prose bg-muted/40 px-4 py-3">
                         <p className="leading-relaxed text-foreground">{qa.content}</p>
                       </Card>
@@ -267,12 +270,9 @@ async function UserProfileContent({
                       <Card className="max-w-prose border-primary/20 bg-primary px-4 py-3 text-primary-foreground">
                         <p className="leading-relaxed">{answer.content}</p>
                       </Card>
-                      <div className="mr-1 mt-1 flex flex-col items-end gap-1">
-                        <p className="text-xs text-muted-foreground">
-                          {displayName} · {formatRelativeTime(answer.createdAt)} 답변
-                        </p>
-                        <ShareInstagramButton shareUrl={shareUrl} />
-                      </div>
+                      <p className="mr-1 mt-1 text-xs text-muted-foreground">
+                        {displayName} · {formatRelativeTime(answer.createdAt)} 답변
+                      </p>
                     </div>
                     <Avatar className="size-10 flex-shrink-0">
                       {clerkUser.avatarUrl ? <AvatarImage src={clerkUser.avatarUrl} alt={displayName} /> : null}

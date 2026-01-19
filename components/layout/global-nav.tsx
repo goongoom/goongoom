@@ -12,11 +12,8 @@ export function GlobalNav() {
     >
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
         <Link href="/" className="flex items-center gap-2">
-          <div
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-white shadow-lg shadow-orange-500/30"
-            style={{ background: "var(--gradient-sunset)" }}
-          >
-            <HugeiconsIcon icon={Message01Icon} size={18} strokeWidth={3} />
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-sunset-orange text-sunset-orange-foreground shadow-lg shadow-sunset-orange/30">
+            <HugeiconsIcon icon={Message01Icon} size={20} strokeWidth={3} />
           </div>
           <span className="text-lg font-bold tracking-tight text-foreground">
             궁금닷컴

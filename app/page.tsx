@@ -8,15 +8,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getTotalUserCount } from "@/lib/db/queries";
 import { HeroAuthButtons, BottomCTAButton } from "@/components/auth/auth-buttons";
 
-async function UserCount() {
+async function UserCountMessage() {
   const userCount = await getTotalUserCount();
-  return <span>{userCount.toLocaleString()}</span>;
+  return <>이미 {userCount.toLocaleString()}명의 유저가 궁금닷컴을 사용하고 있어요.</>;
 }
 
 export default function Home() {
   return (
     <div className="h-full">
-      <div className="relative overflow-hidden pt-16">
+      <div className="relative overflow-hidden pt-32">
         <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-neon-pink/10 blur-3xl filter" />
         <div className="absolute top-48 -left-24 h-72 w-72 rounded-full bg-electric-blue/10 blur-3xl filter" />
 
@@ -97,7 +97,9 @@ export default function Home() {
                 </div>
                 <h2 className="mb-6 text-3xl font-bold text-foreground sm:text-4xl">지금 바로 시작해보세요</h2>
                 <p className="mb-10 text-lg text-muted-foreground">
-                    이미 <Suspense fallback={<Skeleton className="inline-block h-5 w-12" />}><UserCount /></Suspense>명의 유저가 궁금닷컴을 사용하고 있어요.
+                    <Suspense fallback="이미 로딩중...명의 유저가 궁금닷컴을 사용하고 있어요.">
+                      <UserCountMessage />
+                    </Suspense>
                 </p>
                 <BottomCTAButton />
             </div>
@@ -113,9 +115,9 @@ export default function Home() {
             <span className="text-sm font-semibold text-muted-foreground">궁금닷컴</span>
           </div>
           <div className="flex gap-6 text-sm text-muted-foreground">
-            <Link href="#" className="transition-colors">이용약관</Link>
-            <Link href="#" className="transition-colors">개인정보처리방침</Link>
-            <Link href="#" className="transition-colors">문의하기</Link>
+            <Link href="#" className="inline-flex min-h-11 items-center transition-colors">이용약관</Link>
+            <Link href="#" className="inline-flex min-h-11 items-center transition-colors">개인정보처리방침</Link>
+            <Link href="#" className="inline-flex min-h-11 items-center transition-colors">문의하기</Link>
           </div>
           <div className="text-sm text-muted-foreground">
             © 2026 Goongoom. All rights reserved.
