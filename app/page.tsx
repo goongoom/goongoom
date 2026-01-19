@@ -1,10 +1,13 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Message01Icon, Share01Icon, ShieldKeyIcon, SparklesIcon, SentIcon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
+import { auth } from "@clerk/nextjs/server";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTotalUserCount } from "@/lib/db/queries";
+import { getClerkUserById } from "@/lib/clerk";
 import { NavAuthButtons, HeroAuthButtons, BottomCTAButton } from "@/components/ui/auth-buttons";
 
 async function UserCount() {
@@ -12,8 +15,25 @@ async function UserCount() {
   return <span>{userCount.toLocaleString()}</span>;
 }
 
+async function AuthRedirect() {
+  const { userId } = await auth();
+
+  if (userId) {
+    const user = await getClerkUserById(userId);
+    if (user?.username) {
+      redirect(`/${user.username}`);
+    }
+  }
+
+  return null;
+}
+
 export default function Home() {
   return (
+    <>
+      <Suspense fallback={null}>
+        <AuthRedirect />
+      </Suspense>
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-orange-200 selection:text-orange-900">
       <nav className="fixed top-0 z-50 w-full border-b border-orange-100 bg-white/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
@@ -127,5 +147,6 @@ export default function Home() {
         </div>
       </footer>
     </div>
+    </>
   );
 }

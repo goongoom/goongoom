@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -44,8 +45,8 @@ export function HeroAuthButtons() {
         </SignInButton>
       </SignedOut>
       <SignedIn>
-        <Button size="xl" className="w-full sm:w-auto">
-          내 프로필 만들기
+        <Button size="xl" className="w-full sm:w-auto" render={<Link href="/me" />}>
+          내 프로필 보기
           <HugeiconsIcon icon={ArrowRight01Icon} size={20} className="transition-transform" />
         </Button>
       </SignedIn>
@@ -64,8 +65,8 @@ export function BottomCTAButton() {
         </SignUpButton>
       </SignedOut>
       <SignedIn>
-        <Button size="xl">
-          시작
+        <Button size="xl" render={<Link href="/me" />}>
+          내 프로필 보기
         </Button>
       </SignedIn>
     </>
