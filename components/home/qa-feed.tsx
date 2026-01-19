@@ -1,5 +1,8 @@
 import { QuestionBubble } from "@/components/questions/question-bubble";
 import { AnswerBubble } from "@/components/questions/answer-bubble";
+import { Empty, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
+import { Card, CardPanel } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import type { QuestionWithAnswers } from "@/lib/types";
 
 function formatRelativeTime(date: Date): string {
@@ -63,6 +66,54 @@ interface QAFeedProps {
   recipientAvatar?: string | null;
 }
 
+function ChatPair({
+  question,
+  answer,
+  recipientName,
+  recipientAvatar,
+}: {
+  question: {
+    id: number;
+    content: string;
+    isAnonymous: number;
+    createdAt: Date;
+  };
+  answer: {
+    content: string;
+    createdAt: Date;
+  };
+  recipientName: string;
+  recipientAvatar?: string | null;
+}) {
+  const shareUrl = buildShareUrl({
+    question: question.content,
+    answer: answer.content,
+    name: recipientName,
+  });
+
+  return (
+    <Card>
+      <CardPanel className="grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-start">
+        <QuestionBubble
+          avatar={`https://api.dicebear.com/7.x/avataaars/svg?seed=anon_${question.id}`}
+          content={question.content}
+          isAnonymous={question.isAnonymous === 1}
+          timestamp={formatRelativeTime(question.createdAt)}
+        />
+        <Separator className="md:hidden" />
+        <Separator className="hidden md:block" orientation="vertical" />
+        <AnswerBubble
+          avatar={recipientAvatar || null}
+          username={recipientName}
+          content={answer.content}
+          timestamp={formatRelativeTime(answer.createdAt)}
+          shareUrl={shareUrl}
+        />
+      </CardPanel>
+    </Card>
+  );
+}
+
 export function QAFeed({ items, recentItems, recipientName, recipientAvatar }: QAFeedProps) {
   if (recentItems && recentItems.length > 0) {
     return (
@@ -70,28 +121,15 @@ export function QAFeed({ items, recentItems, recipientName, recipientAvatar }: Q
         {recentItems.map((item) => {
           const displayName = item.recipientInfo?.displayName || item.recipientInfo?.username || "사용자";
           const avatarUrl = item.recipientInfo?.avatarUrl || null;
-          const shareUrl = buildShareUrl({
-            question: item.question.content,
-            answer: item.answer.content,
-            name: displayName,
-          });
           
           return (
-            <div key={item.question.id} className="space-y-4">
-              <QuestionBubble
-                avatar={`https://api.dicebear.com/7.x/avataaars/svg?seed=anon_${item.question.id}`}
-                content={item.question.content}
-                isAnonymous={item.question.isAnonymous === 1}
-                timestamp={formatRelativeTime(item.question.createdAt)}
-              />
-              <AnswerBubble
-                avatar={avatarUrl}
-                username={displayName}
-                content={item.answer.content}
-                timestamp={formatRelativeTime(item.answer.createdAt)}
-                shareUrl={shareUrl}
-              />
-            </div>
+            <ChatPair
+              key={item.question.id}
+              question={item.question}
+              answer={item.answer}
+              recipientName={displayName}
+              recipientAvatar={avatarUrl}
+            />
           );
         })}
       </div>
@@ -105,28 +143,15 @@ export function QAFeed({ items, recentItems, recipientName, recipientAvatar }: Q
           const answer = qa.answers[0];
           if (!answer) return null;
           const displayName = recipientName || "사용자";
-          const shareUrl = buildShareUrl({
-            question: qa.content,
-            answer: answer.content,
-            name: displayName,
-          });
           
           return (
-            <div key={qa.id} className="space-y-4">
-              <QuestionBubble
-                avatar={`https://api.dicebear.com/7.x/avataaars/svg?seed=anon_${qa.id}`}
-                content={qa.content}
-                isAnonymous={qa.isAnonymous === 1}
-                timestamp={formatRelativeTime(qa.createdAt)}
-              />
-              <AnswerBubble
-                avatar={recipientAvatar || null}
-                username={displayName}
-                content={answer.content}
-                timestamp={formatRelativeTime(answer.createdAt)}
-                shareUrl={shareUrl}
-              />
-            </div>
+            <ChatPair
+              key={qa.id}
+              question={qa}
+              answer={answer}
+              recipientName={displayName}
+              recipientAvatar={recipientAvatar || null}
+            />
           );
         })}
       </div>
@@ -134,8 +159,10 @@ export function QAFeed({ items, recentItems, recipientName, recipientAvatar }: Q
   }
   
   return (
-    <div className="text-center py-12">
-      <p className="text-gray-500">아직 답변된 질문이 없습니다.</p>
-    </div>
+    <Empty>
+      <EmptyHeader>
+        <EmptyTitle>아직 답변된 질문이 없습니다.</EmptyTitle>
+      </EmptyHeader>
+    </Empty>
   );
 }

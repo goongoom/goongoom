@@ -2,10 +2,11 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { ClerkUserInfo } from "@/lib/clerk";
 import type { Question } from "@/lib/types";
-import { Card } from "@/components/ui/card";
+import { Card, CardPanel } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { createAnswer } from "@/lib/actions/answers";
 
 interface QuestionCardProps {
@@ -55,39 +56,41 @@ export function QuestionCard({ question, sender }: QuestionCardProps) {
   }
 
   return (
-    <Card className="p-6">
-      <div className="flex gap-3 items-start mb-4">
-        <Avatar className="w-10 h-10 flex-shrink-0">
-          {isAnonymous ? null : sender?.avatarUrl ? (
-            <AvatarImage src={sender.avatarUrl} alt={senderName} />
-          ) : null}
-          <AvatarFallback>{senderName[0] || "?"}</AvatarFallback>
-        </Avatar>
-        <div className="flex-1">
-          <p className="text-gray-900 leading-relaxed">{question.content}</p>
-          <p className="text-xs text-gray-500 mt-1">
-            {isAnonymous ? "익명" : "공개"} · {formatRelativeTime(question.createdAt)}
-          </p>
+    <Card>
+      <CardPanel className="space-y-4">
+        <div className="flex items-start gap-3">
+          <Avatar className="w-10 h-10 flex-shrink-0">
+            {isAnonymous ? null : sender?.avatarUrl ? (
+              <AvatarImage src={sender.avatarUrl} alt={senderName} />
+            ) : null}
+            <AvatarFallback>{senderName[0] || "?"}</AvatarFallback>
+          </Avatar>
+          <div className="flex-1">
+            <p className="text-foreground leading-relaxed">{question.content}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {isAnonymous ? "익명" : "공개"} · {formatRelativeTime(question.createdAt)}
+            </p>
+          </div>
         </div>
-      </div>
-      
-      <form action={submitAnswer} className="border-t border-gray-100 pt-4">
-        <Textarea
-          name="answer"
-          required
-          placeholder="답변을 입력하세요…"
-          className="h-24 text-sm"
-        />
-        
-        <div className="flex justify-end mt-3">
-          <Button
-            type="submit"
-            className="px-6 py-2 bg-orange-500 text-sm"
-          >
-            답변하기
-          </Button>
-        </div>
-      </form>
+
+        <Separator />
+
+        <form action={submitAnswer} className="space-y-3">
+          <Textarea
+            name="answer"
+            required
+            placeholder="답변을 입력하세요…"
+            rows={3}
+            size="sm"
+          />
+
+          <div className="flex justify-end">
+            <Button type="submit" size="sm">
+              답변하기
+            </Button>
+          </div>
+        </form>
+      </CardPanel>
     </Card>
   );
 }

@@ -4,8 +4,8 @@ import { ProfileSettingsSkeleton } from "@/components/settings/profile-settings-
 export default function SettingsLoading() {
   return (
     <MainContent>
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">설정</h1>
-      <p className="text-gray-500 mb-8">프로필 정보를 수정하세요</p>
+      <h1 className="mb-2 text-3xl font-bold text-foreground">설정</h1>
+      <p className="mb-8 text-muted-foreground">프로필 정보를 수정하세요</p>
       <ProfileSettingsSkeleton />
     </MainContent>
   );

@@ -42,7 +42,6 @@ export function ShareInstagramButton({ shareUrl }: ShareInstagramButtonProps) {
       size="xs"
       onClick={handleShare}
       disabled={isSharing}
-      className="h-auto p-0 text-orange-600 hover:text-orange-700"
     >
       {isSharing ? "준비 중..." : "인스타그램 이미지 공유하기"}
     </Button>

@@ -15,7 +15,7 @@ interface PeopleListProps {
 export function PeopleList({ people }: PeopleListProps) {
   if (!people.length) {
     return (
-      <Empty className="p-0 text-left items-start">
+      <Empty className="items-start p-0 text-left">
         <EmptyHeader className="items-start text-left">
           <EmptyTitle>최근에 본 사람이 없습니다</EmptyTitle>
           <EmptyDescription>질문을 확인하면 여기에 표시됩니다.</EmptyDescription>
@@ -26,7 +26,7 @@ export function PeopleList({ people }: PeopleListProps) {
 
   return (
     <>
-      <h2 className="text-lg font-semibold text-gray-900 mb-6">
+      <h2 className="mb-6 text-lg font-semibold text-foreground">
         최근에 본 사람
       </h2>
       
@@ -37,19 +37,21 @@ export function PeopleList({ people }: PeopleListProps) {
 
           return (
             <div key={person.clerkId} className="flex items-center gap-3">
-              <Avatar className="w-[62px] h-[62px]">
+              <Avatar className="h-[62px] w-[62px]">
                 {person.avatarUrl ? (
                   <AvatarImage src={person.avatarUrl} alt={displayName} />
                 ) : null}
                 <AvatarFallback>{fallback}</AvatarFallback>
               </Avatar>
-            <div>
-              <p className="font-medium text-gray-900">{displayName}</p>
-              {person.username ? (
-                <p className="text-sm text-gray-500">@{person.username}</p>
-              ) : null}
+              <div>
+                <p className="font-medium text-foreground">{displayName}</p>
+                {person.username ? (
+                  <p className="text-sm text-muted-foreground">
+                    @{person.username}
+                  </p>
+                ) : null}
+              </div>
             </div>
-          </div>
           );
         })}
       </div>

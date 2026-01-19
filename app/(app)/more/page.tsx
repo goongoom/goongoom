@@ -1,6 +1,12 @@
 import { MainContent } from "@/components/layout/main-content";
+import { Button } from "@/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Megaphone02Icon, GiftIcon, CustomerServiceIcon, Settings01Icon } from "@hugeicons/core-free-icons";
+import {
+  Megaphone02Icon,
+  GiftIcon,
+  CustomerServiceIcon,
+  Settings01Icon,
+} from "@hugeicons/core-free-icons";
 
 const moreOptions = [
   { icon: Megaphone02Icon, label: "공지사항" },
@@ -12,20 +18,26 @@ const moreOptions = [
 export default function MorePage() {
   return (
     <MainContent>
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">더보기</h1>
-      
+      <h1 className="mb-8 text-3xl font-bold text-foreground">더보기</h1>
+
       <div className="space-y-4">
         {moreOptions.map((option) => {
           const Icon = option.icon;
           return (
-            <button
+            <Button
               key={option.label}
-              type="button"
-              className="w-full flex items-center gap-4 p-4 bg-white rounded-xl transition-colors text-left"
+              className="w-full justify-start gap-4"
+              size="lg"
+              variant="outline"
             >
-              <HugeiconsIcon icon={Icon} className="w-6 h-6 text-gray-500" />
-              <span className="text-lg text-gray-500">{option.label}</span>
-            </button>
+              <HugeiconsIcon
+                icon={Icon}
+                className="size-5 text-muted-foreground"
+              />
+              <span className="text-base text-muted-foreground">
+                {option.label}
+              </span>
+            </Button>
           );
         })}
       </div>

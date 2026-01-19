@@ -18,13 +18,13 @@ export function AnswerBubble({
   shareUrl,
 }: AnswerBubbleProps) {
   return (
-    <div className="flex gap-3 items-start justify-end">
-      <div className="flex-1 flex flex-col items-end">
-        <Card className="bg-orange-500 text-white px-4 py-3 max-w-md border-orange-500">
+    <div className="flex w-full items-start justify-end gap-3">
+      <div className="flex flex-1 flex-col items-end">
+        <Card className="max-w-[85%] border-primary/20 bg-primary px-4 py-3 text-primary-foreground">
           <p className="leading-relaxed">{content}</p>
         </Card>
         <div className="mt-1 mr-1 flex flex-col items-end gap-1">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             {username} · {timestamp} 답변
           </p>
           {shareUrl ? <ShareInstagramButton shareUrl={shareUrl} /> : null}

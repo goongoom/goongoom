@@ -1,7 +1,7 @@
 # AGENTS
 
 ## Direct Server Render Strategy (RSC + PPR)
-- Default to Server Components. `use client` is only allowed in `components/ui`.
+- Default to Server Components. `use client` is allowed in `components/ui` and other leaf components that require client interactivity.
 - Keep server components granular: one async server component per data slice, each wrapped in `<Suspense>` with a matching `*Skeleton`.
 - Avoid a single giant `loading.tsx` fallback. Compose `loading.tsx` from section skeletons only.
 - Use server actions + `<form action={...}>` for all mutations; avoid client form libraries.

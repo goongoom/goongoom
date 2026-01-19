@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, Radio } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertAction, AlertDescription } from "@/components/ui/alert";
+import { Label } from "@/components/ui/label";
 import { createQuestion } from "@/lib/actions/questions";
 import {
   DEFAULT_QUESTION_SECURITY_LEVEL,
@@ -56,7 +57,7 @@ export function QuestionForm({
 
     return (
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-gray-900">
+        <h2 className="text-lg font-semibold text-foreground">
           {recipientUsername} 님에게 새 질문을 남겨보세요
         </h2>
 
@@ -74,7 +75,6 @@ export function QuestionForm({
             <Button
               render={<Link href="/sign-in" />}
               size="sm"
-              className="bg-orange-500"
             >
               로그인
             </Button>
@@ -110,7 +110,7 @@ export function QuestionForm({
 
   return (
     <form action={submitQuestion} className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-900">
+      <h2 className="text-lg font-semibold text-foreground">
         {recipientUsername} 님에게 새 질문을 남겨보세요
       </h2>
       
@@ -120,7 +120,8 @@ export function QuestionForm({
             <Textarea
               name="question"
               placeholder="질문을 입력하세요…"
-              className="h-32"
+              rows={4}
+              size="lg"
               required
             />
           }
@@ -134,33 +135,33 @@ export function QuestionForm({
       )}
 
       <div className="space-y-2">
-        <p className="text-sm font-medium text-gray-700">누구로 질문할까요?</p>
+        <p className="text-sm font-medium text-muted-foreground">
+          누구로 질문할까요?
+        </p>
 
         <RadioGroup name="questionType" defaultValue={defaultQuestionType}>
           {canAskAnonymously && (
-            <label
-              htmlFor="r-anonymous"
-              className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer transition-colors"
-            >
+            <Label className="flex items-start gap-2 rounded-lg border border-border p-3 transition-colors hover:bg-accent/50 has-[data-checked]:border-primary/48 has-[data-checked]:bg-accent/50">
               <Radio id="r-anonymous" value="anonymous" />
-              <div className="flex-1">
-                <p className="font-medium text-gray-900">익명</p>
-                <p className="text-xs text-gray-500">익명으로 질문합니다</p>
+              <div className="flex flex-col gap-1">
+                <p className="font-medium text-foreground">익명</p>
+                <p className="text-xs text-muted-foreground">
+                  익명으로 질문합니다
+                </p>
               </div>
-            </label>
+            </Label>
           )}
 
           {canAskPublic && (
-            <label
-              htmlFor="r-public"
-              className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer transition-colors"
-            >
+            <Label className="flex items-start gap-2 rounded-lg border border-border p-3 transition-colors hover:bg-accent/50 has-[data-checked]:border-primary/48 has-[data-checked]:bg-accent/50">
               <Radio id="r-public" value="public" />
-              <div className="flex-1">
-                <p className="font-medium text-gray-900">공개</p>
-                <p className="text-xs text-gray-500">내 이름으로 질문합니다</p>
+              <div className="flex flex-col gap-1">
+                <p className="font-medium text-foreground">공개</p>
+                <p className="text-xs text-muted-foreground">
+                  내 이름으로 질문합니다
+                </p>
               </div>
-            </label>
+            </Label>
           )}
         </RadioGroup>
       </div>
@@ -179,13 +180,14 @@ export function QuestionForm({
       
       <Button
         type="submit"
-        className="w-full bg-orange-500"
+        className="w-full"
+        size="lg"
       >
-        <HugeiconsIcon icon={LockIcon} className="w-4 h-4" aria-hidden="true" />
+        <HugeiconsIcon icon={LockIcon} className="size-4" aria-hidden="true" />
         질문 보내기
       </Button>
       
-      <p className="text-xs text-gray-500 text-center">
+      <p className="text-center text-xs text-muted-foreground">
         질문 시 사용 약관에 동의하게 됩니다
       </p>
     </form>

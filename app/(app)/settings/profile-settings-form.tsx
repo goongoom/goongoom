@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
 import { RadioGroup, Radio } from "@/components/ui/radio-group";
+import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
 import { updateProfile } from "@/lib/actions/profile";
 import {
   DEFAULT_QUESTION_SECURITY_LEVEL,
@@ -32,13 +34,47 @@ export function ProfileSettingsForm({
   questionSecurityLevel: initialQuestionSecurityLevel,
   status,
 }: ProfileSettingsFormProps) {
+  const normalizeHandle = (value: string) => {
+    const trimmed = value.trim();
+    if (!trimmed) return "";
+    const cleaned = trimmed.replace(/^@/, "");
+    const looksLikeUrl =
+      /:\/\/|\/|instagram\.com|github\.com|twitter\.com|x\.com|www\./i.test(
+        cleaned,
+      );
+
+    if (!looksLikeUrl) {
+      return cleaned;
+    }
+
+    try {
+      const url = new URL(
+        cleaned.includes("://") ? cleaned : `https://${cleaned}`,
+      );
+      const parts = url.pathname.split("/").filter(Boolean);
+      return parts[0] || "";
+    } catch {
+      return cleaned.split("/").filter(Boolean)[0] || "";
+    }
+  };
+
+  const instagramHandle = initialSocialLinks?.instagram
+    ? normalizeHandle(initialSocialLinks.instagram)
+    : "";
+  const githubHandle = initialSocialLinks?.github
+    ? normalizeHandle(initialSocialLinks.github)
+    : "";
+  const twitterHandle = initialSocialLinks?.twitter
+    ? normalizeHandle(initialSocialLinks.twitter)
+    : "";
+
   async function submitProfile(formData: FormData) {
     "use server";
 
     const bio = String(formData.get("bio") || "").trim();
-    const instagram = String(formData.get("instagram") || "").trim();
-    const github = String(formData.get("github") || "").trim();
-    const twitter = String(formData.get("twitter") || "").trim();
+    const instagram = normalizeHandle(String(formData.get("instagram") || ""));
+    const github = normalizeHandle(String(formData.get("github") || ""));
+    const twitter = normalizeHandle(String(formData.get("twitter") || ""));
     const securityLevel = String(
       formData.get("questionSecurityLevel") || DEFAULT_QUESTION_SECURITY_LEVEL,
     );
@@ -77,7 +113,6 @@ export function ProfileSettingsForm({
                 id="username"
                 value={clerkUser.username || ""}
                 disabled
-                className="bg-gray-50 text-gray-500"
               />
             }
           />
@@ -92,7 +127,6 @@ export function ProfileSettingsForm({
                 id="displayName"
                 value={clerkUser.displayName || ""}
                 disabled
-                className="bg-gray-50 text-gray-500"
               />
             }
           />
@@ -125,68 +159,80 @@ export function ProfileSettingsForm({
                 {QUESTION_SECURITY_LEVELS.map((level) => {
                   const option = QUESTION_SECURITY_OPTIONS[level];
                   return (
-                    <label
+                    <Label
                       key={level}
-                      htmlFor={`qsl-${level}`}
-                      className="flex items-start gap-3 p-3 rounded-lg border border-gray-200 cursor-pointer transition-colors"
+                      className="flex items-start gap-2 rounded-lg border border-border p-3 transition-colors hover:bg-accent/50 has-[data-checked]:border-primary/48 has-[data-checked]:bg-accent/50"
                     >
                       <Radio id={`qsl-${level}`} value={level} />
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900">{option.label}</p>
-                        <p className="text-xs text-gray-500">{option.description}</p>
+                      <div className="flex flex-col gap-1">
+                        <p className="font-medium text-foreground">
+                          {option.label}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {option.description}
+                        </p>
                       </div>
-                    </label>
+                    </Label>
                   );
                 })}
               </RadioGroup>
             }
           />
         </Field>
-      
-        <div className="border-t border-gray-100 pt-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">소셜 링크</h3>
-          
+
+        <div className="space-y-4">
+          <Separator />
+          <div className="space-y-1">
+            <h3 className="text-base font-medium text-foreground">소셜 링크</h3>
+            <p className="text-xs text-muted-foreground">
+              사용자 이름(핸들)만 입력하세요.
+            </p>
+          </div>
+
           <div className="space-y-4">
             <Field>
               <FieldLabel htmlFor="instagram">Instagram</FieldLabel>
               <FieldControl
                 render={
                   <Input
-                    type="url"
+                    autoCapitalize="none"
+                    autoCorrect="off"
                     id="instagram"
                     name="instagram"
-                    placeholder="https://instagram.com/username"
-                    defaultValue={initialSocialLinks?.instagram || ""}
+                    placeholder="username"
+                    defaultValue={instagramHandle}
                   />
                 }
               />
             </Field>
-            
+
             <Field>
               <FieldLabel htmlFor="github">GitHub</FieldLabel>
               <FieldControl
                 render={
                   <Input
-                    type="url"
+                    autoCapitalize="none"
+                    autoCorrect="off"
                     id="github"
                     name="github"
-                    placeholder="https://github.com/username"
-                    defaultValue={initialSocialLinks?.github || ""}
+                    placeholder="username"
+                    defaultValue={githubHandle}
                   />
                 }
               />
             </Field>
-            
+
             <Field>
               <FieldLabel htmlFor="twitter">Twitter / X</FieldLabel>
               <FieldControl
                 render={
                   <Input
-                    type="url"
+                    autoCapitalize="none"
+                    autoCorrect="off"
                     id="twitter"
                     name="twitter"
-                    placeholder="https://twitter.com/username"
-                    defaultValue={initialSocialLinks?.twitter || ""}
+                    placeholder="username"
+                    defaultValue={twitterHandle}
                   />
                 }
               />
@@ -206,7 +252,7 @@ export function ProfileSettingsForm({
           </Alert>
         )}
         
-        <Button type="submit" className="w-full bg-orange-500">
+        <Button type="submit" className="w-full">
           저장하기
         </Button>
       </form>

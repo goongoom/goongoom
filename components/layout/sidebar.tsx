@@ -3,6 +3,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { UserIcon, InboxIcon, Settings01Icon, LoginSquare01Icon } from "@hugeicons/core-free-icons";
 import { auth } from "@clerk/nextjs/server";
 import { getClerkUserById } from "@/lib/clerk";
+import { Button } from "@/components/ui/button";
 
 export async function Sidebar() {
   const { userId } = await auth();
@@ -21,23 +22,27 @@ export async function Sidebar() {
   ];
 
   return (
-    <aside className="hidden lg:block w-64 lg:w-80 bg-white border-r border-gray-200 h-screen sticky top-0">
+    <aside className="sticky top-0 hidden h-screen w-64 border-r border-border bg-background lg:block lg:w-80">
       <div className="p-6">
         <Link href="/" className="block">
-          <h1 className="text-2xl font-bold text-orange-500 mb-8">궁금닷컴</h1>
+          <h1 className="mb-8 text-2xl font-semibold text-foreground">
+            궁금닷컴
+          </h1>
         </Link>
-        <nav className="space-y-2">
+        <nav className="space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
-              <Link
+              <Button
                 key={item.href}
-                href={item.href}
-                className="flex items-center gap-3 px-4 py-3 rounded-full transition-colors text-gray-500"
+                className="w-full justify-start gap-3 text-muted-foreground"
+                render={<Link href={item.href} />}
+                size="lg"
+                variant="ghost"
               >
-                <HugeiconsIcon icon={Icon} className="w-5 h-5" aria-hidden="true" />
+                <HugeiconsIcon icon={Icon} className="size-5" aria-hidden="true" />
                 <span>{item.label}</span>
-              </Link>
+              </Button>
             );
           })}
         </nav>

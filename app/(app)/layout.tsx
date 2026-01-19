@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { Sidebar } from "@/components/layout/sidebar";
 import { SidebarSkeleton } from "@/components/layout/sidebar-skeleton";
+import { MobileNav } from "@/components/layout/mobile-nav";
+import { MobileNavSkeleton } from "@/components/layout/mobile-nav-skeleton";
 
 export default function AppLayout({
   children,
@@ -13,6 +15,9 @@ export default function AppLayout({
         <Sidebar />
       </Suspense>
       {children}
+      <Suspense fallback={<MobileNavSkeleton />}>
+        <MobileNav />
+      </Suspense>
     </div>
   );
 }

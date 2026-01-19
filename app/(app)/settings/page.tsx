@@ -6,6 +6,12 @@ import { getClerkUserById } from "@/lib/clerk";
 import { getOrCreateUser } from "@/lib/db/queries";
 import { ProfileSettingsForm } from "./profile-settings-form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { ProfileSettingsSkeleton } from "@/components/settings/profile-settings-skeleton";
 import { DEFAULT_QUESTION_SECURITY_LEVEL } from "@/lib/question-security";
 
@@ -41,12 +47,12 @@ async function SettingsForm() {
 
   if (!clerkUser) {
     return (
-      <div className="text-center py-12">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          프로필 설정이 필요합니다
-        </h1>
-        <p className="text-gray-500">계정 설정을 완료해주세요.</p>
-      </div>
+      <Empty>
+        <EmptyHeader>
+          <EmptyTitle>프로필 설정이 필요합니다</EmptyTitle>
+          <EmptyDescription>계정 설정을 완료해주세요.</EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     );
   }
 
@@ -67,8 +73,8 @@ async function SettingsForm() {
 export default function SettingsPage({ searchParams }: SettingsPageProps) {
   return (
     <MainContent>
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">설정</h1>
-      <p className="text-gray-500 mb-8">프로필 정보를 수정하세요</p>
+      <h1 className="mb-2 text-3xl font-bold text-foreground">설정</h1>
+      <p className="mb-8 text-muted-foreground">프로필 정보를 수정하세요</p>
 
       <Suspense fallback={null}>
         <SettingsStatus searchParams={searchParams} />

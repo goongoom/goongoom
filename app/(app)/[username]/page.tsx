@@ -2,7 +2,6 @@ import { Suspense, cache } from "react";
 import { notFound } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { MainContent } from "@/components/layout/main-content";
-import { RightPanel } from "@/components/layout/right-panel";
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { QuestionForm } from "@/components/profile/question-form";
 import { ProfileHeaderSkeleton } from "@/components/profile/profile-header-skeleton";
@@ -20,7 +19,10 @@ interface UserProfilePageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
+const PLACEHOLDER_USERNAME = "_build_placeholder_";
+
 const getClerkUser = cache(async (username: string) => {
+  if (username === PLACEHOLDER_USERNAME) return null;
   return getClerkUserByUsername(username);
 });
 
@@ -108,8 +110,8 @@ async function QuestionFormSection({ params, searchParams }: UserProfilePageProp
   );
 }
 
-export async function generateStaticParams() {
-  return [{ username: "_placeholder" }];
+export function generateStaticParams() {
+  return [{ username: PLACEHOLDER_USERNAME }];
 }
 
 export default function UserProfilePage({
@@ -123,16 +125,14 @@ export default function UserProfilePage({
           <ProfileHeaderSection params={params} />
         </Suspense>
 
+        <Suspense fallback={<QuestionFormSkeleton />}>
+          <QuestionFormSection params={params} searchParams={searchParams} />
+        </Suspense>
+
         <Suspense fallback={<QAFeedSkeleton />}>
           <QAFeedSection params={params} />
         </Suspense>
       </MainContent>
-
-      <RightPanel>
-        <Suspense fallback={<QuestionFormSkeleton />}>
-          <QuestionFormSection params={params} searchParams={searchParams} />
-        </Suspense>
-      </RightPanel>
     </>
   );
 }
