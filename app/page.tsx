@@ -22,7 +22,7 @@ export default function Home() {
       <nav className="fixed top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg text-white shadow-lg shadow-orange-500/30" style={{ background: "var(--gradient-sunset)" }}>
               <HugeiconsIcon icon={Message01Icon} size={18} strokeWidth={3} />
             </div>
             <span className="text-lg font-bold tracking-tight text-foreground">궁금닷컴</span>
@@ -35,8 +35,8 @@ export default function Home() {
       </nav>
 
       <main className="relative overflow-hidden pt-32">
-        <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-warning/10 blur-3xl filter" />
-        <div className="absolute top-48 -left-24 h-72 w-72 rounded-full bg-info/10 blur-3xl filter" />
+        <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-neon-pink/10 blur-3xl filter" />
+        <div className="absolute top-48 -left-24 h-72 w-72 rounded-full bg-electric-blue/10 blur-3xl filter" />
 
         <div className="relative mx-auto max-w-5xl px-6 pb-24 text-center">
           <Badge className="mb-6 gap-2" size="lg" variant="warning">
@@ -65,7 +65,7 @@ export default function Home() {
             <div className="grid gap-8 sm:grid-cols-3">
               <Card>
                 <CardPanel className="space-y-4">
-                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-info/10 text-info-foreground">
+                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-electric-blue/10 text-electric-blue">
                     <HugeiconsIcon icon={ShieldKeyIcon} size={24} />
                   </div>
                   <div className="space-y-2">
@@ -79,7 +79,7 @@ export default function Home() {
 
               <Card>
                 <CardPanel className="space-y-4">
-                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-warning/10 text-warning-foreground">
+                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-neon-pink/10 text-neon-pink">
                     <HugeiconsIcon icon={Share01Icon} size={24} />
                   </div>
                   <div className="space-y-2">
@@ -93,7 +93,7 @@ export default function Home() {
 
               <Card>
                 <CardPanel className="space-y-4">
-                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-success/10 text-success-foreground">
+                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-lime/10 text-lime-foreground">
                     <HugeiconsIcon icon={SparklesIcon} size={24} />
                   </div>
                   <div className="space-y-2">

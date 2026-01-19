@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
-import { readFile } from "fs/promises";
-import { join } from "path";
+import { cacheLife } from "next/cache";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
 const clamp = (value: string, max: number) =>
   value.length > max ? `${value.slice(0, max - 1)}…` : value;
@@ -10,6 +11,20 @@ const pickText = (value: string | null, fallback: string, max: number) => {
   if (!trimmed) return fallback;
   return clamp(trimmed, max);
 };
+
+async function getFonts() {
+  "use cache";
+  cacheLife("max");
+
+  const fontDir = join(process.cwd(), "public/fonts");
+  const [regular, semibold, bold] = await Promise.all([
+    readFile(join(fontDir, "Pretendard-Regular.ttf")),
+    readFile(join(fontDir, "Pretendard-SemiBold.ttf")),
+    readFile(join(fontDir, "Pretendard-Bold.ttf")),
+  ]);
+
+  return { regular, semibold, bold };
+}
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -26,11 +41,7 @@ export async function GET(request: Request) {
   );
   const name = pickText(searchParams.get("name"), "사용자", 40);
 
-  const [regular, semibold, bold] = await Promise.all([
-    readFile(join(process.cwd(), "public/fonts/Pretendard-Regular.woff2")),
-    readFile(join(process.cwd(), "public/fonts/Pretendard-SemiBold.woff2")),
-    readFile(join(process.cwd(), "public/fonts/Pretendard-Bold.woff2")),
-  ]);
+  const { regular, semibold, bold } = await getFonts();
 
   return new ImageResponse(
     (
@@ -40,10 +51,12 @@ export async function GET(request: Request) {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          padding: "80px",
+          padding: "160px",
           backgroundColor: "#FFF7ED",
           fontFamily: "Pretendard",
           color: "#111827",
+          wordWrap: "break-word",
+          wordBreak: "keep-all",
         }}
       >
         <div
@@ -53,32 +66,32 @@ export async function GET(request: Request) {
             justifyContent: "space-between",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "48px" }}>
             <div
               style={{
-                width: "44px",
-                height: "44px",
-                borderRadius: "12px",
+                width: "176px",
+                height: "176px",
+                borderRadius: "48px",
                 backgroundColor: "#F97316",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 color: "#FFFFFF",
-                fontSize: "24px",
+                fontSize: "96px",
                 fontWeight: 700,
               }}
             >
               궁
             </div>
-            <div style={{ fontSize: "32px", fontWeight: 700 }}>궁금닷컴</div>
+            <div style={{ fontSize: "128px", fontWeight: 700 }}>궁금닷컴</div>
           </div>
           <div
             style={{
-              padding: "10px 18px",
+              padding: "40px 72px",
               borderRadius: "999px",
               backgroundColor: "#FFEDD5",
               color: "#9A3412",
-              fontSize: "20px",
+              fontSize: "80px",
               fontWeight: 600,
             }}
           >
@@ -88,21 +101,21 @@ export async function GET(request: Request) {
 
         <div
           style={{
-            marginTop: "60px",
+            marginTop: "240px",
             display: "flex",
             flexDirection: "column",
-            gap: "28px",
+            gap: "112px",
           }}
         >
           <div
             style={{
               backgroundColor: "#FFFFFF",
-              borderRadius: "28px",
-              padding: "30px 34px",
-              fontSize: "36px",
+              borderRadius: "112px",
+              padding: "120px 136px",
+              fontSize: "144px",
               fontWeight: 600,
               lineHeight: 1.4,
-              boxShadow: "0 20px 40px rgba(249, 115, 22, 0.12)",
+              boxShadow: "0 80px 160px rgba(249, 115, 22, 0.12)",
             }}
           >
             {question}
@@ -111,13 +124,13 @@ export async function GET(request: Request) {
             style={{
               alignSelf: "flex-end",
               backgroundColor: "#F97316",
-              borderRadius: "28px",
-              padding: "30px 34px",
-              fontSize: "36px",
+              borderRadius: "112px",
+              padding: "120px 136px",
+              fontSize: "144px",
               fontWeight: 600,
               lineHeight: 1.4,
               color: "#FFFFFF",
-              boxShadow: "0 24px 48px rgba(249, 115, 22, 0.28)",
+              boxShadow: "0 96px 192px rgba(249, 115, 22, 0.28)",
             }}
           >
             {answer}
@@ -130,7 +143,7 @@ export async function GET(request: Request) {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            fontSize: "22px",
+            fontSize: "88px",
             color: "#6B7280",
           }}
         >
@@ -140,13 +153,16 @@ export async function GET(request: Request) {
       </div>
     ),
     {
-      width: 1080,
-      height: 1350,
+      width: 2160,
+      height: 3840,
       fonts: [
         { name: "Pretendard", data: regular, weight: 400 },
         { name: "Pretendard", data: semibold, weight: 600 },
         { name: "Pretendard", data: bold, weight: 700 },
       ],
+      headers: {
+        "Cache-Control": "public, max-age=31536000, immutable",
+      },
     },
   );
 }

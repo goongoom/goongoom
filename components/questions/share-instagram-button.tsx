@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 interface ShareInstagramButtonProps {
@@ -8,31 +8,80 @@ interface ShareInstagramButtonProps {
 }
 
 export function ShareInstagramButton({ shareUrl }: ShareInstagramButtonProps) {
-  const [isSharing, setIsSharing] = useState(false);
+  const [status, setStatus] = useState<"loading" | "ready" | "sharing">(
+    "loading",
+  );
+  const sharingRef = useRef(false);
+  const fileRef = useRef<File | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function prefetch() {
+      try {
+        const response = await fetch(shareUrl);
+        if (cancelled) return;
+        if (!response.ok) throw new Error("Failed to fetch");
+
+        const blob = await response.blob();
+        if (cancelled) return;
+
+        fileRef.current = new File([blob], "goongoom-share.png", {
+          type: "image/png",
+        });
+        setStatus("ready");
+      } catch {
+        if (!cancelled) setStatus("ready");
+      }
+    }
+
+    prefetch();
+    return () => {
+      cancelled = true;
+    };
+  }, [shareUrl]);
 
   const handleShare = async () => {
-    setIsSharing(true);
+    if (sharingRef.current) return;
+    if (!fileRef.current) {
+      window.open(shareUrl, "_blank");
+      return;
+    }
+
+    sharingRef.current = true;
+    setStatus("sharing");
+
     try {
-      const response = await fetch(shareUrl);
-      if (!response.ok) throw new Error("Failed to fetch image");
+      const canShare = navigator.canShare?.({ files: [fileRef.current] });
 
-      const blob = await response.blob();
-      const file = new File([blob], "goongoom-share.png", { type: "image/png" });
-
-      if (navigator.canShare?.({ files: [file] })) {
+      if (canShare) {
         await navigator.share({
-          files: [file],
+          files: [fileRef.current],
           title: "궁금닷컴",
           text: "궁금닷컴에서 공유",
         });
       } else {
-        window.open(shareUrl, "_blank");
+        const url = URL.createObjectURL(fileRef.current);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "goongoom-share.png";
+        a.click();
+        URL.revokeObjectURL(url);
       }
     } catch (error) {
-      console.error("Share failed:", error);
-      window.open(shareUrl, "_blank");
+      const isUserCancelled =
+        error instanceof Error && error.name === "AbortError";
+      if (!isUserCancelled) {
+        const url = URL.createObjectURL(fileRef.current);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "goongoom-share.png";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
     } finally {
-      setIsSharing(false);
+      sharingRef.current = false;
+      setStatus("ready");
     }
   };
 
@@ -41,9 +90,13 @@ export function ShareInstagramButton({ shareUrl }: ShareInstagramButtonProps) {
       variant="link"
       size="xs"
       onClick={handleShare}
-      disabled={isSharing}
+      disabled={status === "loading" || status === "sharing"}
     >
-      {isSharing ? "준비 중..." : "인스타그램 이미지 공유하기"}
+      {status === "loading"
+        ? "이미지 준비 중..."
+        : status === "sharing"
+          ? "공유 중..."
+          : "인스타그램 이미지 공유하기"}
     </Button>
   );
 }

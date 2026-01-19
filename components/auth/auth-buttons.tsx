@@ -50,9 +50,7 @@ export function HeroAuthButtons() {
   return (
     <>
       <ClerkLoading>
-
           <Skeleton className="h-10 w-full rounded-lg sm:w-64" />
-
       </ClerkLoading>
       <ClerkLoaded>
         <SignedOut>

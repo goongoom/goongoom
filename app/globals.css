@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "pretendard/dist/web/variable/pretendardvariable.css";
+
+@font-face {
+  font-family: "Pretendard Variable";
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/PretendardVariable.ttf") format("truetype");
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -206,6 +213,8 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    word-wrap: break-word;
+    word-break: keep-all;
   }
   body {
     @apply bg-background text-foreground;
