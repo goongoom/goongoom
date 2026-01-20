@@ -1,59 +1,61 @@
 # AGENTS
 
-## Design Philosophy - Zenly-Inspired Aesthetic
+## Design Philosophy - Calm Pastel & Paper Aesthetic
 
-Goongoom embraces a vibrant, playful, Gen-Z aesthetic inspired by Zenly's popping visual style:
-- **Popping Colors**: Vibrant electric blue, neon pink, lime, sunset orange, purple
-- **Smooth Animations**: 60fps micro-interactions with GPU acceleration
-- **Playful UI**: Emoji integration, decorative elements, delightful feedback
-- **Mobile-First**: Touch-friendly interactions (44px minimum targets), responsive layouts, gesture support
-- **NOT Map-Centric**: Unlike Zenly, we focus on vibrant UI elements, not map-based navigation
+Goongoom embraces a calm, tactile, and organized aesthetic inspired by paper notes and post-it arrangements:
+- **Calm Pastels**: Soft, soothing colors like electric blue, neon pink, lime, sunset orange, and purple.
+- **Paper-Like Textures**: UI elements that feel like physical paper - subtle shadows, slight rotations, and overlapping "post-it" cards.
+- **Thoughtful UI**: Clean layouts, generous whitespace, and readable typography that prioritizes clarity over visual noise.
+- **Mobile-First**: Touch-friendly interactions (44px minimum targets), responsive layouts, and gesture-based navigation.
+- **Tactile Feedback**: Subtle, organic animations that mimic physical movement rather than digital flashes.
 
-## Direct Server Render Strategy (RSC + PPR)
-- Default to Server Components. `use client` is allowed in `components/ui` and other leaf components that require client interactivity.
-- Keep it simple: no `loading.tsx`, no `<Suspense>`. Let pages render directly.
-- Use server actions + `<form action={...}>` for all mutations; avoid client form libraries.
-- Deduplicate shared reads with `cache()` and parallelize independent fetches with `Promise.all`.
+## Direct Server Render Strategy (SSR-First)
+- Default to Server Components (RSC) for all data fetching and layout structure.
+- **Avoid `cacheComponents`**: Prefer standard Server Components and SSR for reliability and simplicity.
+- `use client` is reserved for leaf components requiring direct interactivity (e.g., forms, toggles, complex animations).
+- Keep it simple: no `loading.tsx`, no `<Suspense>`. Let pages render directly via SSR for the fastest perceived load time.
+- Use server actions + `<form action={...}>` for all mutations; avoid client-side form libraries.
+- Deduplicate shared reads with React's `cache()` and parallelize independent fetches with `Promise.all`.
 
 ## Color System
 
-Use semantic vibrant colors for maximum impact:
-- **Electric Blue** (`bg-electric-blue`, `text-electric-blue`): Primary CTAs, interactive links, focus states, clickable elements
-- **Neon Pink** (`bg-neon-pink`, `text-neon-pink`): Playful accents, badges, attention-grabbing elements, notifications
-- **Lime** (`bg-lime`, `text-lime`): Success states, positive actions, growth indicators, confirmations
-- **Sunset Orange** (`bg-sunset-orange`, `text-sunset-orange`): Warm accents, trending content, hot topics, energy indicators
-- **Purple** (`bg-purple`, `text-purple`): Creative features, premium content, special events, artistic elements
+Use semantic pastel colors to create a calm and inviting atmosphere. These tokens are designed to look like soft, paper-like highlights:
+- **Electric Blue** (`bg-electric-blue`, `text-electric-blue`): Primary actions, links, and stable UI elements.
+- **Neon Pink** (`bg-neon-pink`, `text-neon-pink`): Friendly accents, playful highlights, and notifications.
+- **Lime** (`bg-lime`, `text-lime`): Success states, growth indicators, and confirmations.
+- **Sunset Orange** (`bg-sunset-orange`, `text-sunset-orange`): Warm accents, trending content, and gentle alerts.
+- **Purple** (`bg-purple`, `text-purple`): Creative features, special details, and organized categories.
 
 All colors support dark mode with optimized contrast (AA/AAA compliant).
 
 **Foreground Text**: Use `-foreground` variants for text on colored backgrounds:
-- `text-electric-blue-foreground` (white on electric blue)
-- `text-neon-pink-foreground` (white on neon pink)
-- `text-lime-foreground` (dark on lime)
-- `text-sunset-orange-foreground` (white on sunset orange)
-- `text-purple-foreground` (white on purple)
+- `text-electric-blue-foreground` (on electric blue)
+- `text-neon-pink-foreground` (on neon pink)
+- `text-lime-foreground` (on lime)
+- `text-sunset-orange-foreground` (on sunset orange)
+- `text-purple-foreground` (on purple)
 
 **Color Pairing Recommendations**:
-- Electric Blue + Neon Pink: Playful, energetic combinations
-- Lime + Electric Blue: Fresh, modern tech feel
+- Electric Blue + Neon Pink: Gentle, balanced combinations
+- Lime + Electric Blue: Natural, calm tech feel
 - Purple + Sunset Orange: Creative, warm combinations
-- Neon Pink + Purple: Bold, artistic pairings
+- Neon Pink + Purple: Organized, artistic pairings
 
 ## Gradient System
 
-10 vibrant gradients available for cards, buttons, and backgrounds:
+10 gradients available for cards, buttons, and backgrounds, designed to be used as gentle accents:
 
 **Available Gradients**:
-- `sunset`: Warm sunset vibes (orange → pink → purple) - Featured sections, warm content
-- `ocean`: Deep ocean waves (electric-blue → cyan → teal) - Cool, calm sections
-- `forest`: Fresh forest greens (lime → emerald → green) - Success states, growth
-- `candy`: Sweet candy pop (neon-pink → purple → electric-blue) - Playful, social elements
-- `electric`: Electric energy (electric-blue → purple) - Primary CTAs, interactive elements
-- `neon`: Neon lights (neon-pink → sunset-orange) - Attention-grabbing, notifications
-- `cosmic`: Cosmic space (purple → electric-blue → neon-pink) - Premium features, creative tools
-- `tropical`: Tropical paradise (lime → sunset-orange → neon-pink) - Vibrant, energetic content
-- `fire`: Blazing fire (sunset-orange → neon-pink → purple) - Hot topics, trending content
-- `aurora`: Northern lights (electric-blue → lime → neon-pink) - Magical moments, highlights
+- `sunset`: Warm sunset vibes (sunset-orange → neon-pink) - Featured sections
+- `ocean`: Calm ocean waves (electric-blue → deep-azure) - Cool, calm sections
+- `forest`: Fresh forest greens (lime → sage) - Success states, growth
+- `candy`: Sweet candy pop (neon-pink → purple) - Playful, social elements
+- `electric`: Electric energy (electric-blue → purple) - Primary CTAs
+- `neon`: Neon lights (neon-pink → sunset-orange) - Notifications
+- `cosmic`: Cosmic space (purple → electric-blue) - Premium features
+- `tropical`: Tropical paradise (lime → sunset-orange) - Fresh content
+- `fire`: Warm fire (sunset-orange → deep-orange) - Trending content
+- `aurora`: Northern lights (electric-blue → lime) - Highlights
 
 **Usage Examples**:
 ```tsx
@@ -87,7 +89,7 @@ import { GradientButton } from "@/components/ui/gradient-button";
 - `pulse`: Subtle pulsing
 - `shimmer`: Loading shimmer effect
 - `wiggle`: Playful shake
-- `pop`: Energetic pop-in
+- `pop`: Delightful pop-in
 
 **Durations**: `fast` (150ms), `normal` (250ms), `slow` (400ms)
 **Easings**: `ease-out`, `ease-in-out`, `spring` (bouncy)
@@ -155,17 +157,6 @@ import { AnimatedCard } from "@/components/ui/animated-card";
 - Default to Server Components for all pages and layouts
 - Use `"use client"` only for interactive components (buttons, forms, animations)
 - Keep client components small and focused (leaf components)
-
-**Granular Suspense Boundaries**:
-- Wrap each async data fetch in `<Suspense>` with a matching skeleton
-- Avoid single giant `loading.tsx` fallback
-- Compose `loading.tsx` from section skeletons only
-- Example:
-  ```tsx
-  <Suspense fallback={<UserProfileSkeleton />}>
-    <UserProfile userId={userId} />
-  </Suspense>
-  ```
 
 **Performance Best Practices**:
 - Deduplicate shared reads with `cache()` from React
