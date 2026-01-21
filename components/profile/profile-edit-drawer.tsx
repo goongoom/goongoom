@@ -3,7 +3,6 @@
 import {
   AnonymousIcon,
   InstagramIcon,
-  Link01Icon,
   LockIcon,
   NewTwitterIcon,
   PencilEdit01Icon,
@@ -24,7 +23,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
-import { Field, FieldContent, FieldLabel } from "@/components/ui/field"
+import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -152,7 +151,7 @@ export function ProfileEditDrawer({
             <DrawerDescription>{t("profileSettings")}</DrawerDescription>
           </DrawerHeader>
 
-          <div className="max-h-[85vh] animate-fade-in space-y-8 overflow-y-auto px-4 pb-8">
+          <div className="max-h-[85vh] animate-fade-in space-y-6 overflow-y-auto px-4 pb-8">
             <div className="space-y-4 rounded-2xl border border-border/50 bg-muted/30 p-4">
               <div className="flex items-center gap-2 pb-2">
                 <div className="flex size-8 items-center justify-center rounded-full bg-electric-blue/10 text-electric-blue">
@@ -177,75 +176,52 @@ export function ProfileEditDrawer({
                   value={bio}
                 />
               </Field>
-            </div>
 
-            <div className="space-y-4 rounded-2xl border border-border/50 bg-muted/30 p-4">
-              <div className="flex items-center gap-2 pb-2">
-                <div className="flex size-8 items-center justify-center rounded-full bg-neon-pink/10 text-neon-pink">
-                  <HugeiconsIcon className="size-4" icon={Link01Icon} />
-                </div>
-                <h3 className="font-semibold text-foreground text-sm">
+              <div className="border-border/30 border-t pt-4">
+                <p className="mb-3 font-medium text-muted-foreground text-xs">
                   {t("socialLinks")}
-                </h3>
-              </div>
-
-              <div className="grid gap-4">
-                <Field>
-                  <FieldLabel
-                    className="font-medium text-sm"
-                    htmlFor="instagram"
-                  >
-                    Instagram
-                  </FieldLabel>
-                  <FieldContent>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <HugeiconsIcon
-                          className="size-5 text-muted-foreground/60"
-                          icon={InstagramIcon}
-                          strokeWidth={2}
-                        />
-                      </div>
-                      <Input
-                        autoCapitalize="none"
-                        autoCorrect="off"
-                        className="min-h-12 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-neon-pink focus:ring-2 focus:ring-neon-pink/20"
-                        id="instagram"
-                        name="instagram"
-                        onChange={(e) => handleInstagramChange(e.target.value)}
-                        placeholder="username"
-                        value={instagram}
+                </p>
+                <div className="grid gap-3">
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                      <HugeiconsIcon
+                        className="size-5 text-muted-foreground/60"
+                        icon={InstagramIcon}
+                        strokeWidth={2}
                       />
                     </div>
-                  </FieldContent>
-                </Field>
+                    <Input
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20"
+                      id="instagram"
+                      name="instagram"
+                      onChange={(e) => handleInstagramChange(e.target.value)}
+                      placeholder="Instagram"
+                      value={instagram}
+                    />
+                  </div>
 
-                <Field>
-                  <FieldLabel className="font-medium text-sm" htmlFor="twitter">
-                    Twitter / X
-                  </FieldLabel>
-                  <FieldContent>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <HugeiconsIcon
-                          className="size-5 text-muted-foreground/60"
-                          icon={NewTwitterIcon}
-                          strokeWidth={2}
-                        />
-                      </div>
-                      <Input
-                        autoCapitalize="none"
-                        autoCorrect="off"
-                        className="min-h-12 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-neon-pink focus:ring-2 focus:ring-neon-pink/20"
-                        id="twitter"
-                        name="twitter"
-                        onChange={(e) => handleTwitterChange(e.target.value)}
-                        placeholder="username"
-                        value={twitter}
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                      <HugeiconsIcon
+                        className="size-5 text-muted-foreground/60"
+                        icon={NewTwitterIcon}
+                        strokeWidth={2}
                       />
                     </div>
-                  </FieldContent>
-                </Field>
+                    <Input
+                      autoCapitalize="none"
+                      autoCorrect="off"
+                      className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20"
+                      id="twitter"
+                      name="twitter"
+                      onChange={(e) => handleTwitterChange(e.target.value)}
+                      placeholder="X (Twitter)"
+                      value={twitter}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -259,51 +235,46 @@ export function ProfileEditDrawer({
                 </h3>
               </div>
 
-              <Field>
-                <FieldContent>
-                  <RadioGroup
-                    className="w-full space-y-3"
-                    onValueChange={handleSecurityLevelChange}
-                    value={securityLevel}
-                  >
-                    {QUESTION_SECURITY_LEVELS.map((level) => {
-                      const option = securityOptions[level]
-                      const IconComponent =
-                        SECURITY_ICONS[level] || AnonymousIcon
-                      if (!option) {
-                        return null
-                      }
-                      return (
-                        <Label
-                          className="group relative flex cursor-pointer items-start gap-3 rounded-xl border border-border/50 bg-background p-4 transition-all hover:border-lime/50 hover:bg-lime/5 has-[data-state=checked]:border-lime has-[data-state=checked]:bg-lime/5 has-[data-state=checked]:ring-2 has-[data-state=checked]:ring-lime/20"
-                          key={level}
-                        >
-                          <RadioGroupItem
-                            className="mt-1 border-muted-foreground/30 text-lime data-[state=checked]:border-lime data-[state=checked]:text-lime"
-                            id={`qsl-${level}`}
-                            value={level}
-                          />
-                          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-muted to-muted/50 text-muted-foreground transition-colors group-has-[data-state=checked]:from-lime group-has-[data-state=checked]:to-lime/80 group-has-[data-state=checked]:text-lime-foreground">
-                            <HugeiconsIcon
-                              className="size-5"
-                              icon={IconComponent}
-                              strokeWidth={2}
-                            />
-                          </div>
-                          <div className="flex flex-1 flex-col gap-1">
-                            <p className="font-semibold text-foreground text-sm group-has-[data-state=checked]:text-lime-foreground">
-                              {option.label}
-                            </p>
-                            <p className="text-muted-foreground text-xs leading-relaxed group-has-[data-state=checked]:text-lime-foreground/80">
-                              {option.description}
-                            </p>
-                          </div>
-                        </Label>
-                      )
-                    })}
-                  </RadioGroup>
-                </FieldContent>
-              </Field>
+              <RadioGroup
+                className="w-full space-y-2"
+                onValueChange={handleSecurityLevelChange}
+                value={securityLevel}
+              >
+                {QUESTION_SECURITY_LEVELS.map((level) => {
+                  const option = securityOptions[level]
+                  const IconComponent = SECURITY_ICONS[level] || AnonymousIcon
+                  if (!option) {
+                    return null
+                  }
+                  return (
+                    <Label
+                      className="group relative flex cursor-pointer items-start gap-3 rounded-xl border-2 border-transparent bg-background p-3 transition-all hover:border-border hover:bg-muted/50 has-data-checked:border-lime/50 has-data-checked:bg-lime/5"
+                      key={level}
+                    >
+                      <RadioGroupItem
+                        className="pointer-events-none absolute opacity-0"
+                        id={`qsl-${level}`}
+                        value={level}
+                      />
+                      <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted/80 text-muted-foreground transition-colors group-has-data-checked:bg-lime/20 group-has-data-checked:text-lime">
+                        <HugeiconsIcon
+                          className="size-5"
+                          icon={IconComponent}
+                          strokeWidth={2}
+                        />
+                      </div>
+                      <div className="flex flex-1 flex-col gap-0.5">
+                        <p className="font-semibold text-foreground text-sm transition-colors group-has-data-checked:text-foreground">
+                          {option.label}
+                        </p>
+                        <p className="text-muted-foreground text-xs leading-relaxed transition-colors group-has-data-checked:text-muted-foreground">
+                          {option.description}
+                        </p>
+                      </div>
+                    </Label>
+                  )
+                })}
+              </RadioGroup>
             </div>
           </div>
         </div>

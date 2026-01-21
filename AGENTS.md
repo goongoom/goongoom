@@ -5,7 +5,7 @@
 Goongoom follows Apple's Human Interface Guidelines, embracing clarity, deference, and depth:
 - **Clarity**: Content is the focus. Typography is legible, icons are precise, and UI elements are purposeful.
 - **Deference**: The UI defers to content. Minimal chrome, subtle borders, and restrained color usage.
-- **Depth**: Visual layers provide hierarchy through soft shadows and subtle elevation.
+- **Depth**: Visual layers provide hierarchy through borders and subtle background tints (not shadows).
 - **Mobile-First**: Touch-friendly interactions (44px minimum targets), responsive layouts, and gesture-based navigation.
 - **Refined Motion**: Smooth, physics-based animations that feel responsive and natural.
 
@@ -98,6 +98,42 @@ Animation utility classes are available in `globals.css` for micro-interactions:
 - Design for mobile (375px) first, then scale up
 - Use responsive utilities: `text-sm md:text-base lg:text-lg`
 - Stack on mobile, grid on desktop: `flex flex-col md:grid md:grid-cols-2`
+
+## Interactive Card Patterns
+
+**Prefer Ring/Border over Shadows**:
+- Shadows feel heavy and don't align with Apple HIG's deference principle
+- Use `border` for card outlines and `ring` for focus states only
+- Never combine `border` + `ring` on the same element (creates double outline)
+
+**Selection State Colors**:
+- Keep colors subtle: `/5` for backgrounds, `/50` for borders, `/20` for icon backgrounds
+- Text should stay neutral on selection (`text-foreground`, not accent colors)
+- Only the border and icon should carry the accent color
+- Example: `has-data-checked:border-lime/50 has-data-checked:bg-lime/5`
+
+**Radio Card Pattern** (Base UI):
+```tsx
+<Label className="group ... border-2 border-transparent has-data-checked:border-lime/50 has-data-checked:bg-lime/5">
+  <RadioGroupItem className="pointer-events-none absolute opacity-0" />
+  <div className="... bg-muted/80 group-has-data-checked:bg-lime/20 group-has-data-checked:text-lime">
+    <Icon />
+  </div>
+  <div>
+    <p className="group-has-data-checked:text-foreground">Title</p>
+    <p className="group-has-data-checked:text-muted-foreground">Description</p>
+  </div>
+</Label>
+```
+
+**Key Selector Differences**:
+- Base UI (this project): `has-data-checked`, `group-has-data-checked`
+- Radix UI: `has-[data-state=checked]`, `group-has-[data-state=checked]`
+
+**Section Grouping**:
+- Related settings can share one card with subtle `border-t border-border/30` dividers
+- Avoid separate cards for every field group
+- Use small section headers with icons for visual hierarchy within cards
 
 ## Development Principles
 

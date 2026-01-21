@@ -149,14 +149,14 @@ export function QuestionDrawer({
                     {t("whoToAsk")}
                   </Label>
                   <RadioGroup
-                    className="grid grid-cols-2 gap-3"
+                    className="grid grid-cols-2 gap-2"
                     defaultValue={canAskAnonymously ? "anonymous" : "public"}
                     name="questionType"
                   >
                     <Label
-                      className={`group relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 bg-background p-5 transition-all ${
+                      className={`group relative flex flex-col items-center justify-center gap-2 rounded-2xl border-2 bg-background p-4 transition-all ${
                         canAskAnonymously
-                          ? "cursor-pointer border-border/40 hover:border-electric-blue/50 hover:bg-electric-blue/5 has-data-checked:border-electric-blue has-data-checked:bg-electric-blue/5 has-data-checked:ring-2 has-data-checked:ring-electric-blue/20"
+                          ? "cursor-pointer border-transparent hover:border-border hover:bg-muted/50 has-data-checked:border-electric-blue/50 has-data-checked:bg-electric-blue/5"
                           : "cursor-not-allowed border-border/20 opacity-50"
                       }`}
                     >
@@ -166,27 +166,27 @@ export function QuestionDrawer({
                         id="r-anonymous"
                         value="anonymous"
                       />
-                      <div className="flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-muted to-muted/50 text-muted-foreground transition-all group-has-data-checked:from-electric-blue group-has-data-checked:to-electric-blue/80 group-has-data-checked:text-white group-has-data-checked:ring-2 group-has-data-checked:ring-white/30">
+                      <div className="flex size-12 items-center justify-center rounded-full bg-muted/80 text-muted-foreground transition-all group-has-data-checked:bg-electric-blue/20 group-has-data-checked:text-electric-blue">
                         <HugeiconsIcon
-                          className="size-7"
+                          className="size-6"
                           icon={AnonymousIcon}
                           strokeWidth={1.8}
                         />
                       </div>
                       <div className="space-y-1 text-center">
-                        <p className="font-bold text-foreground text-sm transition-colors group-has-data-checked:text-electric-blue">
+                        <p className="font-bold text-foreground text-sm transition-colors group-has-data-checked:text-foreground">
                           {t("anonymousOption")}
                         </p>
-                        <p className="font-medium text-muted-foreground/70 text-xs leading-relaxed">
+                        <p className="font-medium text-muted-foreground/70 text-xs leading-relaxed group-has-data-checked:text-muted-foreground">
                           {t("anonymousDescription")}
                         </p>
                       </div>
                     </Label>
 
                     <Label
-                      className={`group relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 bg-background p-5 transition-all ${
+                      className={`group relative flex flex-col items-center justify-center gap-2 rounded-2xl border-2 bg-background p-4 transition-all ${
                         canAskPublic
-                          ? "cursor-pointer border-border/40 hover:border-electric-blue/50 hover:bg-electric-blue/5 has-data-checked:border-electric-blue has-data-checked:bg-electric-blue/5 has-data-checked:ring-2 has-data-checked:ring-electric-blue/20"
+                          ? "cursor-pointer border-transparent hover:border-border hover:bg-muted/50 has-data-checked:border-electric-blue/50 has-data-checked:bg-electric-blue/5"
                           : "cursor-not-allowed border-border/20 opacity-50"
                       }`}
                     >
@@ -196,18 +196,18 @@ export function QuestionDrawer({
                         id="r-public"
                         value="public"
                       />
-                      <div className="flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-muted to-muted/50 text-muted-foreground transition-all group-has-data-checked:from-electric-blue group-has-data-checked:to-electric-blue/80 group-has-data-checked:text-white group-has-data-checked:ring-2 group-has-data-checked:ring-white/30">
+                      <div className="flex size-12 items-center justify-center rounded-full bg-muted/80 text-muted-foreground transition-all group-has-data-checked:bg-electric-blue/20 group-has-data-checked:text-electric-blue">
                         <HugeiconsIcon
-                          className="size-7"
+                          className="size-6"
                           icon={UserIcon}
                           strokeWidth={1.8}
                         />
                       </div>
                       <div className="space-y-1 text-center">
-                        <p className="font-bold text-foreground text-sm transition-colors group-has-data-checked:text-electric-blue">
+                        <p className="font-bold text-foreground text-sm transition-colors group-has-data-checked:text-foreground">
                           {t("identifiedOption")}
                         </p>
-                        <p className="font-medium text-muted-foreground/70 text-xs leading-relaxed">
+                        <p className="font-medium text-muted-foreground/70 text-xs leading-relaxed group-has-data-checked:text-muted-foreground">
                           {canAskPublic
                             ? t("identifiedDescription")
                             : tRestrictions("loginForIdentified")}
