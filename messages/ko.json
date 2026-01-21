@@ -68,7 +68,7 @@
     "sending": "보내는 중...",
     "inputPlaceholder": "질문을 입력하세요…",
     "writeQuestion": "질문 작성하기",
-    "toRecipient": "{recipientName} 님에게",
+    "toRecipient": "{recipientName}에게",
     "newQuestion": "새 질문을 남겨보세요",
     "whoToAsk": "누구로 질문할까요?",
     "anonymousOption": "익명",
@@ -79,7 +79,9 @@
     "questionSent": "질문이 전송됐어요!",
     "questionLabel": "질문",
     "defaultQuestion": "궁금한 질문이 여기에 표시돼요.",
-    "defaultAnswer": "재치있는 답변을 공유해 보세요."
+    "defaultAnswer": "재치있는 답변을 공유해 보세요.",
+    "askAnotherQuestion": "{displayName}에게 다른 질문 하러 가기",
+    "questionNumber": "{displayName}에게 온 {number}번째 질문"
   },
   "answers": {
     "answer": "답변",
@@ -99,7 +101,7 @@
     "inboxMenu": "받은 질문함",
     "settingsMenu": "설정",
     "noBio": "한줄소개를 설정하지 않았어요",
-    "backToProfile": "← {displayName} 님의 프로필"
+    "backToProfile": "{displayName}의 프로필"
   },
   "settings": {
     "title": "설정",

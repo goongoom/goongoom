@@ -79,7 +79,9 @@
     "questionSent": "Question sent!",
     "questionLabel": "Question",
     "defaultQuestion": "Your question will appear here.",
-    "defaultAnswer": "Share your witty answer."
+    "defaultAnswer": "Share your witty answer.",
+    "askAnotherQuestion": "Ask {displayName} another question",
+    "questionNumber": "Question #{number} to {displayName}"
   },
   "answers": {
     "answer": "Answer",
@@ -99,7 +101,7 @@
     "inboxMenu": "Inbox",
     "settingsMenu": "Settings",
     "noBio": "No bio set",
-    "backToProfile": "← {displayName}'s profile"
+    "backToProfile": "{displayName}'s profile"
   },
   "settings": {
     "title": "Settings",

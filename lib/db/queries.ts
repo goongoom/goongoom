@@ -156,3 +156,20 @@ export async function getQuestionByIdAndRecipient(
     },
   })
 }
+
+export async function getAnsweredQuestionNumber(
+  questionId: number,
+  recipientClerkId: string
+): Promise<number> {
+  const result = await db.query.questions.findMany({
+    where: (questions, { and, eq, lte }) =>
+      and(
+        eq(questions.recipientClerkId, recipientClerkId),
+        lte(questions.id, questionId)
+      ),
+    with: {
+      answers: true,
+    },
+  })
+  return result.filter((q) => q.answers.length > 0).length
+}
