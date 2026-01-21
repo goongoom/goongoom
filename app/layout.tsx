@@ -2,6 +2,7 @@ import { enUS, koKR } from "@clerk/localizations"
 import { ClerkProvider } from "@clerk/nextjs"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { EscapeInAppBrowser } from "eiab/react"
 import type { Metadata, Viewport } from "next"
 import { NextIntlClientProvider } from "next-intl"
 import { getLocale, getMessages } from "next-intl/server"
@@ -49,6 +50,7 @@ export default async function RootLayout({
               disableTransitionOnChange
               enableSystem
             >
+              <EscapeInAppBrowser />
               <GlobalNav />
               <main className="pt-16">{children}</main>
               <PasskeySetupModal />
