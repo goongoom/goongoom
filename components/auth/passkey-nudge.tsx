@@ -54,8 +54,8 @@ export function PasskeyNudge() {
 
   return (
     <Card className={cn(
-      "border-none overflow-hidden relative group animate-slide-up-fade hover-lift",
-      "bg-[image:var(--gradient-electric)] text-electric-blue-foreground shadow-lg shadow-electric-blue/20"
+      "border-none overflow-hidden relative group animate-slide-up-fade hover-lift bg-gradient-to-br from-electric-blue via-purple to-electric-blue",
+      "text-electric-blue-foreground shadow-lg shadow-electric-blue/20"
     )}>
       <div className="absolute top-0 right-0 p-12 bg-white/10 blur-3xl rounded-full translate-x-1/3 -translate-y-1/3 group-hover:bg-white/20 transition-colors duration-500" />
       <div className="absolute bottom-0 left-0 p-10 bg-purple/20 blur-2xl rounded-full -translate-x-1/3 translate-y-1/3" />

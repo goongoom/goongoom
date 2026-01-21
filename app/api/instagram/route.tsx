@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { cacheLife } from "next/cache";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -12,19 +11,12 @@ const pickText = (value: string | null, fallback: string, max: number) => {
   return clamp(trimmed, max);
 };
 
-async function getFonts() {
-  "use cache";
-  cacheLife("max");
-
-  const fontDir = join(process.cwd(), "public/fonts");
-  const [regular, semibold, bold] = await Promise.all([
-    readFile(join(fontDir, "Pretendard-Regular.ttf")),
-    readFile(join(fontDir, "Pretendard-SemiBold.ttf")),
-    readFile(join(fontDir, "Pretendard-Bold.ttf")),
-  ]);
-
-  return { regular, semibold, bold };
-}
+const fontDir = join(process.cwd(), "public/fonts");
+const fontsPromise = Promise.all([
+  readFile(join(fontDir, "Pretendard-Regular.ttf")),
+  readFile(join(fontDir, "Pretendard-SemiBold.ttf")),
+  readFile(join(fontDir, "Pretendard-Bold.ttf")),
+]);
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -41,7 +33,7 @@ export async function GET(request: Request) {
   );
   const name = pickText(searchParams.get("name"), "사용자", 40);
 
-  const { regular, semibold, bold } = await getFonts();
+  const [regular, semibold, bold] = await fontsPromise;
 
   return new ImageResponse(
     (

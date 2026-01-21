@@ -12,7 +12,6 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['@hugeicons/react', '@hugeicons/core-free-icons'],
   },
-  cacheComponents: true,
 };
 
 export default nextConfig;

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -5,11 +6,6 @@ import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { InstagramIcon, FacebookIcon, GithubIcon } from "@hugeicons/core-free-icons";
-
-// Required for Cache Components with dynamic routes
-export function generateStaticParams() {
-  return [{ username: "__placeholder__" }];
-}
 import { MainContent } from "@/components/layout/main-content";
 import { Card, CardPanel } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -66,20 +62,18 @@ function buildShareUrl({ question, answer, name }: { question: string; answer: s
 
 async function UserProfileContent({ 
   paramsPromise, 
-  searchParamsPromise 
+  searchParamsPromise,
 }: { 
   paramsPromise: Promise<{ username: string }>; 
-  searchParamsPromise?: Promise<Record<string, string | string[] | undefined>>; 
+  searchParamsPromise?: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const [{ username }, searchParams = {}] = await Promise.all([
+  const [{ username }, searchParams = {}, { userId: viewerId }] = await Promise.all([
     paramsPromise,
     searchParamsPromise,
-  ]) as [{ username: string }, Record<string, string | string[] | undefined> | undefined];
-  
-  const [clerkUser, authResult] = await Promise.all([
-    getClerkUserByUsername(username),
     auth(),
-  ]);
+  ]) as [{ username: string }, Record<string, string | string[] | undefined> | undefined, { userId: string | null }];
+  
+  const clerkUser = await getClerkUserByUsername(username);
 
   if (!clerkUser) notFound();
 
@@ -89,7 +83,6 @@ async function UserProfileContent({
   ]);
 
   const displayName = clerkUser.displayName || clerkUser.username || username;
-  const { userId } = authResult;
 
   const error = typeof searchParams?.error === "string" ? decodeURIComponent(searchParams.error) : null;
   const sent = searchParams?.sent === "1";
@@ -106,7 +99,7 @@ async function UserProfileContent({
   ].filter((link) => Boolean(link.href));
 
   const securityLevel = dbUser?.questionSecurityLevel || DEFAULT_QUESTION_SECURITY_LEVEL;
-  const viewerIsVerified = Boolean(userId);
+  const viewerIsVerified = Boolean(viewerId);
   const canAskAnonymously = securityLevel !== "public_only" && (securityLevel === "anyone" || viewerIsVerified);
   const canAskPublic = viewerIsVerified;
   const showSecurityNotice =
@@ -203,8 +196,8 @@ async function UserProfileContent({
         <Card className="mb-6">
           <CardPanel className="space-y-4">
             <h2 className="text-lg font-semibold text-foreground">{recipientUsername} 님에게 새 질문을 남겨보세요</h2>
-            <Alert variant="warning">
-              <AlertDescription>{warningMessage}</AlertDescription>
+            <Alert className="border-electric-blue/30 bg-electric-blue/10 text-electric-blue">
+              <AlertDescription className="text-electric-blue/80">{warningMessage}</AlertDescription>
               <AlertAction>
                 <Button render={<Link href="/sign-in" />} size="sm">로그인</Button>
               </AlertAction>
@@ -282,5 +275,9 @@ async function UserProfileContent({
 }
 
 export default function UserProfilePage({ params, searchParams }: UserProfilePageProps) {
-  return <UserProfileContent paramsPromise={params} searchParamsPromise={searchParams} />;
+  return (
+    <Suspense fallback={null}>
+      <UserProfileContent paramsPromise={params} searchParamsPromise={searchParams} />
+    </Suspense>
+  );
 }

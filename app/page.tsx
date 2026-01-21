@@ -15,9 +15,9 @@ export default async function Home() {
         <div className="absolute top-48 -left-24 h-72 w-72 rounded-full bg-electric-blue/10 blur-3xl filter" />
 
         <div className="relative mx-auto max-w-5xl px-6 pb-24 text-center">
-          <Badge className="mb-6 gap-2" size="lg" variant="warning">
-            <span className="size-2 rounded-full bg-warning animate-pulse" />
-            <span className="text-xs font-semibold tracking-wide">
+          <Badge className="mb-6 gap-2" size="lg" variant="secondary">
+            <span className="size-2 rounded-full bg-neon-pink animate-pulse" />
+            <span className="text-xs font-semibold tracking-wide text-neon-pink">
               지금 가장 핫한 익명 Q&A
             </span>
           </Badge>
@@ -69,7 +69,7 @@ export default async function Home() {
 
               <Card>
                 <CardPanel className="space-y-4">
-                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-lime/10 text-lime-foreground">
+                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-lime/10 text-lime">
                     <HugeiconsIcon icon={SparklesIcon} size={24} />
                   </div>
                   <div className="space-y-2">
@@ -86,7 +86,7 @@ export default async function Home() {
 
         <div className="relative overflow-hidden py-24">
             <div className="mx-auto max-w-5xl px-6 text-center">
-                <div className="mb-8 inline-flex items-center justify-center rounded-full bg-warning/10 p-3 text-warning-foreground">
+                <div className="mb-8 inline-flex items-center justify-center rounded-full bg-sunset-orange/15 p-3 text-sunset-orange">
                     <HugeiconsIcon icon={SentIcon} size={24} />
                 </div>
                 <h2 className="mb-6 text-3xl font-bold text-foreground sm:text-4xl">지금 바로 시작해보세요</h2>

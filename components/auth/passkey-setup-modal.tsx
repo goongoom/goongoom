@@ -57,7 +57,7 @@ export function PasskeySetupModal() {
     <Dialog open={open} onOpenChange={(val) => !val && handleDismiss()}>
       <DialogPopup 
         className={cn(
-          "bg-[image:var(--gradient-electric)] text-electric-blue-foreground border-none shadow-2xl overflow-hidden",
+          "bg-gradient-to-br from-electric-blue via-purple to-electric-blue text-electric-blue-foreground border-none shadow-2xl overflow-hidden",
           "p-0 gap-0 max-w-md w-full"
         )}
         showCloseButton={false}
@@ -100,7 +100,7 @@ export function PasskeySetupModal() {
                 <DialogTitle className="text-2xl font-bold text-white mb-2">
                   🔐 패스키로 더 빠르게!
                 </DialogTitle>
-                <DialogDescription className="text-electric-blue-foreground/90 text-base max-w-[280px]">
+                <DialogDescription className="text-electric-blue-foreground/90 text-base max-w-xs">
                   Face ID, 지문, 또는 기기 잠금으로<br/>한 번의 터치로 로그인하세요.
                 </DialogDescription>
               </DialogHeader>
@@ -116,7 +116,7 @@ export function PasskeySetupModal() {
                 <Button 
                   onClick={createPasskey} 
                   disabled={isLoading}
-                  className="w-full bg-white text-electric-blue hover:bg-white/90 font-bold border-none shadow-lg h-12 text-base rounded-xl transition-all hover:scale-[1.02] active:scale-95"
+                  className="w-full bg-white text-electric-blue hover:bg-white/90 font-bold border-none shadow-lg h-12 text-base rounded-xl transition-all hover-lift tap-scale"
                 >
                   {isLoading ? (
                     <>

@@ -26,9 +26,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider localization={koKR}>
-      <html lang="ko" suppressHydrationWarning>
-        <body className="bg-background font-sans antialiased">
+    <html lang="ko" suppressHydrationWarning>
+      <body className="bg-background font-sans antialiased">
+        <ClerkProvider localization={koKR}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -39,10 +39,10 @@ export default function RootLayout({
             {children}
             <PasskeySetupModal />
           </ThemeProvider>
-          <Analytics />
-          <SpeedInsights />
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+        <Analytics />
+        <SpeedInsights />
+      </body>
+    </html>
   );
 }

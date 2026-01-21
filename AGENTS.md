@@ -11,9 +11,7 @@ Goongoom embraces a calm, tactile, and organized aesthetic inspired by paper not
 
 ## Direct Server Render Strategy (SSR-First)
 - Default to Server Components (RSC) for all data fetching and layout structure.
-- **Avoid `cacheComponents`**: Prefer standard Server Components and SSR for reliability and simplicity.
 - `use client` is reserved for leaf components requiring direct interactivity (e.g., forms, toggles, complex animations).
-- Keep it simple: no `loading.tsx`, no `<Suspense>`. Let pages render directly via SSR for the fastest perceived load time.
 - Use server actions + `<form action={...}>` for all mutations; avoid client-side form libraries.
 - Deduplicate shared reads with React's `cache()` and parallelize independent fetches with `Promise.all`.
 
@@ -169,3 +167,6 @@ import { AnimatedCard } from "@/components/ui/animated-card";
 
 ## Avatars
 - User avatars must come from Clerk `imageUrl`. Only use dicebear for anonymous users.
+
+## ETC
+- Use Bun.

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
@@ -46,12 +47,13 @@ function normalizeHandle(value: string) {
   }
 }
 
-async function SettingsContent({ searchParamsPromise }: { searchParamsPromise?: Promise<Record<string, string | string[] | undefined>> }) {
+async function SettingsContent({ 
+  searchParamsPromise 
+}: { 
+  searchParamsPromise?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const { userId: clerkId } = await auth();
-
-  if (!clerkId) {
-    redirect("/");
-  }
+  if (!clerkId) redirect("/");
 
   const [clerkUser, dbUser, query] = await Promise.all([
     getClerkUserById(clerkId),
@@ -230,5 +232,9 @@ async function SettingsContent({ searchParamsPromise }: { searchParamsPromise?: 
 }
 
 export default function SettingsPage({ searchParams }: SettingsPageProps) {
-  return <SettingsContent searchParamsPromise={searchParams} />;
+  return (
+    <Suspense fallback={null}>
+      <SettingsContent searchParamsPromise={searchParams} />
+    </Suspense>
+  );
 }

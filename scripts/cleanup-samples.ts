@@ -1,5 +1,5 @@
 import { db } from '@/src/db'
-import { users, questions, answers } from '@/src/db/schema'
+import { questions, answers } from '@/src/db/schema'
 import { sql } from 'drizzle-orm'
 
 async function cleanup() {

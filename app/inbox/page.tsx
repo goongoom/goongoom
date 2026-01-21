@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { MainContent } from "@/components/layout/main-content";
@@ -12,12 +13,13 @@ interface InboxPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
-async function InboxContent({ searchParamsPromise }: { searchParamsPromise?: Promise<Record<string, string | string[] | undefined>> }) {
+async function InboxContent({ 
+  searchParamsPromise 
+}: { 
+  searchParamsPromise?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const { userId: clerkId } = await auth();
-
-  if (!clerkId) {
-    redirect("/");
-  }
+  if (!clerkId) redirect("/");
 
   const [, unansweredQuestions, query] = await Promise.all([
     getOrCreateUser(clerkId),
@@ -81,5 +83,9 @@ async function InboxContent({ searchParamsPromise }: { searchParamsPromise?: Pro
 }
 
 export default function InboxPage({ searchParams }: InboxPageProps) {
-  return <InboxContent searchParamsPromise={searchParams} />;
+  return (
+    <Suspense fallback={null}>
+      <InboxContent searchParamsPromise={searchParams} />
+    </Suspense>
+  );
 }

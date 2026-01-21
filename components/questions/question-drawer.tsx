@@ -14,7 +14,6 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,7 +37,7 @@ function SubmitButton() {
   return (
     <Button 
       type="submit" 
-      className="w-full h-12 rounded-xl border-electric-blue bg-electric-blue text-white shadow-lg shadow-electric-blue/20 transition-all hover:bg-electric-blue/90 hover:shadow-electric-blue/30 hover:scale-[1.01] active:scale-[0.99] focus-visible:ring-electric-blue sm:h-13" 
+      className="w-full h-12 rounded-xl border-electric-blue bg-electric-blue text-white shadow-lg shadow-electric-blue/20 hover-lift tap-scale transition-all hover:bg-electric-blue/90 hover:shadow-electric-blue/30 focus-visible:ring-electric-blue sm:h-13" 
       size="lg" 
       disabled={pending}
     >
@@ -70,7 +69,7 @@ export function QuestionDrawer({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <QuestionInputTrigger onClick={() => setOpen(true)} />
-      <SheetContent side="bottom" className="rounded-t-[28px] border-none px-0 pb-0 pt-3 shadow-[0_-8px_40px_rgba(0,0,0,0.12)]">
+      <SheetContent side="bottom" className="rounded-t-3xl border-none px-0 pb-0 pt-3 shadow-xl">
         <div className="mx-auto mb-6 h-1.5 w-12 rounded-full bg-border/40" />
         
         <SheetHeader className="px-6 pb-2 text-left space-y-2">
@@ -80,23 +79,23 @@ export function QuestionDrawer({
            </SheetTitle>
         </SheetHeader>
         
-        <div className="px-6 pb-6 pt-2 h-full overflow-y-auto max-h-[85vh]">
+        <div className="px-6 pb-6 pt-2 h-full overflow-y-auto max-h-svh">
            <form action={submitAction} className="space-y-6">
              <Textarea 
                name="question" 
                placeholder="질문을 입력하세요…" 
-               className="h-32 min-h-[128px] resize-none rounded-2xl border-border bg-muted/30 p-5 text-base shadow-sm focus:border-electric-blue focus:ring-electric-blue/20" 
+               className="min-h-32 resize-none rounded-2xl border-border bg-muted/30 p-5 text-base shadow-sm focus:border-electric-blue focus:ring-electric-blue/20"
                required 
              />
              
              {showSecurityNotice && securityNotice && (
-                <Alert variant="info" className="rounded-2xl border-none bg-blue-50/50 text-blue-900 dark:bg-blue-950/30 dark:text-blue-100">
-                  <AlertDescription className="text-xs font-medium leading-relaxed">{securityNotice}</AlertDescription>
+                <Alert className="rounded-2xl border-none bg-electric-blue/10 text-electric-blue dark:bg-electric-blue/20">
+                  <AlertDescription className="text-xs font-medium leading-relaxed text-electric-blue/80">{securityNotice}</AlertDescription>
                 </Alert>
              )}
 
              <div className="space-y-4">
-               <Label className="text-sm font-semibold text-foreground/90 ml-1">누구로 질문할까요?</Label>
+               <Label className="ml-1 text-sm font-semibold text-foreground/90">누구로 질문할까요?</Label>
                <RadioGroup name="questionType" defaultValue={canAskAnonymously ? "anonymous" : "public"} className="grid grid-cols-2 gap-3">
                  {canAskAnonymously && (
                    <Label className="cursor-pointer group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-border/60 bg-background p-4 transition-all hover:border-electric-blue/50 hover:bg-muted/30 has-data-checked:border-electric-blue has-data-checked:bg-electric-blue/5">
@@ -106,7 +105,7 @@ export function QuestionDrawer({
                       </div>
                       <div className="text-center space-y-0.5">
                         <p className="text-sm font-bold text-foreground group-has-data-checked:text-electric-blue">익명</p>
-                        <p className="text-[11px] font-medium text-muted-foreground/70">익명으로 질문합니다</p>
+                        <p className="text-xs font-medium text-muted-foreground/70">익명으로 질문합니다</p>
                       </div>
                     </Label>
                  )}
@@ -118,7 +117,7 @@ export function QuestionDrawer({
                       </div>
                       <div className="text-center space-y-0.5">
                         <p className="text-sm font-bold text-foreground group-has-data-checked:text-electric-blue">공개</p>
-                        <p className="text-[11px] font-medium text-muted-foreground/70">내 이름으로 질문합니다</p>
+                        <p className="text-xs font-medium text-muted-foreground/70">내 이름으로 질문합니다</p>
                       </div>
                     </Label>
                  )}
@@ -127,7 +126,7 @@ export function QuestionDrawer({
 
              <div className="space-y-3 pb-[calc(1rem+env(safe-area-inset-bottom))]">
                 <SubmitButton />
-                <p className="text-center text-[11px] text-muted-foreground/60">질문 시 사용 약관에 동의하게 됩니다</p>
+                <p className="text-center text-xs text-muted-foreground/60">질문 시 사용 약관에 동의하게 됩니다</p>
              </div>
            </form>
         </div>
