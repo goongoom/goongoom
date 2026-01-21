@@ -1,13 +1,17 @@
 "use client"
 
-import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
+import {
+  AnonymousIcon,
+  ArrowRight01Icon,
+  SentIcon,
+  UserIcon,
+} from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import {
   Drawer,
   DrawerContent,
@@ -16,6 +20,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer"
+import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
 import { createAnswer } from "@/lib/actions/answers"
 import { useRelativeTime } from "@/lib/hooks/use-relative-time"
@@ -76,41 +81,64 @@ export function InboxList({ questions }: InboxListProps) {
       <div className="space-y-3">
         {questions.map((question) => (
           <button
-            className="w-full text-left"
+            className="group w-full text-left"
             key={question.id}
             onClick={() => handleQuestionClick(question)}
             type="button"
           >
-            <Card className="transition-colors hover:bg-accent/50 active:bg-accent">
-              <CardContent className="flex items-center gap-3">
-                <Avatar className="size-10 flex-shrink-0">
+            <div className="flex items-start gap-4 rounded-2xl border border-border/40 bg-background p-4 transition-all group-hover:border-electric-blue/50 group-hover:bg-electric-blue/5 group-hover:ring-2 group-hover:ring-electric-blue/10 group-active:scale-[0.98]">
+              <div className="relative flex-shrink-0">
+                <Avatar className="size-12 ring-2 ring-background">
                   {!question.isAnonymous && question.senderAvatarUrl ? (
                     <AvatarImage
                       alt={question.senderName}
                       src={question.senderAvatarUrl}
                     />
                   ) : null}
-                  <AvatarFallback>
+                  <AvatarFallback className="bg-gradient-to-br from-muted to-muted/50 font-semibold text-muted-foreground">
                     {question.senderName[0] || "?"}
                   </AvatarFallback>
                 </Avatar>
-                <div className="min-w-0 flex-1">
-                  <p className="line-clamp-2 text-foreground leading-relaxed">
-                    {question.content}
-                  </p>
-                  <p className="mt-1 text-muted-foreground text-xs">
+                <div
+                  className={`absolute -right-0.5 -bottom-0.5 flex size-5 items-center justify-center rounded-full ring-2 ring-background ${
+                    question.isAnonymous
+                      ? "bg-gradient-to-br from-purple to-purple/80"
+                      : "bg-gradient-to-br from-electric-blue to-electric-blue/80"
+                  }`}
+                >
+                  <HugeiconsIcon
+                    className="size-3 text-white"
+                    icon={question.isAnonymous ? AnonymousIcon : UserIcon}
+                    strokeWidth={2.5}
+                  />
+                </div>
+              </div>
+
+              <div className="min-w-0 flex-1 space-y-1.5">
+                <p className="line-clamp-2 font-medium text-foreground leading-relaxed">
+                  {question.content}
+                </p>
+                <div className="flex items-center gap-2 text-muted-foreground text-xs">
+                  <span
+                    className={`font-medium ${question.isAnonymous ? "text-purple" : "text-electric-blue"}`}
+                  >
                     {question.isAnonymous
                       ? tCommon("anonymous")
-                      : tCommon("identified")}{" "}
-                    · {formatRelativeTime(question.createdAt)}
-                  </p>
+                      : question.senderName}
+                  </span>
+                  <span className="text-muted-foreground/40">·</span>
+                  <span>{formatRelativeTime(question.createdAt)}</span>
                 </div>
+              </div>
+
+              <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-all group-hover:bg-electric-blue group-hover:text-white">
                 <HugeiconsIcon
-                  className="size-5 flex-shrink-0 text-muted-foreground"
+                  className="size-5"
                   icon={ArrowRight01Icon}
+                  strokeWidth={2}
                 />
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </button>
         ))}
       </div>
@@ -120,41 +148,91 @@ export function InboxList({ questions }: InboxListProps) {
         open={!!selectedQuestion}
       >
         <DrawerContent className="pb-safe">
-          <DrawerHeader>
-            <DrawerTitle>{t("answerDrawerTitle")}</DrawerTitle>
-            {selectedQuestion && (
-              <DrawerDescription className="text-left">
-                {selectedQuestion.content}
-              </DrawerDescription>
-            )}
-          </DrawerHeader>
-          <div className="px-4">
-            <Textarea
-              className="w-full"
-              onChange={(e) => setAnswer(e.target.value)}
-              placeholder={t("answerPlaceholder")}
-              rows={4}
-              value={answer}
-            />
+          <div className="mx-auto w-full max-w-lg">
+            <DrawerHeader className="text-left">
+              <DrawerTitle className="font-bold text-xl tracking-tight">
+                {t("answerDrawerTitle")}
+              </DrawerTitle>
+              {selectedQuestion && (
+                <DrawerDescription className="mt-3 rounded-xl border border-border/40 bg-muted/30 p-4 text-left text-foreground">
+                  <div className="mb-2 flex items-center gap-2">
+                    <div
+                      className={`flex size-6 items-center justify-center rounded-full ${
+                        selectedQuestion.isAnonymous
+                          ? "bg-gradient-to-br from-purple to-purple/80"
+                          : "bg-gradient-to-br from-electric-blue to-electric-blue/80"
+                      }`}
+                    >
+                      <HugeiconsIcon
+                        className="size-3.5 text-white"
+                        icon={
+                          selectedQuestion.isAnonymous
+                            ? AnonymousIcon
+                            : UserIcon
+                        }
+                        strokeWidth={2.5}
+                      />
+                    </div>
+                    <span
+                      className={`font-semibold text-sm ${
+                        selectedQuestion.isAnonymous
+                          ? "text-purple"
+                          : "text-electric-blue"
+                      }`}
+                    >
+                      {selectedQuestion.isAnonymous
+                        ? tCommon("anonymous")
+                        : selectedQuestion.senderName}
+                    </span>
+                  </div>
+                  <p className="leading-relaxed">{selectedQuestion.content}</p>
+                </DrawerDescription>
+              )}
+            </DrawerHeader>
+
+            <div className="space-y-2 px-4">
+              <Textarea
+                className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-electric-blue focus:bg-background focus:ring-2 focus:ring-electric-blue/20"
+                onChange={(e) => setAnswer(e.target.value)}
+                placeholder={t("answerPlaceholder")}
+                rows={4}
+                value={answer}
+              />
+            </div>
+
+            <DrawerFooter className="flex-row gap-3 pt-4">
+              <Button
+                className="h-12 flex-1 rounded-xl font-semibold"
+                onClick={() => setSelectedQuestion(null)}
+                type="button"
+                variant="outline"
+              >
+                {tCommon("cancel")}
+              </Button>
+              <Button
+                className="h-12 flex-1 rounded-xl bg-gradient-to-r from-electric-blue to-electric-blue/90 font-semibold ring-1 ring-electric-blue/50 transition-all hover:ring-2 hover:ring-electric-blue/70 disabled:opacity-70"
+                disabled={!answer.trim() || isSubmitting}
+                onClick={handleSubmit}
+                type="button"
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <Spinner className="size-4 text-white" />
+                    <span>{tCommon("submitting")}</span>
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <HugeiconsIcon
+                      className="size-4"
+                      icon={SentIcon}
+                      strokeWidth={2.5}
+                    />
+                    <span>{t("answerButton")}</span>
+                  </span>
+                )}
+              </Button>
+            </DrawerFooter>
           </div>
-          <DrawerFooter className="flex-row gap-3">
-            <Button
-              className="min-h-11 flex-1"
-              onClick={() => setSelectedQuestion(null)}
-              type="button"
-              variant="ghost"
-            >
-              {tCommon("cancel")}
-            </Button>
-            <Button
-              className="min-h-11 flex-1"
-              disabled={!answer.trim() || isSubmitting}
-              onClick={handleSubmit}
-              type="button"
-            >
-              {isSubmitting ? tCommon("submitting") : t("answerButton")}
-            </Button>
-          </DrawerFooter>
         </DrawerContent>
       </Drawer>
     </>

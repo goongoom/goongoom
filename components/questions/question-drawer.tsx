@@ -1,7 +1,12 @@
 "use client"
 
 import { SignInButton, SignUpButton } from "@clerk/nextjs"
-import { AnonymousIcon, LockIcon, UserIcon } from "@hugeicons/core-free-icons"
+import {
+  AnonymousIcon,
+  LockIcon,
+  SentIcon,
+  UserIcon,
+} from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
@@ -11,6 +16,7 @@ import { Button } from "@/components/ui/button"
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer"
@@ -33,20 +39,20 @@ function SubmitButton() {
   const { pending } = useFormStatus()
   return (
     <Button
-      className="w-full rounded-xl transition-all sm:h-13"
+      className="h-14 w-full rounded-2xl bg-gradient-to-r from-electric-blue to-electric-blue/90 font-semibold text-base ring-1 ring-electric-blue/50 transition-all hover:ring-2 hover:ring-electric-blue/70 disabled:opacity-70"
       disabled={pending}
       size="lg"
       type="submit"
     >
       {pending ? (
-        <span className="flex items-center gap-2">
-          <Spinner className="h-4 w-4 text-white" />
-          {t("sending")}
+        <span className="flex items-center gap-2.5">
+          <Spinner className="size-5 text-white" />
+          <span>{t("sending")}</span>
         </span>
       ) : (
-        <span className="flex items-center gap-2 font-semibold">
-          <HugeiconsIcon className="size-5" icon={LockIcon} strokeWidth={2.5} />
-          {t("sendQuestion")}
+        <span className="flex items-center gap-2.5">
+          <HugeiconsIcon className="size-5" icon={SentIcon} strokeWidth={2.5} />
+          <span>{t("sendQuestion")}</span>
         </span>
       )}
     </Button>
@@ -70,123 +76,156 @@ export function QuestionDrawer({
     <Drawer onOpenChange={setOpen} open={open}>
       <QuestionInputTrigger onClick={() => setOpen(true)} />
       <DrawerContent className="pb-safe">
-        <DrawerHeader className="text-left">
-          <DrawerTitle className="font-bold text-xl leading-tight tracking-tight">
-            <span className="text-primary">{recipientName}</span>{" "}
-            {t("toRecipient", { recipientName: "" })}
-            <br />
-            {t("newQuestion")}
-          </DrawerTitle>
-        </DrawerHeader>
+        <div className="mx-auto w-full max-w-lg">
+          <DrawerHeader className="pb-2 text-left">
+            <DrawerTitle className="font-bold text-2xl tracking-tight">
+              <span className="bg-gradient-to-r from-electric-blue to-purple bg-clip-text text-transparent">
+                {recipientName}
+              </span>
+              <span className="text-foreground">
+                {" "}
+                {t("toRecipient", { recipientName: "" })}
+              </span>
+            </DrawerTitle>
+            <DrawerDescription className="text-base">
+              {t("newQuestion")}
+            </DrawerDescription>
+          </DrawerHeader>
 
-        <div className="max-h-[85vh] overflow-y-auto px-4 pb-6">
-          {requiresSignIn ? (
-            <div className="space-y-6">
-              <p className="text-muted-foreground">{tAuth("loginRequired")}</p>
-              <div className="flex gap-3">
-                <SignInButton mode="modal">
-                  <Button className="flex-1" size="lg" variant="outline">
-                    {tCommon("login")}
-                  </Button>
-                </SignInButton>
-                <SignUpButton mode="modal">
-                  <Button className="flex-1" size="lg">
-                    {tCommon("start")}
-                  </Button>
-                </SignUpButton>
-              </div>
-            </div>
-          ) : (
-            <form action={submitAction} className="space-y-6">
-              <Textarea
-                className="my-2 min-h-32 resize-none rounded-2xl border-border bg-muted/30 p-5 text-base focus:border-primary focus:ring-primary/20"
-                name="question"
-                placeholder={t("inputPlaceholder")}
-                required
-              />
-
-              <div className="space-y-4">
-                <Label className="ml-1 font-semibold text-foreground/90 text-sm">
-                  {t("whoToAsk")}
-                </Label>
-                <RadioGroup
-                  className="grid grid-cols-2 gap-2"
-                  defaultValue={canAskAnonymously ? "anonymous" : "public"}
-                  name="questionType"
-                >
-                  <Label
-                    className={`group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-border/60 bg-background p-4 transition-all ${
-                      canAskAnonymously
-                        ? "cursor-pointer hover:border-electric-blue/50 hover:bg-muted/30 has-data-checked:border-electric-blue has-data-checked:bg-electric-blue/5"
-                        : "cursor-not-allowed opacity-50"
-                    }`}
-                  >
-                    <RadioGroupItem
-                      className="pointer-events-none absolute opacity-0"
-                      disabled={!canAskAnonymously}
-                      id="r-anonymous"
-                      value="anonymous"
+          <div className="max-h-[70vh] overflow-y-auto px-4 pb-8">
+            {requiresSignIn ? (
+              <div className="space-y-6 py-4">
+                <div className="rounded-2xl border border-border/60 bg-muted/20 p-6 text-center">
+                  <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-electric-blue/20 to-purple/20">
+                    <HugeiconsIcon
+                      className="size-7 text-electric-blue"
+                      icon={LockIcon}
+                      strokeWidth={2}
                     />
-                    <div className="rounded-full bg-gradient-to-br from-muted to-muted/50 p-3 text-muted-foreground transition-colors group-has-data-checked:from-electric-blue group-has-data-checked:to-electric-blue/90 group-has-data-checked:text-white">
-                      <HugeiconsIcon
-                        className="size-6"
-                        icon={AnonymousIcon}
-                        strokeWidth={2}
-                      />
-                    </div>
-                    <div className="space-y-0.5 text-center">
-                      <p className="font-bold text-foreground text-sm group-has-data-checked:text-electric-blue">
-                        {t("anonymousOption")}
-                      </p>
-                      <p className="font-medium text-muted-foreground/70 text-xs">
-                        {t("anonymousDescription")}
-                      </p>
-                    </div>
-                  </Label>
-                  <Label
-                    className={`group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-border/60 bg-background p-4 transition-all ${
-                      canAskPublic
-                        ? "cursor-pointer hover:border-electric-blue/50 hover:bg-muted/30 has-data-checked:border-electric-blue has-data-checked:bg-electric-blue/5"
-                        : "cursor-not-allowed opacity-50"
-                    }`}
-                  >
-                    <RadioGroupItem
-                      className="pointer-events-none absolute opacity-0"
-                      disabled={!canAskPublic}
-                      id="r-public"
-                      value="public"
-                    />
-                    <div className="rounded-full bg-gradient-to-br from-muted to-muted/50 p-3 text-muted-foreground transition-colors group-has-data-checked:from-electric-blue group-has-data-checked:to-electric-blue/90 group-has-data-checked:text-white">
-                      <HugeiconsIcon
-                        className="size-6"
-                        icon={UserIcon}
-                        strokeWidth={2}
-                      />
-                    </div>
-                    <div className="space-y-0.5 text-center">
-                      <p className="font-bold text-foreground text-sm group-has-data-checked:text-electric-blue">
-                        {t("identifiedOption")}
-                      </p>
-                      <p className="font-medium text-muted-foreground/70 text-xs">
-                        {canAskPublic
-                          ? t("identifiedDescription")
-                          : tRestrictions("loginForIdentified")}
-                      </p>
-                    </div>
-                  </Label>
-                </RadioGroup>
+                  </div>
+                  <p className="mb-1 font-semibold text-foreground">
+                    {tAuth("loginRequired")}
+                  </p>
+                  <p className="text-muted-foreground text-sm">
+                    {tRestrictions("anonymousLoginRequired")}
+                  </p>
+                </div>
+                <div className="flex gap-3">
+                  <SignInButton mode="modal">
+                    <Button
+                      className="h-12 flex-1 rounded-xl font-semibold"
+                      size="lg"
+                      variant="outline"
+                    >
+                      {tCommon("login")}
+                    </Button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
+                    <Button
+                      className="h-12 flex-1 rounded-xl bg-gradient-to-r from-electric-blue to-electric-blue/90 font-semibold ring-1 ring-electric-blue/50"
+                      size="lg"
+                    >
+                      {tCommon("start")}
+                    </Button>
+                  </SignUpButton>
+                </div>
               </div>
+            ) : (
+              <form action={submitAction} className="space-y-6 py-2">
+                <div className="space-y-2">
+                  <Label className="ml-1 font-semibold text-foreground/90 text-sm">
+                    {t("inputPlaceholder")}
+                  </Label>
+                  <Textarea
+                    className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-electric-blue focus:bg-background focus:ring-2 focus:ring-electric-blue/20"
+                    name="question"
+                    placeholder={t("inputPlaceholder")}
+                    required
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <SubmitButton />
-                <p className="text-center text-muted-foreground/60 text-xs">
-                  {t("termsAgreement")}
-                  <br />
-                  {tRestrictions("anonymousLoginRequired")}
-                </p>
-              </div>
-            </form>
-          )}
+                <div className="space-y-3">
+                  <Label className="ml-1 font-semibold text-foreground/90 text-sm">
+                    {t("whoToAsk")}
+                  </Label>
+                  <RadioGroup
+                    className="grid grid-cols-2 gap-3"
+                    defaultValue={canAskAnonymously ? "anonymous" : "public"}
+                    name="questionType"
+                  >
+                    <Label
+                      className={`group relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 bg-background p-5 transition-all ${
+                        canAskAnonymously
+                          ? "cursor-pointer border-border/40 hover:border-electric-blue/50 hover:bg-electric-blue/5 has-data-checked:border-electric-blue has-data-checked:bg-electric-blue/5 has-data-checked:ring-2 has-data-checked:ring-electric-blue/20"
+                          : "cursor-not-allowed border-border/20 opacity-50"
+                      }`}
+                    >
+                      <RadioGroupItem
+                        className="pointer-events-none absolute opacity-0"
+                        disabled={!canAskAnonymously}
+                        id="r-anonymous"
+                        value="anonymous"
+                      />
+                      <div className="flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-muted to-muted/50 text-muted-foreground transition-all group-has-data-checked:from-electric-blue group-has-data-checked:to-electric-blue/80 group-has-data-checked:text-white group-has-data-checked:ring-2 group-has-data-checked:ring-white/30">
+                        <HugeiconsIcon
+                          className="size-7"
+                          icon={AnonymousIcon}
+                          strokeWidth={1.8}
+                        />
+                      </div>
+                      <div className="space-y-1 text-center">
+                        <p className="font-bold text-foreground text-sm transition-colors group-has-data-checked:text-electric-blue">
+                          {t("anonymousOption")}
+                        </p>
+                        <p className="font-medium text-muted-foreground/70 text-xs leading-relaxed">
+                          {t("anonymousDescription")}
+                        </p>
+                      </div>
+                    </Label>
+
+                    <Label
+                      className={`group relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 bg-background p-5 transition-all ${
+                        canAskPublic
+                          ? "cursor-pointer border-border/40 hover:border-electric-blue/50 hover:bg-electric-blue/5 has-data-checked:border-electric-blue has-data-checked:bg-electric-blue/5 has-data-checked:ring-2 has-data-checked:ring-electric-blue/20"
+                          : "cursor-not-allowed border-border/20 opacity-50"
+                      }`}
+                    >
+                      <RadioGroupItem
+                        className="pointer-events-none absolute opacity-0"
+                        disabled={!canAskPublic}
+                        id="r-public"
+                        value="public"
+                      />
+                      <div className="flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-muted to-muted/50 text-muted-foreground transition-all group-has-data-checked:from-electric-blue group-has-data-checked:to-electric-blue/80 group-has-data-checked:text-white group-has-data-checked:ring-2 group-has-data-checked:ring-white/30">
+                        <HugeiconsIcon
+                          className="size-7"
+                          icon={UserIcon}
+                          strokeWidth={1.8}
+                        />
+                      </div>
+                      <div className="space-y-1 text-center">
+                        <p className="font-bold text-foreground text-sm transition-colors group-has-data-checked:text-electric-blue">
+                          {t("identifiedOption")}
+                        </p>
+                        <p className="font-medium text-muted-foreground/70 text-xs leading-relaxed">
+                          {canAskPublic
+                            ? t("identifiedDescription")
+                            : tRestrictions("loginForIdentified")}
+                        </p>
+                      </div>
+                    </Label>
+                  </RadioGroup>
+                </div>
+
+                <div className="space-y-3 pt-2">
+                  <SubmitButton />
+                  <p className="text-balance text-center text-muted-foreground/50 text-xs leading-relaxed">
+                    {t("termsAgreement")}
+                  </p>
+                </div>
+              </form>
+            )}
+          </div>
         </div>
       </DrawerContent>
     </Drawer>
