@@ -118,7 +118,8 @@
     "bioPlaceholder": "Write a short bio…",
     "socialLinks": "Social links (username only)",
     "accountSettings": "Account settings",
-    "accountSettingsDescription": "Manage your email, password, and security settings."
+    "accountSettingsDescription": "Manage your email, password, and security settings.",
+    "saving": "Saving…"
   },
   "more": {
     "title": "More",

@@ -24,29 +24,29 @@ export function LocaleSelector() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-1">
-        <h3 className="font-medium text-base text-foreground">
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <h3 className="font-semibold text-base text-foreground">
           {t("languageSettings")}
         </h3>
-        <p className="text-muted-foreground text-xs">
+        <p className="text-muted-foreground text-sm leading-relaxed">
           {t("languageSettingsDescription")}
         </p>
       </div>
 
       <RadioGroup
-        className="w-full"
+        className="w-full space-y-3"
         disabled={isPending}
         onValueChange={handleLocaleChange}
         value={selectedLocale}
       >
         {locales.map((locale) => (
           <Label
-            className="flex items-center gap-2 rounded-lg border border-border p-3 transition-colors hover:bg-accent/50 disabled:opacity-50 has-[data-checked]:border-primary/48 has-[data-checked]:bg-accent/50"
+            className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-border bg-background p-4 transition-all hover:border-electric-blue/30 hover:bg-accent/30 disabled:opacity-50 has-[data-checked]:border-electric-blue has-[data-checked]:bg-electric-blue/5 has-[data-checked]:shadow-sm"
             key={locale}
           >
             <RadioGroupItem id={`locale-${locale}`} value={locale} />
-            <span className="font-medium text-foreground">
+            <span className="font-medium text-foreground text-sm">
               {localeNames[locale]}
             </span>
           </Label>
