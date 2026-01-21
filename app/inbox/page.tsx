@@ -1,72 +1,84 @@
-import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
-import { MainContent } from "@/components/layout/main-content";
-import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { getClerkUsersByIds } from "@/lib/clerk";
-import { getOrCreateUser, getUnansweredQuestions } from "@/lib/db/queries";
-import { InboxList } from "./inbox-list";
-import type { Question } from "@/lib/types";
+import { auth } from "@clerk/nextjs/server"
+import { redirect } from "next/navigation"
+import { Suspense } from "react"
+import { MainContent } from "@/components/layout/main-content"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@/components/ui/empty"
+import { getClerkUsersByIds } from "@/lib/clerk"
+import { getOrCreateUser, getUnansweredQuestions } from "@/lib/db/queries"
+import type { Question } from "@/lib/types"
+import { InboxList } from "./inbox-list"
 
 interface InboxPageProps {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>
 }
 
-async function InboxContent({ 
-  searchParamsPromise 
-}: { 
-  searchParamsPromise?: Promise<Record<string, string | string[] | undefined>>;
+async function InboxContent({
+  searchParamsPromise,
+}: {
+  searchParamsPromise?: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const { userId: clerkId } = await auth();
-  if (!clerkId) redirect("/");
+  const { userId: clerkId } = await auth()
+  if (!clerkId) {
+    redirect("/")
+  }
 
   const [, unansweredQuestions, query] = await Promise.all([
     getOrCreateUser(clerkId),
     getUnansweredQuestions(clerkId),
     searchParamsPromise,
-  ]);
+  ])
 
-  const error = typeof query?.error === "string" ? decodeURIComponent(query.error) : null;
+  const error =
+    typeof query?.error === "string" ? decodeURIComponent(query.error) : null
 
   const senderIds = Array.from(
     new Set(
       unansweredQuestions
         .filter((question) => question.isAnonymous !== 1)
         .map((question) => question.senderClerkId)
-        .filter((id): id is string => Boolean(id)),
-    ),
-  );
+        .filter((id): id is string => Boolean(id))
+    )
+  )
 
-  const senderMap = await getClerkUsersByIds(senderIds);
+  const senderMap = await getClerkUsersByIds(senderIds)
 
   const questionsWithSenders = unansweredQuestions.map((question: Question) => {
     const sender =
       question.isAnonymous !== 1 && question.senderClerkId
         ? senderMap.get(question.senderClerkId) || null
-        : null;
-    const isAnonymous = question.isAnonymous === 1 || !sender;
-    
+        : null
+    const isAnonymous = question.isAnonymous === 1 || !sender
+
     return {
       id: question.id,
       content: question.content,
       isAnonymous,
       createdAt: question.createdAt,
-      senderName: isAnonymous ? "익명" : sender?.displayName || sender?.username || "사용자",
+      senderName: isAnonymous
+        ? "익명"
+        : sender?.displayName || sender?.username || "사용자",
       senderAvatarUrl: isAnonymous ? undefined : sender?.avatarUrl,
-    };
-  });
+    }
+  })
 
   return (
     <MainContent>
-      <h1 className="mb-2 text-3xl font-bold text-foreground">받은 질문</h1>
-      <p className="mb-8 text-muted-foreground">아직 답변하지 않은 질문들입니다</p>
+      <h1 className="mb-2 font-bold text-3xl text-foreground">받은 질문</h1>
+      <p className="mb-8 text-muted-foreground">
+        아직 답변하지 않은 질문들입니다
+      </p>
 
-       {error && (
-         <Alert variant="destructive" className="mb-6">
-           <AlertDescription className="text-center">{error}</AlertDescription>
-         </Alert>
-       )}
+      {error && (
+        <Alert className="mb-6" variant="destructive">
+          <AlertDescription className="text-center">{error}</AlertDescription>
+        </Alert>
+      )}
 
       {questionsWithSenders.length === 0 ? (
         <Empty>
@@ -79,7 +91,7 @@ async function InboxContent({
         <InboxList questions={questionsWithSenders} />
       )}
     </MainContent>
-  );
+  )
 }
 
 export default function InboxPage({ searchParams }: InboxPageProps) {
@@ -87,5 +99,5 @@ export default function InboxPage({ searchParams }: InboxPageProps) {
     <Suspense fallback={null}>
       <InboxContent searchParamsPromise={searchParams} />
     </Suspense>
-  );
+  )
 }

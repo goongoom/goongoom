@@ -1,16 +1,18 @@
-import { db } from '@/src/db'
-import { users, questions, answers } from '@/src/db/schema'
-import type { SocialLinks } from '@/src/db/schema'
-import type { QuestionSecurityLevel } from '@/lib/question-security'
-import { eq, desc, count } from 'drizzle-orm'
+import { count, desc, eq } from "drizzle-orm"
+import type { QuestionSecurityLevel } from "@/lib/question-security"
+import { db } from "@/src/db"
+import type { SocialLinks } from "@/src/db/schema"
+import { answers, questions, users } from "@/src/db/schema"
 
 export async function getOrCreateUser(clerkId: string) {
   const existing = await db.query.users.findFirst({
     where: eq(users.clerkId, clerkId),
   })
-  
-  if (existing) return existing
-  
+
+  if (existing) {
+    return existing
+  }
+
   const [newUser] = await db.insert(users).values({ clerkId }).returning()
   return newUser
 }
@@ -30,12 +32,18 @@ export async function updateUserProfile(
     updatedAt: Date
   } = {
     updatedAt: new Date(),
-  };
-  
-  if ('bio' in data) updateData.bio = data.bio;
-  if ('socialLinks' in data) updateData.socialLinks = data.socialLinks;
-  if (data.questionSecurityLevel) updateData.questionSecurityLevel = data.questionSecurityLevel;
-  
+  }
+
+  if ("bio" in data) {
+    updateData.bio = data.bio
+  }
+  if ("socialLinks" in data) {
+    updateData.socialLinks = data.socialLinks
+  }
+  if (data.questionSecurityLevel) {
+    updateData.questionSecurityLevel = data.questionSecurityLevel
+  }
+
   return await db
     .update(users)
     .set(updateData)
@@ -78,10 +86,10 @@ export async function getUserWithAnsweredQuestions(clerkId: string) {
       },
     }),
   ])
-  
+
   return {
     user,
-    answeredQuestions: allQuestions.filter(q => q.answers.length > 0),
+    answeredQuestions: allQuestions.filter((q) => q.answers.length > 0),
   }
 }
 
@@ -93,8 +101,8 @@ export async function getUnansweredQuestions(clerkId: string) {
       answers: true,
     },
   })
-  
-  return allQuestions.filter(q => q.answers.length === 0)
+
+  return allQuestions.filter((q) => q.answers.length === 0)
 }
 
 export async function getRecentAnsweredQuestions(limit = 20) {
@@ -105,8 +113,8 @@ export async function getRecentAnsweredQuestions(limit = 20) {
       question: true,
     },
   })
-  
-  return recentAnswers.map(a => ({
+
+  return recentAnswers.map((a) => ({
     question: a.question,
     answer: a,
     recipientClerkId: a.question.recipientClerkId,

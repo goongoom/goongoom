@@ -2,11 +2,11 @@ export const QUESTION_SECURITY_LEVELS = [
   "anyone",
   "verified_anonymous",
   "public_only",
-] as const;
+] as const
 
-export type QuestionSecurityLevel = (typeof QUESTION_SECURITY_LEVELS)[number];
+export type QuestionSecurityLevel = (typeof QUESTION_SECURITY_LEVELS)[number]
 
-export const DEFAULT_QUESTION_SECURITY_LEVEL: QuestionSecurityLevel = "anyone";
+export const DEFAULT_QUESTION_SECURITY_LEVEL: QuestionSecurityLevel = "anyone"
 
 export const QUESTION_SECURITY_OPTIONS: Record<
   QuestionSecurityLevel,
@@ -25,10 +25,10 @@ export const QUESTION_SECURITY_OPTIONS: Record<
     label: "공개 질문만",
     description: "공개 질문만 받습니다.",
   },
-};
+}
 
 export function isQuestionSecurityLevel(
-  value: string,
+  value: string
 ): value is QuestionSecurityLevel {
-  return (QUESTION_SECURITY_LEVELS as readonly string[]).includes(value);
+  return (QUESTION_SECURITY_LEVELS as readonly string[]).includes(value)
 }

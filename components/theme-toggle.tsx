@@ -1,55 +1,51 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Sun03Icon, Moon02Icon, ComputerIcon } from "@hugeicons/core-free-icons";
-import { Button } from "@/components/ui/button";
+import { ComputerIcon, Moon02Icon, Sun03Icon } from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
+import { useTheme } from "next-themes"
+import { Button } from "@/components/ui/button"
 
 export function ThemeToggle() {
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const { theme, setTheme, resolvedTheme } = useTheme()
 
   const cycleTheme = () => {
     if (theme === "light") {
-      setTheme("dark");
+      setTheme("dark")
     } else if (theme === "dark") {
-      setTheme("system");
+      setTheme("system")
     } else {
-      setTheme("light");
+      setTheme("light")
     }
-  };
+  }
 
-  if (!mounted) {
-    return (
-      <Button
-        aria-label="테마 전환"
-        size="icon-sm"
-        variant="ghost"
-      >
-        <HugeiconsIcon icon={ComputerIcon} className="size-4" />
-      </Button>
-    );
+  const getThemeLabel = () => {
+    if (theme === "light") {
+      return "라이트"
+    }
+    if (theme === "dark") {
+      return "다크"
+    }
+    return "시스템"
+  }
+
+  const getThemeIcon = () => {
+    if (resolvedTheme === "dark") {
+      return Moon02Icon
+    }
+    if (resolvedTheme === "light") {
+      return Sun03Icon
+    }
+    return ComputerIcon
   }
 
   return (
     <Button
-      aria-label={`테마 전환 (현재: ${theme === "light" ? "라이트" : theme === "dark" ? "다크" : "시스템"})`}
+      aria-label={`테마 전환 (현재: ${getThemeLabel()})`}
       onClick={cycleTheme}
       size="icon-sm"
       variant="ghost"
     >
-      {theme === "light" ? (
-        <HugeiconsIcon icon={Sun03Icon} className="size-4" />
-      ) : theme === "dark" ? (
-        <HugeiconsIcon icon={Moon02Icon} className="size-4" />
-      ) : (
-        <HugeiconsIcon icon={ComputerIcon} className="size-4" />
-      )}
+      <HugeiconsIcon className="size-4" icon={getThemeIcon()} />
     </Button>
-  );
+  )
 }

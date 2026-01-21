@@ -1,13 +1,27 @@
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Message01Icon, Share01Icon, ShieldKeyIcon, SparklesIcon, SentIcon } from "@hugeicons/core-free-icons";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardDescription, CardContent, CardTitle } from "@/components/ui/card";
-import { getTotalUserCount } from "@/lib/db/queries";
-import { HeroAuthButtons, BottomCTAButton } from "@/components/auth/auth-buttons";
+import {
+  Message01Icon,
+  SentIcon,
+  Share01Icon,
+  ShieldKeyIcon,
+  SparklesIcon,
+} from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
+import Link from "next/link"
+import {
+  BottomCTAButton,
+  HeroAuthButtons,
+} from "@/components/auth/auth-buttons"
+import { Badge } from "@/components/ui/badge"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card"
+import { getTotalUserCount } from "@/lib/db/queries"
 
 export default async function Home() {
-  const userCount = await getTotalUserCount();
+  const userCount = await getTotalUserCount()
   return (
     <div className="h-full">
       <div className="relative overflow-hidden pt-32">
@@ -16,17 +30,17 @@ export default async function Home() {
 
         <div className="relative mx-auto max-w-5xl px-6 pb-24 text-center">
           <Badge className="mb-6 gap-2" variant="secondary">
-            <span className="size-2 rounded-full bg-neon-pink animate-pulse" />
-            <span className="text-xs font-semibold tracking-wide text-neon-pink">
+            <span className="size-2 animate-pulse rounded-full bg-neon-pink" />
+            <span className="font-semibold text-neon-pink text-xs tracking-wide">
               지금 가장 핫한 익명 Q&A
             </span>
           </Badge>
-          
-          <h1 className="mb-8 text-4xl font-extrabold leading-tight tracking-tight text-foreground sm:text-7xl text-balance">
+
+          <h1 className="mb-8 text-balance font-extrabold text-4xl text-foreground leading-tight tracking-tight sm:text-7xl">
             궁금한 건 뭐든 물어보세요
           </h1>
-          
-          <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
+
+          <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground leading-relaxed sm:text-xl">
             익명으로 질문하고, 솔직하게 답변하세요. <br />
             당신의 프로필을 공유하고 친구들의 진짜 속마음을 들어보세요.
           </p>
@@ -36,7 +50,7 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="border-y border-border bg-muted/40 py-24">
+        <div className="border-border border-y bg-muted/40 py-24">
           <div className="mx-auto max-w-5xl px-6">
             <div className="grid gap-8 sm:grid-cols-3">
               <Card>
@@ -47,7 +61,8 @@ export default async function Home() {
                   <div className="space-y-2">
                     <CardTitle className="text-xl">안전한 익명성</CardTitle>
                     <CardDescription className="text-base">
-                      질문하는 사람의 정보는 비공개로 유지됩니다. 부담 없이 솔직한 대화를 시작해보세요.
+                      질문하는 사람의 정보는 비공개로 유지됩니다. 부담 없이
+                      솔직한 대화를 시작해보세요.
                     </CardDescription>
                   </div>
                 </CardContent>
@@ -61,7 +76,8 @@ export default async function Home() {
                   <div className="space-y-2">
                     <CardTitle className="text-xl">쉬운 공유</CardTitle>
                     <CardDescription className="text-base">
-                      인스타그램, 트위터 어디든 링크를 공유하세요. 클릭 한 번으로 질문을 받을 수 있습니다.
+                      인스타그램, 트위터 어디든 링크를 공유하세요. 클릭 한
+                      번으로 질문을 받을 수 있습니다.
                     </CardDescription>
                   </div>
                 </CardContent>
@@ -75,7 +91,8 @@ export default async function Home() {
                   <div className="space-y-2">
                     <CardTitle className="text-xl">인스타그램 공유</CardTitle>
                     <CardDescription className="text-base">
-                      재치있는 답변을 이미지로 저장해 인스타그램 스토리와 피드에 바로 공유해보세요.
+                      재치있는 답변을 이미지로 저장해 인스타그램 스토리와 피드에
+                      바로 공유해보세요.
                     </CardDescription>
                   </div>
                 </CardContent>
@@ -85,37 +102,57 @@ export default async function Home() {
         </div>
 
         <div className="relative overflow-hidden py-24">
-            <div className="mx-auto max-w-5xl px-6 text-center">
-                <div className="mb-8 inline-flex items-center justify-center rounded-full bg-sunset-orange/15 p-3 text-sunset-orange">
-                    <HugeiconsIcon icon={SentIcon} size={24} />
-                </div>
-                <h2 className="mb-6 text-3xl font-bold text-foreground sm:text-4xl">지금 바로 시작해보세요</h2>
-                <p className="mb-10 text-lg text-muted-foreground">
-                    이미 {userCount.toLocaleString()}명의 유저가 궁금닷컴을 사용하고 있어요.
-                </p>
-                <BottomCTAButton />
+          <div className="mx-auto max-w-5xl px-6 text-center">
+            <div className="mb-8 inline-flex items-center justify-center rounded-full bg-sunset-orange/15 p-3 text-sunset-orange">
+              <HugeiconsIcon icon={SentIcon} size={24} />
             </div>
+            <h2 className="mb-6 font-bold text-3xl text-foreground sm:text-4xl">
+              지금 바로 시작해보세요
+            </h2>
+            <p className="mb-10 text-lg text-muted-foreground">
+              이미 {userCount.toLocaleString()}명의 유저가 궁금닷컴을 사용하고
+              있어요.
+            </p>
+            <BottomCTAButton />
+          </div>
         </div>
       </div>
 
-      <footer className="border-t border-border bg-background py-12">
+      <footer className="border-border border-t bg-background py-12">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 px-6 sm:flex-row">
           <div className="flex items-center gap-2">
             <div className="flex h-6 w-6 items-center justify-center rounded bg-muted text-muted-foreground">
               <HugeiconsIcon icon={Message01Icon} size={14} strokeWidth={3} />
             </div>
-            <span className="text-sm font-semibold text-muted-foreground">궁금닷컴</span>
+            <span className="font-semibold text-muted-foreground text-sm">
+              궁금닷컴
+            </span>
           </div>
-          <div className="flex gap-6 text-sm text-muted-foreground">
-            <Link href="#" className="inline-flex min-h-11 items-center transition-colors">이용약관</Link>
-            <Link href="#" className="inline-flex min-h-11 items-center transition-colors">개인정보처리방침</Link>
-            <Link href="#" className="inline-flex min-h-11 items-center transition-colors">문의하기</Link>
+          <div className="flex gap-6 text-muted-foreground text-sm">
+            <Link
+              className="inline-flex min-h-11 items-center transition-colors"
+              href="#"
+            >
+              이용약관
+            </Link>
+            <Link
+              className="inline-flex min-h-11 items-center transition-colors"
+              href="#"
+            >
+              개인정보처리방침
+            </Link>
+            <Link
+              className="inline-flex min-h-11 items-center transition-colors"
+              href="#"
+            >
+              문의하기
+            </Link>
           </div>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-muted-foreground text-sm">
             © 2026 Goongoom. All rights reserved.
           </div>
         </div>
       </footer>
     </div>
-  );
+  )
 }
