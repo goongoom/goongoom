@@ -12,12 +12,7 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty"
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldLabel,
-} from "@/components/ui/field"
+import { Field, FieldContent, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -190,82 +185,30 @@ async function SettingsContent({
       <PasskeyNudge />
 
       <form action={submitProfile} className="space-y-6">
-        <Field>
-          <FieldLabel htmlFor="username">사용자 이름</FieldLabel>
-          <FieldContent>
-            <Input disabled id="username" value={clerkUser.username || ""} />
-          </FieldContent>
-          <FieldDescription>
-            사용자 이름은 Clerk에서 관리됩니다
-          </FieldDescription>
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="displayName">표시 이름</FieldLabel>
-          <FieldContent>
-            <Input
-              disabled
-              id="displayName"
-              value={clerkUser.displayName || ""}
-            />
-          </FieldContent>
-          <FieldDescription>표시 이름은 Clerk에서 관리됩니다</FieldDescription>
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="bio">소개</FieldLabel>
-          <Textarea
-            defaultValue={initialBio || ""}
-            id="bio"
-            name="bio"
-            placeholder="자기소개를 입력하세요…"
-            rows={4}
-          />
-        </Field>
-
-        <Field>
-          <FieldLabel>질문 보안 수준</FieldLabel>
-          <FieldDescription>
-            익명 질문을 제한해 악성 질문을 줄일 수 있습니다.
-          </FieldDescription>
-          <FieldContent>
-            <RadioGroup
-              className="w-full"
-              defaultValue={initialQuestionSecurityLevel}
-              name="questionSecurityLevel"
-            >
-              {QUESTION_SECURITY_LEVELS.map((level) => {
-                const option = QUESTION_SECURITY_OPTIONS[level]
-                return (
-                  <Label
-                    className="flex items-start gap-2 rounded-lg border border-border p-3 transition-colors hover:bg-accent/50 has-[data-checked]:border-primary/48 has-[data-checked]:bg-accent/50"
-                    key={level}
-                  >
-                    <RadioGroupItem id={`qsl-${level}`} value={level} />
-                    <div className="flex flex-col gap-1">
-                      <p className="font-medium text-foreground">
-                        {option.label}
-                      </p>
-                      <p className="text-muted-foreground text-xs">
-                        {option.description}
-                      </p>
-                    </div>
-                  </Label>
-                )
-              })}
-            </RadioGroup>
-          </FieldContent>
-        </Field>
-
-        <div className="space-y-4 border-border border-t pt-6">
+        <div className="space-y-4">
           <div className="space-y-1">
-            <h3 className="font-medium text-base text-foreground">소셜 링크</h3>
+            <h3 className="font-medium text-base text-foreground">계정 설정</h3>
             <p className="text-muted-foreground text-xs">
-              사용자 이름(핸들)만 입력하세요.
+              프로필 정보와 소셜 링크를 설정하세요.
             </p>
           </div>
 
-          <div className="space-y-4">
+          <Field>
+            <FieldLabel htmlFor="bio">소개</FieldLabel>
+            <Textarea
+              defaultValue={initialBio || ""}
+              id="bio"
+              name="bio"
+              placeholder="자기소개를 입력하세요…"
+              rows={4}
+            />
+          </Field>
+
+          <div className="space-y-4 pt-2">
+            <p className="text-muted-foreground text-xs">
+              소셜 링크 (사용자 이름만 입력)
+            </p>
+
             <Field>
               <FieldLabel htmlFor="instagram">Instagram</FieldLabel>
               <FieldContent>
@@ -308,6 +251,46 @@ async function SettingsContent({
               </FieldContent>
             </Field>
           </div>
+        </div>
+
+        <div className="space-y-4 border-border border-t pt-6">
+          <div className="space-y-1">
+            <h3 className="font-medium text-base text-foreground">질문 설정</h3>
+            <p className="text-muted-foreground text-xs">
+              익명 질문을 제한해 악성 질문을 줄일 수 있습니다.
+            </p>
+          </div>
+
+          <Field>
+            <FieldLabel>질문 보안 수준</FieldLabel>
+            <FieldContent>
+              <RadioGroup
+                className="w-full"
+                defaultValue={initialQuestionSecurityLevel}
+                name="questionSecurityLevel"
+              >
+                {QUESTION_SECURITY_LEVELS.map((level) => {
+                  const option = QUESTION_SECURITY_OPTIONS[level]
+                  return (
+                    <Label
+                      className="flex items-start gap-2 rounded-lg border border-border p-3 transition-colors hover:bg-accent/50 has-[data-checked]:border-primary/48 has-[data-checked]:bg-accent/50"
+                      key={level}
+                    >
+                      <RadioGroupItem id={`qsl-${level}`} value={level} />
+                      <div className="flex flex-col gap-1">
+                        <p className="font-medium text-foreground">
+                          {option.label}
+                        </p>
+                        <p className="text-muted-foreground text-xs">
+                          {option.description}
+                        </p>
+                      </div>
+                    </Label>
+                  )
+                })}
+              </RadioGroup>
+            </FieldContent>
+          </Field>
         </div>
 
         <Button className="w-full" type="submit">
