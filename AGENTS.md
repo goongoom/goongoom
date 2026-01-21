@@ -1,13 +1,13 @@
 # AGENTS
 
-## Design Philosophy - Calm Pastel & Paper Aesthetic
+## Design Philosophy - Apple Human Interface Guidelines
 
-Goongoom embraces a calm, tactile, and organized aesthetic inspired by paper notes and post-it arrangements:
-- **Calm Pastels**: Soft, soothing colors like electric blue, neon pink, lime, sunset orange, and purple.
-- **Paper-Like Textures**: UI elements that feel like physical paper - subtle shadows, slight rotations, and overlapping "post-it" cards.
-- **Thoughtful UI**: Clean layouts, generous whitespace, and readable typography that prioritizes clarity over visual noise.
+Goongoom follows Apple's Human Interface Guidelines, embracing clarity, deference, and depth:
+- **Clarity**: Content is the focus. Typography is legible, icons are precise, and UI elements are purposeful.
+- **Deference**: The UI defers to content. Minimal chrome, subtle borders, and restrained color usage.
+- **Depth**: Visual layers provide hierarchy through soft shadows and subtle elevation.
 - **Mobile-First**: Touch-friendly interactions (44px minimum targets), responsive layouts, and gesture-based navigation.
-- **Tactile Feedback**: Subtle, organic animations that mimic physical movement rather than digital flashes.
+- **Refined Motion**: Smooth, physics-based animations that feel responsive and natural.
 
 ## Direct Server Render Strategy (SSR-First)
 - Default to Server Components (RSC) for all data fetching and layout structure.
@@ -55,20 +55,6 @@ All colors support dark mode with optimized contrast (AA/AAA compliant).
 - `fire`: Warm fire (sunset-orange → deep-orange) - Trending content
 - `aurora`: Northern lights (electric-blue → lime) - Highlights
 
-**Usage Examples**:
-```tsx
-import { GradientCard } from "@/components/vibrant/gradient-card";
-import { GradientButton } from "@/components/vibrant/gradient-button";
-
-<GradientCard variant="sunset">
-  <h2>Featured Content</h2>
-</GradientCard>
-
-<GradientButton variant="electric">
-  Click Me
-</GradientButton>
-```
-
 **Best Practices**:
 - Use gradients sparingly for emphasis (1-2 per screen)
 - Prefer solid colors for text-heavy content
@@ -76,56 +62,32 @@ import { GradientButton } from "@/components/vibrant/gradient-button";
 
 ## Animation System
 
-15 animation variants for smooth, delightful micro-interactions:
+Animation utility classes are available in `globals.css` for micro-interactions:
 
-**Available Animations**:
-- `fadeIn`, `fadeOut`: Opacity transitions
-- `slideUp`, `slideDown`, `slideLeft`, `slideRight`: Directional slides
-- `slideUpFade`, `slideDownFade`: Combined slide + fade
-- `scaleIn`, `scaleOut`: Scale transitions
-- `bounce`: Bouncy spring effect
-- `pulse`: Subtle pulsing
-- `shimmer`: Loading shimmer effect
-- `wiggle`: Playful shake
-- `pop`: Delightful pop-in
+**Available Classes**:
+- `animate-fade-in`, `animate-fade-out`: Opacity transitions
+- `animate-slide-up`, `animate-slide-down`, `animate-slide-left`, `animate-slide-right`: Directional slides
+- `animate-slide-up-fade`, `animate-slide-down-fade`: Combined slide + fade
+- `animate-scale-in`, `animate-scale-out`: Scale transitions
+- `animate-bounce`: Bouncy spring effect
+- `animate-pulse`: Subtle pulsing
+- `animate-shimmer`: Loading shimmer effect
+- `animate-wiggle`: Playful shake
+- `animate-pop`: Delightful pop-in
 
-**Durations**: `fast` (150ms), `normal` (250ms), `slow` (400ms)
-**Easings**: `ease-out`, `ease-in-out`, `spring` (bouncy)
-
-**Usage Examples**:
+**Usage**: Apply directly to elements via className:
 ```tsx
-import { AnimatedButton } from "@/components/vibrant/animated-button";
-import { AnimatedCard } from "@/components/vibrant/animated-card";
-
-<AnimatedButton animation="pop" duration="normal" easing="spring">
-  Click Me
-</AnimatedButton>
-
-<AnimatedCard animation="slideUpFade" delay={100}>
+<Card className="animate-slide-up-fade">
   <p>Content</p>
-</AnimatedCard>
+</Card>
 ```
 
 **Performance Guidelines**:
 - All animations are GPU-accelerated (transform, opacity only)
 - Respects `prefers-reduced-motion` for accessibility
-- Use staggered delays for list animations: `delay={index * 50}`
 - Target 60fps for smooth interactions
 
 ## Component Guidelines
-
-**Vibrant Components**:
-- `<GradientCard>`: Cards with gradient backgrounds (10 variants)
-- `<GradientButton>`: Buttons with gradient backgrounds (10 variants)
-- `<AnimatedButton>`: Buttons with entrance animations (15 variants)
-- `<AnimatedCard>`: Cards with entrance animations (15 variants)
-- `<VibrantBadge>`: Badges with vibrant colors (5 colors)
-
-**When to Use Animated Components**:
-- Use for primary CTAs and important interactive elements
-- Apply to cards in lists/grids for staggered reveals
-- Add to modals/dialogs for smooth entrances
-- Avoid on static content or text-heavy sections
 
 **Touch Target Sizing**:
 - Minimum 44px × 44px for all interactive elements

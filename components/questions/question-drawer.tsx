@@ -1,11 +1,13 @@
 "use client"
 
+import { SignInButton, SignUpButton } from "@clerk/nextjs"
 import { AnonymousIcon, LockIcon, UserIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { useState } from "react"
+import { useTranslations } from "next-intl"
+import { useEffect, useRef, useState } from "react"
 import { useFormStatus } from "react-dom"
+import { toast } from "sonner"
 import { QuestionInputTrigger } from "@/components/questions/question-input-trigger"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import {
   Drawer,
@@ -19,20 +21,22 @@ import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
 
 interface QuestionDrawerProps {
-  recipientUsername: string
+  recipientName: string
   recipientClerkId: string
   canAskAnonymously: boolean
   canAskPublic: boolean
   showSecurityNotice: boolean
   securityNotice: string | null
   submitAction: (formData: FormData) => Promise<void>
+  requiresSignIn?: boolean
 }
 
 function SubmitButton() {
+  const t = useTranslations("questions")
   const { pending } = useFormStatus()
   return (
     <Button
-      className="w-full rounded-xl border-electric-blue bg-electric-blue text-white shadow-electric-blue/20 shadow-lg transition-all hover:bg-electric-blue/90 hover:shadow-electric-blue/30 sm:h-13"
+      className="w-full rounded-xl transition-all sm:h-13"
       disabled={pending}
       size="lg"
       type="submit"
@@ -40,12 +44,12 @@ function SubmitButton() {
       {pending ? (
         <span className="flex items-center gap-2">
           <Spinner className="h-4 w-4 text-white" />
-          보내는 중...
+          {t("sending")}
         </span>
       ) : (
         <span className="flex items-center gap-2 font-semibold">
           <HugeiconsIcon className="size-5" icon={LockIcon} strokeWidth={2.5} />
-          질문 보내기
+          {t("sendQuestion")}
         </span>
       )}
     </Button>
@@ -53,14 +57,34 @@ function SubmitButton() {
 }
 
 export function QuestionDrawer({
-  recipientUsername,
+  recipientName,
   canAskAnonymously,
   canAskPublic,
   showSecurityNotice,
   securityNotice,
   submitAction,
+  requiresSignIn = false,
 }: QuestionDrawerProps) {
+  const t = useTranslations("questions")
+  const tAuth = useTranslations("auth")
+  const tCommon = useTranslations("common")
   const [open, setOpen] = useState(false)
+  const toastShownRef = useRef(false)
+
+  useEffect(() => {
+    if (
+      open &&
+      showSecurityNotice &&
+      securityNotice &&
+      !toastShownRef.current
+    ) {
+      toast.info(securityNotice)
+      toastShownRef.current = true
+    }
+    if (!open) {
+      toastShownRef.current = false
+    }
+  }, [open, showSecurityNotice, securityNotice])
 
   return (
     <Drawer onOpenChange={setOpen} open={open}>
@@ -68,96 +92,107 @@ export function QuestionDrawer({
       <DrawerContent className="pb-safe">
         <DrawerHeader className="text-left">
           <DrawerTitle className="font-bold text-xl leading-tight tracking-tight">
-            <span className="text-electric-blue">@{recipientUsername}</span>{" "}
-            님에게
-            <br />새 질문을 남겨보세요
+            <span className="text-primary">{recipientName}</span>{" "}
+            {t("toRecipient", { recipientName: "" })}
+            <br />
+            {t("newQuestion")}
           </DrawerTitle>
         </DrawerHeader>
 
         <div className="max-h-[60vh] overflow-y-auto px-4 pb-6">
-          <form action={submitAction} className="space-y-6">
-            <Textarea
-              className="min-h-32 resize-none rounded-2xl border-border bg-muted/30 p-5 text-base shadow-sm focus:border-electric-blue focus:ring-electric-blue/20"
-              name="question"
-              placeholder="질문을 입력하세요…"
-              required
-            />
-
-            {showSecurityNotice && securityNotice && (
-              <Alert className="rounded-2xl border-none bg-electric-blue/10 text-electric-blue dark:bg-electric-blue/20">
-                <AlertDescription className="font-medium text-electric-blue/80 text-xs leading-relaxed">
-                  {securityNotice}
-                </AlertDescription>
-              </Alert>
-            )}
-
-            <div className="space-y-4">
-              <Label className="ml-1 font-semibold text-foreground/90 text-sm">
-                누구로 질문할까요?
-              </Label>
-              <RadioGroup
-                className="grid grid-cols-2 gap-2"
-                defaultValue={canAskAnonymously ? "anonymous" : "public"}
-                name="questionType"
-              >
-                {canAskAnonymously && (
-                  <Label className="group relative flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border border-border/60 bg-background p-4 transition-all hover:border-electric-blue/50 hover:bg-muted/30 has-data-checked:border-electric-blue has-data-checked:bg-electric-blue/5">
-                    <RadioGroupItem
-                      className="pointer-events-none absolute opacity-0"
-                      id="r-anonymous"
-                      value="anonymous"
-                    />
-                    <div className="rounded-full bg-gradient-to-br from-muted to-muted/50 p-3 text-muted-foreground transition-colors group-has-data-checked:from-electric-blue group-has-data-checked:to-electric-blue/90 group-has-data-checked:text-white">
-                      <HugeiconsIcon
-                        className="size-6"
-                        icon={AnonymousIcon}
-                        strokeWidth={2}
-                      />
-                    </div>
-                    <div className="space-y-0.5 text-center">
-                      <p className="font-bold text-foreground text-sm group-has-data-checked:text-electric-blue">
-                        익명
-                      </p>
-                      <p className="font-medium text-muted-foreground/70 text-xs">
-                        익명으로 질문합니다
-                      </p>
-                    </div>
-                  </Label>
-                )}
-                {canAskPublic && (
-                  <Label className="group relative flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border border-border/60 bg-background p-4 transition-all hover:border-electric-blue/50 hover:bg-muted/30 has-data-checked:border-electric-blue has-data-checked:bg-electric-blue/5">
-                    <RadioGroupItem
-                      className="pointer-events-none absolute opacity-0"
-                      id="r-public"
-                      value="public"
-                    />
-                    <div className="rounded-full bg-gradient-to-br from-muted to-muted/50 p-3 text-muted-foreground transition-colors group-has-data-checked:from-electric-blue group-has-data-checked:to-electric-blue/90 group-has-data-checked:text-white">
-                      <HugeiconsIcon
-                        className="size-6"
-                        icon={UserIcon}
-                        strokeWidth={2}
-                      />
-                    </div>
-                    <div className="space-y-0.5 text-center">
-                      <p className="font-bold text-foreground text-sm group-has-data-checked:text-electric-blue">
-                        공개
-                      </p>
-                      <p className="font-medium text-muted-foreground/70 text-xs">
-                        내 이름으로 질문합니다
-                      </p>
-                    </div>
-                  </Label>
-                )}
-              </RadioGroup>
+          {requiresSignIn ? (
+            <div className="space-y-6">
+              <p className="text-muted-foreground">{tAuth("loginRequired")}</p>
+              <div className="flex gap-3">
+                <SignInButton mode="modal">
+                  <Button className="flex-1" size="lg" variant="outline">
+                    {tCommon("login")}
+                  </Button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <Button className="flex-1" size="lg">
+                    {tCommon("start")}
+                  </Button>
+                </SignUpButton>
+              </div>
             </div>
+          ) : (
+            <form action={submitAction} className="space-y-6">
+              <Textarea
+                className="my-2 min-h-32 resize-none rounded-2xl border-border bg-muted/30 p-5 text-base focus:border-primary focus:ring-primary/20"
+                name="question"
+                placeholder={t("inputPlaceholder")}
+                required
+              />
 
-            <div className="space-y-2">
-              <SubmitButton />
-              <p className="text-center text-muted-foreground/60 text-xs">
-                질문 시 사용 약관에 동의하게 됩니다
-              </p>
-            </div>
-          </form>
+              <div className="space-y-4">
+                <Label className="ml-1 font-semibold text-foreground/90 text-sm">
+                  {t("whoToAsk")}
+                </Label>
+                <RadioGroup
+                  className="grid grid-cols-2 gap-2"
+                  defaultValue={canAskAnonymously ? "anonymous" : "public"}
+                  name="questionType"
+                >
+                  {canAskAnonymously && (
+                    <Label className="group relative flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border border-border/60 bg-background p-4 transition-all hover:border-electric-blue/50 hover:bg-muted/30 has-data-checked:border-electric-blue has-data-checked:bg-electric-blue/5">
+                      <RadioGroupItem
+                        className="pointer-events-none absolute opacity-0"
+                        id="r-anonymous"
+                        value="anonymous"
+                      />
+                      <div className="rounded-full bg-gradient-to-br from-muted to-muted/50 p-3 text-muted-foreground transition-colors group-has-data-checked:from-electric-blue group-has-data-checked:to-electric-blue/90 group-has-data-checked:text-white">
+                        <HugeiconsIcon
+                          className="size-6"
+                          icon={AnonymousIcon}
+                          strokeWidth={2}
+                        />
+                      </div>
+                      <div className="space-y-0.5 text-center">
+                        <p className="font-bold text-foreground text-sm group-has-data-checked:text-electric-blue">
+                          {t("anonymousOption")}
+                        </p>
+                        <p className="font-medium text-muted-foreground/70 text-xs">
+                          {t("anonymousDescription")}
+                        </p>
+                      </div>
+                    </Label>
+                  )}
+                  {canAskPublic && (
+                    <Label className="group relative flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border border-border/60 bg-background p-4 transition-all hover:border-electric-blue/50 hover:bg-muted/30 has-data-checked:border-electric-blue has-data-checked:bg-electric-blue/5">
+                      <RadioGroupItem
+                        className="pointer-events-none absolute opacity-0"
+                        id="r-public"
+                        value="public"
+                      />
+                      <div className="rounded-full bg-gradient-to-br from-muted to-muted/50 p-3 text-muted-foreground transition-colors group-has-data-checked:from-electric-blue group-has-data-checked:to-electric-blue/90 group-has-data-checked:text-white">
+                        <HugeiconsIcon
+                          className="size-6"
+                          icon={UserIcon}
+                          strokeWidth={2}
+                        />
+                      </div>
+                      <div className="space-y-0.5 text-center">
+                        <p className="font-bold text-foreground text-sm group-has-data-checked:text-electric-blue">
+                          {t("identifiedOption")}
+                        </p>
+                        <p className="font-medium text-muted-foreground/70 text-xs">
+                          {t("identifiedDescription")}
+                        </p>
+                      </div>
+                    </Label>
+                  )}
+                </RadioGroup>
+              </div>
+
+              <div className="space-y-2">
+                <SubmitButton />
+                <p className="text-center text-muted-foreground/60 text-xs">
+                  {t("termsAgreement")}
+                </p>
+              </div>
+            </form>
+          )}
         </div>
       </DrawerContent>
     </Drawer>

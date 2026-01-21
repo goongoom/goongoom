@@ -5,20 +5,23 @@ import {
   Settings01Icon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { getTranslations } from "next-intl/server"
 import { MainContent } from "@/components/layout/main-content"
 import { Button } from "@/components/ui/button"
 
-const moreOptions = [
-  { icon: Megaphone02Icon, label: "공지사항" },
-  { icon: GiftIcon, label: "이벤트" },
-  { icon: CustomerServiceIcon, label: "문의하기" },
-  { icon: Settings01Icon, label: "환경설정" },
-]
+export default async function MorePage() {
+  const t = await getTranslations("more")
 
-export default function MorePage() {
+  const moreOptions = [
+    { icon: Megaphone02Icon, labelKey: "announcements" as const },
+    { icon: GiftIcon, labelKey: "events" as const },
+    { icon: CustomerServiceIcon, labelKey: "contact" as const },
+    { icon: Settings01Icon, labelKey: "settings" as const },
+  ]
+
   return (
     <MainContent>
-      <h1 className="mb-8 font-bold text-3xl text-foreground">더보기</h1>
+      <h1 className="mb-8 font-bold text-3xl text-foreground">{t("title")}</h1>
 
       <div className="space-y-3">
         {moreOptions.map((option) => {
@@ -26,7 +29,7 @@ export default function MorePage() {
           return (
             <Button
               className="min-h-12 w-full justify-start gap-4"
-              key={option.label}
+              key={option.labelKey}
               size="lg"
               variant="outline"
             >
@@ -34,7 +37,9 @@ export default function MorePage() {
                 className="size-5 text-muted-foreground"
                 icon={Icon}
               />
-              <span className="text-base text-foreground">{option.label}</span>
+              <span className="text-base text-foreground">
+                {t(option.labelKey)}
+              </span>
             </Button>
           )
         })}

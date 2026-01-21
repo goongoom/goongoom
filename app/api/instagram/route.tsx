@@ -25,12 +25,12 @@ export async function GET(request: Request) {
 
   const question = pickText(
     searchParams.get("question"),
-    "궁금한 질문이 여기에 표시됩니다.",
+    "궁금한 질문이 여기에 표시돼요.",
     180
   )
   const answer = pickText(
     searchParams.get("answer"),
-    "재치있는 답변을 공유해보세요.",
+    "재치있는 답변을 공유해 보세요.",
     260
   )
   const name = pickText(searchParams.get("name"), "사용자", 40)

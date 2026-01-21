@@ -18,6 +18,7 @@ import {
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import Link from "next/link"
+import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -33,67 +34,51 @@ import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 
 function ProfileDrawerContent() {
+  const t = useTranslations("profile")
+  const tCommon = useTranslations("common")
   const { user } = useUser()
   const profileHref = user?.username ? `/${user.username}` : "/settings"
-  const displayName =
-    `${user?.lastName}${user?.firstName}` ||
-    user?.username ||
-    user?.primaryEmailAddress?.emailAddress
 
   return (
     <>
-      <DrawerHeader className="text-left">
-        <div className="flex items-center gap-4">
-          <Avatar className="size-16 ring-2 ring-electric-blue/30">
-            {user?.imageUrl ? (
-              <AvatarImage alt={displayName || "Profile"} src={user.imageUrl} />
-            ) : null}
-            <AvatarFallback className="bg-muted text-lg">
-              {displayName?.[0]?.toUpperCase() || "?"}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col gap-0.5">
-            <DrawerTitle className="text-left text-lg">
-              {displayName}
-            </DrawerTitle>
-            {user?.username && (
-              <DrawerDescription>{user.username}</DrawerDescription>
-            )}
-          </div>
-        </div>
+      <DrawerHeader className="sr-only">
+        <DrawerTitle>{tCommon("menu")}</DrawerTitle>
       </DrawerHeader>
 
-      <div className="flex flex-col gap-1 p-4 pt-2">
+      <div className="flex flex-col gap-1 p-4">
         <DrawerClose asChild>
           <Button
             className="h-12 w-full justify-start gap-2 px-4"
+            nativeButton={false}
             render={<Link href={profileHref} />}
             variant="ghost"
           >
             <HugeiconsIcon className="size-5" icon={UserIcon} />
-            <span className="font-medium">내 프로필</span>
+            <span className="font-medium">{t("myProfile")}</span>
           </Button>
         </DrawerClose>
 
         <DrawerClose asChild>
           <Button
             className="h-12 w-full justify-start gap-2 px-4"
+            nativeButton={false}
             render={<Link href="/inbox" />}
             variant="ghost"
           >
             <HugeiconsIcon className="size-5" icon={InboxIcon} />
-            <span className="font-medium">받은 질문함</span>
+            <span className="font-medium">{t("inboxMenu")}</span>
           </Button>
         </DrawerClose>
 
         <DrawerClose asChild>
           <Button
             className="h-12 w-full justify-start gap-2 px-4"
+            nativeButton={false}
             render={<Link href="/settings" />}
             variant="ghost"
           >
             <HugeiconsIcon className="size-5" icon={Settings01Icon} />
-            <span className="font-medium">설정</span>
+            <span className="font-medium">{t("settingsMenu")}</span>
           </Button>
         </DrawerClose>
 
@@ -105,7 +90,7 @@ function ProfileDrawerContent() {
             variant="ghost"
           >
             <HugeiconsIcon className="size-5" icon={Logout03Icon} />
-            <span className="font-medium">로그아웃</span>
+            <span className="font-medium">{tCommon("logout")}</span>
           </Button>
         </SignOutButton>
       </div>
@@ -114,26 +99,25 @@ function ProfileDrawerContent() {
 }
 
 function SignedOutContent() {
+  const t = useTranslations("auth")
+  const tCommon = useTranslations("common")
+
   return (
     <>
       <DrawerHeader className="text-left">
-        <DrawerTitle className="text-xl">
-          궁금닷컴에 오신 것을 환영합니다
-        </DrawerTitle>
-        <DrawerDescription>
-          로그인하고 익명 질문을 주고받아 보세요
-        </DrawerDescription>
+        <DrawerTitle className="text-xl">{t("welcome")}</DrawerTitle>
+        <DrawerDescription>{t("welcomeDescription")}</DrawerDescription>
       </DrawerHeader>
 
       <div className="flex flex-col gap-2 p-4">
         <SignInButton mode="modal">
           <Button className="h-12 w-full" size="lg" variant="outline">
-            로그인
+            {tCommon("login")}
           </Button>
         </SignInButton>
         <SignUpButton mode="modal">
           <Button className="h-12 w-full" size="lg">
-            시작하기
+            {tCommon("start")}
           </Button>
         </SignUpButton>
       </div>
@@ -142,6 +126,7 @@ function SignedOutContent() {
 }
 
 export function ProfileDrawer() {
+  const t = useTranslations("auth")
   const [open, setOpen] = useState(false)
   const { user } = useUser()
 
@@ -153,7 +138,7 @@ export function ProfileDrawer() {
       <ClerkLoaded>
         <Drawer onOpenChange={setOpen} open={open}>
           <button
-            aria-label="프로필 메뉴 열기"
+            aria-label={t("openProfileMenu")}
             className="flex size-11 items-center justify-center rounded-full ring-2 ring-border/50 transition-all hover:ring-electric-blue/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2"
             onClick={() => setOpen(true)}
             type="button"

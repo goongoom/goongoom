@@ -1,6 +1,7 @@
 "use server"
 
 import { auth } from "@clerk/nextjs/server"
+import { getTranslations } from "next-intl/server"
 import { getClerkUserById } from "@/lib/clerk"
 import { getOrCreateUser, updateUserProfile } from "@/lib/db/queries"
 import {
@@ -15,16 +16,17 @@ export type ProfileActionResult<T = unknown> =
   | { success: false; error: string }
 
 export async function getProfile(): Promise<ProfileActionResult<UserProfile>> {
+  const t = await getTranslations("errors")
   try {
     const { userId: clerkId } = await auth()
 
     if (!clerkId) {
-      return { success: false, error: "로그인이 필요합니다" }
+      return { success: false, error: t("loginRequired") }
     }
 
     const clerkUser = await getClerkUserById(clerkId)
     if (!clerkUser) {
-      return { success: false, error: "사용자를 찾을 수 없습니다" }
+      return { success: false, error: t("userNotFound") }
     }
 
     const dbUser = await getOrCreateUser(clerkId)
@@ -46,7 +48,7 @@ export async function getProfile(): Promise<ProfileActionResult<UserProfile>> {
     console.error("Profile fetch error:", error)
     return {
       success: false,
-      error: "프로필 정보를 불러오는 중 오류가 발생했습니다",
+      error: t("profileLoadError"),
     }
   }
 }
@@ -56,11 +58,12 @@ export async function updateProfile(data: {
   socialLinks?: SocialLinks | null
   questionSecurityLevel?: string | null
 }): Promise<ProfileActionResult<UserProfile>> {
+  const t = await getTranslations("errors")
   try {
     const { userId: clerkId } = await auth()
 
     if (!clerkId) {
-      return { success: false, error: "로그인이 필요합니다" }
+      return { success: false, error: t("loginRequired") }
     }
 
     await getOrCreateUser(clerkId)
@@ -69,7 +72,7 @@ export async function updateProfile(data: {
       data.questionSecurityLevel &&
       !isQuestionSecurityLevel(data.questionSecurityLevel)
     ) {
-      return { success: false, error: "잘못된 질문 보안 설정입니다" }
+      return { success: false, error: t("invalidSecuritySetting") }
     }
 
     const validatedSecurityLevel =
@@ -101,6 +104,6 @@ export async function updateProfile(data: {
     }
   } catch (error) {
     console.error("Profile update error:", error)
-    return { success: false, error: "프로필 수정 중 오류가 발생했습니다" }
+    return { success: false, error: t("profileUpdateError") }
   }
 }

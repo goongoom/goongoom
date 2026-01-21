@@ -1,26 +1,26 @@
 import { auth } from "@clerk/nextjs/server"
-import {
-  FacebookIcon,
-  GithubIcon,
-  InstagramIcon,
-} from "@hugeicons/core-free-icons"
+import { FacebookIcon, InstagramIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { revalidatePath } from "next/cache"
 import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
+import { getLocale, getTranslations } from "next-intl/server"
 import { MainContent } from "@/components/layout/main-content"
+import { ClampedAnswer } from "@/components/questions/clamped-answer"
+import { CopyLinkButton } from "@/components/questions/copy-link-button"
 import { QuestionDrawer } from "@/components/questions/question-drawer"
 import { ShareInstagramButton } from "@/components/questions/share-instagram-button"
-import { Alert, AlertAction, AlertDescription } from "@/components/ui/alert"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Empty, EmptyHeader, EmptyTitle } from "@/components/ui/empty"
+import { ToastOnMount } from "@/components/ui/toast-on-mount"
 import { createQuestion } from "@/lib/actions/questions"
 import { getClerkUserByUsername } from "@/lib/clerk"
 import { getOrCreateUser, getUserWithAnsweredQuestions } from "@/lib/db/queries"
 import { DEFAULT_QUESTION_SECURITY_LEVEL } from "@/lib/question-security"
 import type { QuestionWithAnswers } from "@/lib/types"
+import { formatRelativeTime } from "@/lib/utils/format-time"
 
 interface UserProfilePageProps {
   params: Promise<{ username: string }>
@@ -46,28 +46,6 @@ function toProfileUrl(value: string | undefined, domain: string) {
   }
   const handle = trimmed.split("/")[0]
   return handle ? `https://${domain}/${handle}` : null
-}
-
-function formatRelativeTime(date: Date): string {
-  const now = new Date()
-  const diffMs = now.getTime() - new Date(date).getTime()
-  const diffMins = Math.floor(diffMs / (1000 * 60))
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-
-  if (diffMins < 1) {
-    return "방금 전"
-  }
-  if (diffMins < 60) {
-    return `${diffMins}분 전`
-  }
-  if (diffHours < 24) {
-    return `${diffHours}시간 전`
-  }
-  if (diffDays < 7) {
-    return `${diffDays}일 전`
-  }
-  return new Date(date).toLocaleDateString("ko-KR")
 }
 
 function buildShareUrl({
@@ -109,12 +87,28 @@ export default async function UserProfilePage({
     notFound()
   }
 
-  const [dbUser, { answeredQuestions }] = await Promise.all([
+  const [
+    dbUser,
+    { answeredQuestions },
+    t,
+    tCommon,
+    tRestrictions,
+    ,
+    tAnswers,
+    locale,
+  ] = await Promise.all([
     getOrCreateUser(clerkUser.clerkId),
     getUserWithAnsweredQuestions(clerkUser.clerkId),
+    getTranslations("questions"),
+    getTranslations("common"),
+    getTranslations("restrictions"),
+    getTranslations("errors"),
+    getTranslations("answers"),
+    getLocale(),
   ])
 
-  const displayName = clerkUser.displayName || clerkUser.username || username
+  const fullName = clerkUser.displayName || clerkUser.username || username
+  const displayName = fullName.split(" ")[0] || fullName
 
   const error =
     typeof query?.error === "string" ? decodeURIComponent(query.error) : null
@@ -125,7 +119,7 @@ export default async function UserProfilePage({
       return { type: "error" as const, message: error }
     }
     if (sent) {
-      return { type: "success" as const, message: "질문이 전송되었습니다!" }
+      return { type: "success" as const, message: t("questionSent") }
     }
     return null
   }
@@ -144,12 +138,6 @@ export default async function UserProfilePage({
       icon: FacebookIcon,
       href: toProfileUrl(dbUser?.socialLinks?.facebook, "facebook.com"),
     },
-    {
-      key: "github",
-      label: "GitHub",
-      icon: GithubIcon,
-      href: toProfileUrl(dbUser?.socialLinks?.github, "github.com"),
-    },
   ].filter((link) => Boolean(link.href))
 
   const securityLevel =
@@ -165,12 +153,12 @@ export default async function UserProfilePage({
     (!viewerIsVerified && securityLevel === "anyone")
   const getSecurityNotice = () => {
     if (securityLevel === "verified_anonymous") {
-      return "익명 질문은 로그인 사용자만 가능하며, 사법 기관 요청이 없는 한 이름은 공개되지 않습니다."
+      return tRestrictions("anonymousLoginRequired")
     }
     if (securityLevel === "public_only") {
-      return "이 사용자는 공개 질문만 받습니다."
+      return tRestrictions("identifiedOnly")
     }
-    return "로그인하면 공개 질문도 보낼 수 있어요."
+    return tRestrictions("loginForIdentified")
   }
   const securityNotice = getSecurityNotice()
 
@@ -179,12 +167,13 @@ export default async function UserProfilePage({
 
   async function submitQuestion(formData: FormData) {
     "use server"
+    const tErrors = await getTranslations("errors")
     const content = String(formData.get("question") || "").trim()
     const questionType = String(formData.get("questionType") || "anonymous")
 
     if (!content) {
       redirect(
-        `/${recipientUsername}?error=${encodeURIComponent("질문을 입력해주세요")}`
+        `/${recipientUsername}?error=${encodeURIComponent(tErrors("pleaseEnterQuestion"))}`
       )
     }
 
@@ -204,22 +193,35 @@ export default async function UserProfilePage({
     redirect(`/${recipientUsername}?sent=1`)
   }
 
-  const showLoginWarning = !viewerIsVerified && securityLevel !== "anyone"
-  const warningMessage =
-    securityLevel === "public_only"
-      ? "이 사용자는 공개 질문만 받습니다. 로그인 후 질문해 주세요."
-      : "이 사용자는 익명 질문을 로그인 사용자에게만 허용합니다. 로그인 후 질문해 주세요."
+  const requiresSignIn = !viewerIsVerified && securityLevel !== "anyone"
+
+  const tProfile = await getTranslations("profile")
 
   return (
     <MainContent>
       <Card className="mb-6">
-        <CardContent className="flex items-start gap-6">
-          <Avatar className="size-24 ring-2 ring-electric-blue/50">
+        <CardContent className="flex items-center gap-6">
+          <Avatar className="size-24 ring-2 ring-primary/30">
             {clerkUser.avatarUrl ? (
               <AvatarImage alt={displayName} src={clerkUser.avatarUrl} />
             ) : null}
             <AvatarFallback>{displayName[0] || "?"}</AvatarFallback>
           </Avatar>
+          <div className="flex flex-1 flex-col gap-1">
+            <h1 className="font-semibold text-foreground text-xl">
+              {displayName}
+            </h1>
+            <p className="text-muted-foreground text-sm">
+              {clerkUser.username || username}
+            </p>
+            <p className="mt-1 text-sm">
+              {dbUser?.bio || (
+                <span className="text-muted-foreground">
+                  {tProfile("noBio")}
+                </span>
+              )}
+            </p>
+          </div>
         </CardContent>
         {socialLinks.length > 0 && (
           <CardContent className="flex flex-wrap gap-4 pt-0">
@@ -256,34 +258,10 @@ export default async function UserProfilePage({
       </Card>
 
       {status && (
-        <Alert
-          className="mb-6"
-          variant={status.type === "error" ? "destructive" : "default"}
-        >
-          <AlertDescription className="text-center">
-            {status.message}
-          </AlertDescription>
-        </Alert>
-      )}
-
-      {showLoginWarning && (
-        <Card className="mb-6">
-          <CardContent className="space-y-4">
-            <h2 className="font-semibold text-foreground text-lg">
-              {recipientUsername} 님에게 새 질문을 남겨보세요
-            </h2>
-            <Alert className="border-electric-blue/30 bg-electric-blue/10 text-electric-blue">
-              <AlertDescription className="text-electric-blue/80">
-                {warningMessage}
-              </AlertDescription>
-              <AlertAction>
-                <Button render={<Link href="/sign-in" />} size="sm">
-                  로그인
-                </Button>
-              </AlertAction>
-            </Alert>
-          </CardContent>
-        </Card>
+        <ToastOnMount
+          message={status.message}
+          type={status.type === "error" ? "error" : "success"}
+        />
       )}
 
       {answeredQuestions.length > 0 ? (
@@ -299,75 +277,88 @@ export default async function UserProfilePage({
               name: displayName,
             })
             return (
-              <Card className="relative" key={qa.id}>
-                <div className="absolute top-4 right-4">
-                  <ShareInstagramButton shareUrl={shareUrl} />
-                </div>
-                <CardContent className="flex flex-col gap-4">
-                  <div className="flex w-full items-start gap-3">
-                    <Avatar className="size-10 flex-shrink-0">
-                      <AvatarImage
-                        alt="Avatar"
-                        src={`https://api.dicebear.com/7.x/avataaars/svg?seed=anon_${qa.id}`}
-                      />
-                      <AvatarFallback>?</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col">
-                      <Card className="max-w-prose bg-muted/40 px-4 py-3">
-                        <p className="text-foreground leading-relaxed">
-                          {qa.content}
-                        </p>
-                      </Card>
-                      <p className="mt-1 ml-1 text-muted-foreground text-xs">
-                        {qa.isAnonymous === 1 ? "익명" : "공개"} ·{" "}
-                        {formatRelativeTime(qa.createdAt)} 질문
-                      </p>
-                    </div>
+              <Link
+                className="block"
+                href={`/${username}/q/${qa.id}`}
+                key={qa.id}
+                prefetch={false}
+              >
+                <Card className="group relative transition-colors hover:bg-muted/50">
+                  <div className="absolute top-4 right-4 flex gap-2">
+                    <CopyLinkButton url={`/${username}/q/${qa.id}`} />
+                    <ShareInstagramButton shareUrl={shareUrl} />
                   </div>
-                  <div className="flex w-full items-start justify-end gap-3">
-                    <div className="flex flex-1 flex-col items-end">
-                      <Card className="max-w-prose border-primary/20 bg-primary px-4 py-3 text-primary-foreground">
-                        <p className="leading-relaxed">{answer.content}</p>
-                      </Card>
-                      <p className="mt-1 mr-1 text-muted-foreground text-xs">
-                        {displayName} · {formatRelativeTime(answer.createdAt)}{" "}
-                        답변
-                      </p>
-                    </div>
-                    <Avatar className="size-10 flex-shrink-0">
-                      {clerkUser.avatarUrl ? (
+                  <CardContent className="flex flex-col gap-4">
+                    <div className="flex w-full items-start gap-3">
+                      <Avatar className="size-10 flex-shrink-0">
                         <AvatarImage
-                          alt={displayName}
-                          src={clerkUser.avatarUrl}
+                          alt="Avatar"
+                          src={`https://api.dicebear.com/7.x/avataaars/svg?seed=anon_${qa.id}`}
                         />
-                      ) : null}
-                      <AvatarFallback>{displayName[0] || "?"}</AvatarFallback>
-                    </Avatar>
-                  </div>
-                </CardContent>
-              </Card>
+                        <AvatarFallback>?</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <Card className="max-w-prose bg-muted/40 px-4 py-3">
+                          <p className="text-foreground leading-relaxed">
+                            {qa.content}
+                          </p>
+                        </Card>
+                        <p className="mt-1 ml-1 text-muted-foreground text-xs">
+                          {qa.isAnonymous === 1
+                            ? tCommon("anonymous")
+                            : tCommon("identified")}{" "}
+                          · {formatRelativeTime(qa.createdAt, locale)}{" "}
+                          {t("questionLabel")}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex w-full items-start justify-end gap-3">
+                      <div className="flex flex-1 flex-col items-end">
+                        <Card className="max-w-prose border-primary/20 bg-primary px-4 py-3 text-primary-foreground">
+                          <ClampedAnswer content={answer.content} />
+                        </Card>
+                        <p className="mt-1 mr-1 text-muted-foreground text-xs">
+                          {displayName} ·{" "}
+                          {formatRelativeTime(answer.createdAt, locale)}{" "}
+                          {tAnswers("answer")}
+                        </p>
+                      </div>
+                      <Avatar className="size-10 flex-shrink-0">
+                        {clerkUser.avatarUrl ? (
+                          <AvatarImage
+                            alt={displayName}
+                            src={clerkUser.avatarUrl}
+                          />
+                        ) : null}
+                        <AvatarFallback>{displayName[0] || "?"}</AvatarFallback>
+                      </Avatar>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             )
           })}
         </div>
       ) : (
         <Empty className="pb-24">
           <EmptyHeader>
-            <EmptyTitle>아직 답변된 질문이 없습니다.</EmptyTitle>
+            <EmptyTitle className="text-muted-foreground">
+              {tAnswers("noAnswersYet")}
+            </EmptyTitle>
           </EmptyHeader>
         </Empty>
       )}
 
-      {!showLoginWarning && (canAskAnonymously || canAskPublic) && (
-        <QuestionDrawer
-          canAskAnonymously={canAskAnonymously}
-          canAskPublic={canAskPublic}
-          recipientClerkId={recipientClerkId}
-          recipientUsername={recipientUsername}
-          securityNotice={securityNotice}
-          showSecurityNotice={showSecurityNotice}
-          submitAction={submitQuestion}
-        />
-      )}
+      <QuestionDrawer
+        canAskAnonymously={canAskAnonymously}
+        canAskPublic={canAskPublic}
+        recipientClerkId={recipientClerkId}
+        recipientName={displayName}
+        requiresSignIn={requiresSignIn}
+        securityNotice={securityNotice}
+        showSecurityNotice={showSecurityNotice}
+        submitAction={submitQuestion}
+      />
     </MainContent>
   )
 }

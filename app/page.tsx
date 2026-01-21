@@ -7,6 +7,7 @@ import {
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import Link from "next/link"
+import { getTranslations } from "next-intl/server"
 import {
   BottomCTAButton,
   HeroAuthButtons,
@@ -21,7 +22,14 @@ import {
 import { getTotalUserCount } from "@/lib/db/queries"
 
 export default async function Home() {
-  const userCount = await getTotalUserCount()
+  const [userCount, t, tNav, tFooter, tShare] = await Promise.all([
+    getTotalUserCount(),
+    getTranslations("home"),
+    getTranslations("nav"),
+    getTranslations("footer"),
+    getTranslations("share"),
+  ])
+
   return (
     <div className="h-full">
       <div className="relative overflow-hidden pt-32">
@@ -32,17 +40,16 @@ export default async function Home() {
           <Badge className="mb-6 gap-2" variant="secondary">
             <span className="size-2 animate-pulse rounded-full bg-neon-pink" />
             <span className="font-semibold text-neon-pink text-xs tracking-wide">
-              지금 가장 핫한 익명 Q&A
+              {t("hotTitle")}
             </span>
           </Badge>
 
           <h1 className="mb-8 text-balance font-extrabold text-4xl text-foreground leading-tight tracking-tight sm:text-7xl">
-            궁금한 건 뭐든 물어보세요
+            {t("heroTitle")}
           </h1>
 
-          <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground leading-relaxed sm:text-xl">
-            익명으로 질문하고, 솔직하게 답변하세요. <br />
-            당신의 프로필을 공유하고 친구들의 진짜 속마음을 들어보세요.
+          <p className="mx-auto mb-10 max-w-2xl whitespace-pre-line text-lg text-muted-foreground leading-relaxed sm:text-xl">
+            {t("heroDescription")}
           </p>
 
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -59,10 +66,11 @@ export default async function Home() {
                     <HugeiconsIcon icon={ShieldKeyIcon} size={24} />
                   </div>
                   <div className="space-y-2">
-                    <CardTitle className="text-xl">안전한 익명성</CardTitle>
+                    <CardTitle className="text-xl">
+                      {t("safeAnonymity")}
+                    </CardTitle>
                     <CardDescription className="text-base">
-                      질문하는 사람의 정보는 비공개로 유지됩니다. 부담 없이
-                      솔직한 대화를 시작해보세요.
+                      {t("safeAnonymityDescription")}
                     </CardDescription>
                   </div>
                 </CardContent>
@@ -74,10 +82,11 @@ export default async function Home() {
                     <HugeiconsIcon icon={Share01Icon} size={24} />
                   </div>
                   <div className="space-y-2">
-                    <CardTitle className="text-xl">쉬운 공유</CardTitle>
+                    <CardTitle className="text-xl">
+                      {tShare("easyShare")}
+                    </CardTitle>
                     <CardDescription className="text-base">
-                      인스타그램, 트위터 어디든 링크를 공유하세요. 클릭 한
-                      번으로 질문을 받을 수 있습니다.
+                      {tShare("easyShareDescription")}
                     </CardDescription>
                   </div>
                 </CardContent>
@@ -89,10 +98,11 @@ export default async function Home() {
                     <HugeiconsIcon icon={SparklesIcon} size={24} />
                   </div>
                   <div className="space-y-2">
-                    <CardTitle className="text-xl">인스타그램 공유</CardTitle>
+                    <CardTitle className="text-xl">
+                      {tShare("instagramShare")}
+                    </CardTitle>
                     <CardDescription className="text-base">
-                      재치있는 답변을 이미지로 저장해 인스타그램 스토리와 피드에
-                      바로 공유해보세요.
+                      {tShare("instagramShareDescription")}
                     </CardDescription>
                   </div>
                 </CardContent>
@@ -107,11 +117,10 @@ export default async function Home() {
               <HugeiconsIcon icon={SentIcon} size={24} />
             </div>
             <h2 className="mb-6 font-bold text-3xl text-foreground sm:text-4xl">
-              지금 바로 시작해보세요
+              {t("ctaTitle")}
             </h2>
             <p className="mb-10 text-lg text-muted-foreground">
-              이미 {userCount.toLocaleString()}명의 유저가 궁금닷컴을 사용하고
-              있어요.
+              {t("ctaDescription", { userCount: userCount.toLocaleString() })}
             </p>
             <BottomCTAButton />
           </div>
@@ -125,7 +134,7 @@ export default async function Home() {
               <HugeiconsIcon icon={Message01Icon} size={14} strokeWidth={3} />
             </div>
             <span className="font-semibold text-muted-foreground text-sm">
-              궁금닷컴
+              {tNav("appName")}
             </span>
           </div>
           <div className="flex gap-6 text-muted-foreground text-sm">
@@ -133,19 +142,19 @@ export default async function Home() {
               className="inline-flex min-h-11 items-center transition-colors"
               href="#"
             >
-              이용약관
+              {tFooter("terms")}
             </Link>
             <Link
               className="inline-flex min-h-11 items-center transition-colors"
               href="#"
             >
-              개인정보처리방침
+              {tFooter("privacy")}
             </Link>
             <Link
               className="inline-flex min-h-11 items-center transition-colors"
               href="#"
             >
-              문의하기
+              {tFooter("contact")}
             </Link>
           </div>
           <div className="text-muted-foreground text-sm">

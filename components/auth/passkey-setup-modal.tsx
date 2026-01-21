@@ -7,6 +7,7 @@ import {
   ShieldCheckIcon,
   XIcon,
 } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -17,10 +18,10 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer"
 import { Spinner } from "@/components/ui/spinner"
-import { AnimatedCard } from "@/components/vibrant/animated-card"
 import { cn } from "@/lib/utils"
 
 export function PasskeySetupModal() {
+  const t = useTranslations("passkey")
   const { user, isLoaded } = useUser()
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -57,7 +58,7 @@ export function PasskeySetupModal() {
       }, 2000)
     } catch (err: unknown) {
       console.error("Error creating passkey:", err)
-      setError("패스키 설정 중 오류가 발생했습니다. 다시 시도해주세요.")
+      setError(t("setupError"))
     } finally {
       setIsLoading(false)
     }
@@ -71,7 +72,7 @@ export function PasskeySetupModal() {
     <Drawer onOpenChange={(val) => !val && handleDismiss()} open={open}>
       <DrawerContent
         className={cn(
-          "overflow-hidden border-none bg-gradient-to-br from-electric-blue via-purple to-electric-blue text-electric-blue-foreground shadow-2xl",
+          "overflow-hidden border-primary/20 bg-primary text-primary-foreground",
           "w-full max-w-md gap-0 p-0"
         )}
       >
@@ -90,42 +91,32 @@ export function PasskeySetupModal() {
 
         <div className="relative z-10 flex flex-col items-center p-8 pt-12 text-center">
           {success ? (
-            <AnimatedCard
-              animation="scaleIn"
-              className="flex flex-col items-center border-none bg-transparent shadow-none"
-            >
-              <AnimatedCard
-                animation="bounce"
-                className="mb-6 flex size-20 items-center justify-center rounded-full border-none bg-white/20 text-white shadow-none backdrop-blur-md"
-              >
+            <div className="flex animate-scale-in flex-col items-center">
+              <div className="mb-6 flex size-20 animate-bounce items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md">
                 <CheckCircleIcon className="size-10" />
-              </AnimatedCard>
-              <h2 className="mb-2 font-bold text-2xl text-white">설정 완료!</h2>
-              <p className="text-white/90">
-                이제 더 빠르고 안전하게 로그인할 수 있습니다.
-              </p>
-            </AnimatedCard>
+              </div>
+              <h2 className="mb-2 font-bold text-2xl text-white">
+                {t("setupComplete")}
+              </h2>
+              <p className="text-white/90">{t("setupCompleteDescription")}</p>
+            </div>
           ) : (
             <>
               <div className="relative mb-6">
-                <div className="flex size-20 rotate-3 items-center justify-center rounded-2xl bg-white/20 text-white shadow-lg backdrop-blur-md">
+                <div className="flex size-20 rotate-3 items-center justify-center rounded-2xl bg-white/20 text-white backdrop-blur-md">
                   <FingerprintIcon className="size-10" />
                 </div>
-                <AnimatedCard
-                  animation="bounce"
-                  className="absolute -top-2 -right-2 flex size-8 items-center justify-center rounded-full border-none bg-neon-pink text-white shadow-md"
-                >
+                <div className="absolute -top-2 -right-2 flex size-8 animate-bounce items-center justify-center rounded-full bg-white/30 text-white">
                   <ShieldCheckIcon className="size-4" />
-                </AnimatedCard>
+                </div>
               </div>
 
               <DrawerHeader className="mb-8 items-center p-0">
                 <DrawerTitle className="mb-2 font-bold text-2xl text-white">
-                  🔐 패스키로 더 빠르게!
+                  {t("fasterTitle")}
                 </DrawerTitle>
-                <DrawerDescription className="max-w-xs text-base text-electric-blue-foreground/90">
-                  Face ID, 지문, 또는 기기 잠금으로
-                  <br />한 번의 터치로 로그인하세요.
+                <DrawerDescription className="max-w-xs whitespace-pre-line text-base text-primary-foreground/90">
+                  {t("fasterDescription")}
                 </DrawerDescription>
               </DrawerHeader>
 
@@ -138,18 +129,18 @@ export function PasskeySetupModal() {
 
               <div className="w-full space-y-2">
                 <Button
-                  className="w-full rounded-xl border-none bg-white font-bold text-base text-electric-blue shadow-lg transition-all hover:bg-white/90"
+                  className="w-full rounded-xl border-none bg-white font-bold text-base text-primary transition-all hover:bg-white/90"
                   disabled={isLoading}
                   onClick={createPasskey}
                   size="lg"
                 >
                   {isLoading ? (
                     <>
-                      <Spinner className="mr-2 size-5 text-electric-blue" />
-                      설정 중...
+                      <Spinner className="mr-2 size-5 text-primary" />
+                      {t("settingUp")}
                     </>
                   ) : (
-                    <>지금 설정하기</>
+                    t("setupNow")
                   )}
                 </Button>
 
@@ -159,7 +150,7 @@ export function PasskeySetupModal() {
                   size="lg"
                   variant="ghost"
                 >
-                  다음에 하기
+                  {t("later")}
                 </Button>
               </div>
             </>

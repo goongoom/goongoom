@@ -3,6 +3,7 @@
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useRouter } from "next/navigation"
+import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -17,6 +18,7 @@ import {
 } from "@/components/ui/drawer"
 import { Textarea } from "@/components/ui/textarea"
 import { createAnswer } from "@/lib/actions/answers"
+import { useRelativeTime } from "@/lib/hooks/use-relative-time"
 
 interface QuestionItem {
   id: number
@@ -31,29 +33,10 @@ interface InboxListProps {
   questions: QuestionItem[]
 }
 
-function formatRelativeTime(date: Date): string {
-  const now = new Date()
-  const diffMs = now.getTime() - new Date(date).getTime()
-  const diffMins = Math.floor(diffMs / (1000 * 60))
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-
-  if (diffMins < 1) {
-    return "방금 전"
-  }
-  if (diffMins < 60) {
-    return `${diffMins}분 전`
-  }
-  if (diffHours < 24) {
-    return `${diffHours}시간 전`
-  }
-  if (diffDays < 7) {
-    return `${diffDays}일 전`
-  }
-  return new Date(date).toLocaleDateString("ko-KR")
-}
-
 export function InboxList({ questions }: InboxListProps) {
+  const t = useTranslations("answers")
+  const tCommon = useTranslations("common")
+  const formatRelativeTime = useRelativeTime()
   const router = useRouter()
   const [selectedQuestion, setSelectedQuestion] = useState<QuestionItem | null>(
     null
@@ -116,8 +99,10 @@ export function InboxList({ questions }: InboxListProps) {
                     {question.content}
                   </p>
                   <p className="mt-1 text-muted-foreground text-xs">
-                    {question.isAnonymous ? "익명" : "공개"} ·{" "}
-                    {formatRelativeTime(question.createdAt)}
+                    {question.isAnonymous
+                      ? tCommon("anonymous")
+                      : tCommon("identified")}{" "}
+                    · {formatRelativeTime(question.createdAt)}
                   </p>
                 </div>
                 <HugeiconsIcon
@@ -136,7 +121,7 @@ export function InboxList({ questions }: InboxListProps) {
       >
         <DrawerContent className="pb-safe">
           <DrawerHeader>
-            <DrawerTitle>질문에 답변하기</DrawerTitle>
+            <DrawerTitle>{t("answerDrawerTitle")}</DrawerTitle>
             {selectedQuestion && (
               <DrawerDescription className="text-left">
                 {selectedQuestion.content}
@@ -147,7 +132,7 @@ export function InboxList({ questions }: InboxListProps) {
             <Textarea
               className="w-full"
               onChange={(e) => setAnswer(e.target.value)}
-              placeholder="답변을 입력하세요…"
+              placeholder={t("answerPlaceholder")}
               rows={4}
               value={answer}
             />
@@ -159,7 +144,7 @@ export function InboxList({ questions }: InboxListProps) {
               type="button"
               variant="ghost"
             >
-              취소
+              {tCommon("cancel")}
             </Button>
             <Button
               className="min-h-11 flex-1"
@@ -167,7 +152,7 @@ export function InboxList({ questions }: InboxListProps) {
               onClick={handleSubmit}
               type="button"
             >
-              {isSubmitting ? "전송 중…" : "답변하기"}
+              {isSubmitting ? tCommon("submitting") : t("answerButton")}
             </Button>
           </DrawerFooter>
         </DrawerContent>

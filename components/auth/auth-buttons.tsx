@@ -13,10 +13,13 @@ import {
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import Link from "next/link"
+import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export function NavAuthButtons() {
+  const t = useTranslations("common")
+
   return (
     <>
       <ClerkLoading>
@@ -26,11 +29,11 @@ export function NavAuthButtons() {
         <SignedOut>
           <SignInButton mode="modal">
             <Button size="sm" variant="ghost">
-              로그인
+              {t("login")}
             </Button>
           </SignInButton>
           <SignUpButton mode="modal">
-            <Button size="sm">시작하기</Button>
+            <Button size="sm">{t("start")}</Button>
           </SignUpButton>
         </SignedOut>
         <SignedIn>
@@ -42,6 +45,7 @@ export function NavAuthButtons() {
 }
 
 export function HeroAuthButtons() {
+  const t = useTranslations("auth")
   const { user } = useUser()
   const profileHref = user?.username ? `/${user.username}` : "/settings"
 
@@ -54,7 +58,7 @@ export function HeroAuthButtons() {
         <SignedOut>
           <SignUpButton mode="modal">
             <Button className="w-full sm:w-auto" size="lg">
-              내 프로필 만들기
+              {t("createProfile")}
               <HugeiconsIcon
                 className="transition-transform"
                 icon={ArrowRight01Icon}
@@ -64,17 +68,18 @@ export function HeroAuthButtons() {
           </SignUpButton>
           <SignInButton mode="modal">
             <Button className="w-full sm:w-auto" size="lg" variant="outline">
-              로그인하기
+              {t("login")}
             </Button>
           </SignInButton>
         </SignedOut>
         <SignedIn>
           <Button
             className="w-full sm:w-auto"
+            nativeButton={false}
             render={<Link href={profileHref} />}
             size="lg"
           >
-            내 프로필 보기
+            {t("viewProfile")}
             <HugeiconsIcon
               className="transition-transform"
               icon={ArrowRight01Icon}
@@ -88,6 +93,7 @@ export function HeroAuthButtons() {
 }
 
 export function BottomCTAButton() {
+  const t = useTranslations("auth")
   const { user } = useUser()
   const profileHref = user?.username ? `/${user.username}` : "/settings"
 
@@ -99,12 +105,16 @@ export function BottomCTAButton() {
       <ClerkLoaded>
         <SignedOut>
           <SignUpButton mode="modal">
-            <Button size="lg">시작</Button>
+            <Button size="lg">{t("start")}</Button>
           </SignUpButton>
         </SignedOut>
         <SignedIn>
-          <Button render={<Link href={profileHref} />} size="lg">
-            내 프로필 보기
+          <Button
+            nativeButton={false}
+            render={<Link href={profileHref} />}
+            size="lg"
+          >
+            {t("viewProfile")}
           </Button>
         </SignedIn>
       </ClerkLoaded>

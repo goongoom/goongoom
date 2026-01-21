@@ -140,3 +140,19 @@ export async function getTotalUserCount(): Promise<number> {
   const result = await db.select({ count: count() }).from(users)
   return result[0]?.count ?? 0
 }
+
+export async function getQuestionByIdAndRecipient(
+  questionId: number,
+  recipientClerkId: string
+) {
+  return await db.query.questions.findFirst({
+    where: (questions, { and, eq }) =>
+      and(
+        eq(questions.id, questionId),
+        eq(questions.recipientClerkId, recipientClerkId)
+      ),
+    with: {
+      answers: true,
+    },
+  })
+}

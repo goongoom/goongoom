@@ -2,6 +2,7 @@
 
 import { MoreVerticalIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { useTranslations } from "next-intl"
 import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,6 +19,8 @@ interface ShareInstagramButtonProps {
 }
 
 export function ShareInstagramButton({ shareUrl }: ShareInstagramButtonProps) {
+  const t = useTranslations("share")
+  const tCommon = useTranslations("common")
   const sharingRef = useRef(false)
   const fileRef = useRef<File | null>(null)
   const [open, setOpen] = useState(false)
@@ -44,7 +47,6 @@ export function ShareInstagramButton({ shareUrl }: ShareInstagramButtonProps) {
           type: "image/png",
         })
       } catch (error) {
-        // Silently fail on prefetch errors - user can still generate on demand
         console.error("Failed to prefetch Instagram share image:", error)
       }
     }
@@ -73,8 +75,8 @@ export function ShareInstagramButton({ shareUrl }: ShareInstagramButtonProps) {
       if (canShare) {
         await navigator.share({
           files: [fileRef.current],
-          title: "궁금닷컴",
-          text: "궁금닷컴에서 공유",
+          title: tCommon("appName"),
+          text: t("shareToInstagram"),
         })
       } else {
         const url = URL.createObjectURL(fileRef.current)
@@ -103,16 +105,19 @@ export function ShareInstagramButton({ shareUrl }: ShareInstagramButtonProps) {
   return (
     <Drawer onOpenChange={setOpen} open={open}>
       <DrawerTrigger asChild>
-        <Button aria-label="더보기" size="icon-xs" variant="ghost">
+        <Button
+          aria-label={t("more")}
+          onClick={(e) => e.stopPropagation()}
+          size="icon-xs"
+          variant="ghost"
+        >
           <HugeiconsIcon className="size-4" icon={MoreVerticalIcon} />
         </Button>
       </DrawerTrigger>
       <DrawerContent className="pb-safe">
         <DrawerHeader>
-          <DrawerTitle>공유하기</DrawerTitle>
-          <DrawerDescription>
-            이 답변을 인스타그램에 공유하세요
-          </DrawerDescription>
+          <DrawerTitle>{t("title")}</DrawerTitle>
+          <DrawerDescription>{t("instagramDescription")}</DrawerDescription>
         </DrawerHeader>
         <div className="flex flex-col gap-2 px-4 pb-4">
           <Button
@@ -123,7 +128,7 @@ export function ShareInstagramButton({ shareUrl }: ShareInstagramButtonProps) {
             }}
             size="lg"
           >
-            인스타그램 이미지 공유
+            {t("instagramImageShare")}
           </Button>
         </div>
       </DrawerContent>

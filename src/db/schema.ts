@@ -7,9 +7,10 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core"
+import { env } from "@/env"
 import type { QuestionSecurityLevel } from "../../lib/question-security"
 
-export const goongoom = pgSchema("goongoom")
+export const goongoom = pgSchema(env.DATABASE_SCHEMA)
 
 export interface SocialLinks {
   instagram?: string

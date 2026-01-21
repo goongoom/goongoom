@@ -1,51 +1,35 @@
 "use client"
 
-import { ComputerIcon, Moon02Icon, Sun03Icon } from "@hugeicons/core-free-icons"
+import { Moon02Icon, Sun03Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { useTranslations } from "next-intl"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 
 export function ThemeToggle() {
-  const { theme, setTheme, resolvedTheme } = useTheme()
+  const t = useTranslations("theme")
+  const { setTheme, resolvedTheme } = useTheme()
 
-  const cycleTheme = () => {
-    if (theme === "light") {
-      setTheme("dark")
-    } else if (theme === "dark") {
-      setTheme("system")
-    } else {
-      setTheme("light")
-    }
-  }
-
-  const getThemeLabel = () => {
-    if (theme === "light") {
-      return "라이트"
-    }
-    if (theme === "dark") {
-      return "다크"
-    }
-    return "시스템"
-  }
-
-  const getThemeIcon = () => {
-    if (resolvedTheme === "dark") {
-      return Moon02Icon
-    }
-    if (resolvedTheme === "light") {
-      return Sun03Icon
-    }
-    return ComputerIcon
+  const toggleTheme = () => {
+    setTheme(resolvedTheme === "dark" ? "light" : "dark")
   }
 
   return (
     <Button
-      aria-label={`테마 전환 (현재: ${getThemeLabel()})`}
-      onClick={cycleTheme}
+      aria-label={t("toggle")}
+      onClick={toggleTheme}
       size="icon-sm"
       variant="ghost"
     >
-      <HugeiconsIcon className="size-4" icon={getThemeIcon()} />
+      <HugeiconsIcon
+        className="size-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0"
+        icon={Sun03Icon}
+      />
+      <HugeiconsIcon
+        className="absolute size-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100"
+        icon={Moon02Icon}
+      />
+      <span className="sr-only">{t("toggle")}</span>
     </Button>
   )
 }

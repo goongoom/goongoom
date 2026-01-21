@@ -1,10 +1,11 @@
-import { UserButton } from "@clerk/nextjs"
 import { auth } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { getTranslations } from "next-intl/server"
 import { PasskeyNudge } from "@/components/auth/passkey-nudge"
 import { MainContent } from "@/components/layout/main-content"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+import { ClerkAccountCard } from "@/components/settings/clerk-account-card"
+import { LocaleSelector } from "@/components/settings/locale-selector"
 import { Button } from "@/components/ui/button"
 import {
   Empty,
@@ -17,14 +18,15 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
+import { ToastOnMount } from "@/components/ui/toast-on-mount"
 import { updateProfile } from "@/lib/actions/profile"
 import { getClerkUserById } from "@/lib/clerk"
 import { getOrCreateUser } from "@/lib/db/queries"
 import {
   DEFAULT_QUESTION_SECURITY_LEVEL,
+  getQuestionSecurityOptions,
   isQuestionSecurityLevel,
   QUESTION_SECURITY_LEVELS,
-  QUESTION_SECURITY_OPTIONS,
 } from "@/lib/question-security"
 import type { SocialLinks } from "@/lib/types"
 
@@ -32,8 +34,7 @@ interface SettingsPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>
 }
 
-const URL_PATTERN_REGEX =
-  /:\/\/|\/|instagram\.com|github\.com|twitter\.com|x\.com|www\./i
+const URL_PATTERN_REGEX = /:\/\/|\/|instagram\.com|twitter\.com|x\.com|www\./i
 
 function normalizeHandle(value: string) {
   const trimmed = value.trim()
@@ -65,11 +66,15 @@ export default async function SettingsPage({
     redirect("/")
   }
 
-  const [clerkUser, dbUser, query] = await Promise.all([
+  const [clerkUser, dbUser, query, t, tCommon] = await Promise.all([
     getClerkUserById(clerkId),
     getOrCreateUser(clerkId),
     searchParams,
+    getTranslations("settings"),
+    getTranslations("common"),
   ])
+
+  const securityOptions = await getQuestionSecurityOptions()
 
   const error =
     typeof query?.error === "string" ? decodeURIComponent(query.error) : null
@@ -78,12 +83,16 @@ export default async function SettingsPage({
   if (!clerkUser) {
     return (
       <MainContent>
-        <h1 className="mb-2 font-bold text-3xl text-foreground">설정</h1>
-        <p className="mb-8 text-muted-foreground">프로필 정보를 수정하세요</p>
+        <h1 className="mb-2 font-bold text-3xl text-foreground">
+          {t("title")}
+        </h1>
+        <p className="mb-8 text-muted-foreground">{t("description")}</p>
         <Empty>
           <EmptyHeader>
-            <EmptyTitle>프로필 설정이 필요합니다</EmptyTitle>
-            <EmptyDescription>계정 설정을 완료해주세요.</EmptyDescription>
+            <EmptyTitle>{t("profileRequired")}</EmptyTitle>
+            <EmptyDescription>
+              {t("profileRequiredDescription")}
+            </EmptyDescription>
           </EmptyHeader>
         </Empty>
       </MainContent>
@@ -98,15 +107,14 @@ export default async function SettingsPage({
   const instagramHandle = initialSocialLinks?.instagram
     ? normalizeHandle(initialSocialLinks.instagram)
     : ""
-  const githubHandle = initialSocialLinks?.github
-    ? normalizeHandle(initialSocialLinks.github)
-    : ""
   const twitterHandle = initialSocialLinks?.twitter
     ? normalizeHandle(initialSocialLinks.twitter)
     : ""
 
   async function submitProfile(formData: FormData) {
     "use server"
+
+    const tErrors = await getTranslations("errors")
 
     const normalizeHandle = (value: string) => {
       const trimmed = value.trim()
@@ -130,7 +138,6 @@ export default async function SettingsPage({
 
     const bio = String(formData.get("bio") || "").trim()
     const instagram = normalizeHandle(String(formData.get("instagram") || ""))
-    const github = normalizeHandle(String(formData.get("github") || ""))
     const twitter = normalizeHandle(String(formData.get("twitter") || ""))
     const securityLevel = String(
       formData.get("questionSecurityLevel") || DEFAULT_QUESTION_SECURITY_LEVEL
@@ -138,16 +145,13 @@ export default async function SettingsPage({
 
     if (!isQuestionSecurityLevel(securityLevel)) {
       redirect(
-        `/settings?error=${encodeURIComponent("질문 보안 설정이 올바르지 않습니다")}`
+        `/settings?error=${encodeURIComponent(tErrors("invalidSecuritySetting"))}`
       )
     }
 
     const links: SocialLinks = {}
     if (instagram) {
       links.instagram = instagram
-    }
-    if (github) {
-      links.github = github
     }
     if (twitter) {
       links.twitter = twitter
@@ -169,128 +173,33 @@ export default async function SettingsPage({
 
   return (
     <MainContent>
-      <h1 className="mb-2 font-bold text-3xl text-foreground">설정</h1>
-      <p className="mb-8 text-muted-foreground">프로필 정보를 수정하세요</p>
+      <h1 className="mb-2 font-bold text-3xl text-foreground">{t("title")}</h1>
+      <p className="mb-8 text-muted-foreground">{t("description")}</p>
 
-      {(error || updated) && (
-        <Alert className="mb-6" variant={error ? "destructive" : "default"}>
-          <AlertDescription className="text-center">
-            {error || "프로필이 수정되었습니다!"}
-          </AlertDescription>
-        </Alert>
-      )}
-
-      <div className="mb-6 rounded-xl border border-border bg-card p-6">
-        <div className="flex items-start justify-between">
-          <div className="space-y-1">
-            <h3 className="font-medium text-base text-foreground">
-              Clerk 계정
-            </h3>
-            <p className="text-muted-foreground text-xs">
-              이메일, 비밀번호, 보안 설정을 관리하세요.
-            </p>
-          </div>
-          <UserButton
-            appearance={{
-              variables: {
-                colorPrimary: "var(--electric-blue)",
-                borderRadius: "0.75rem",
-              },
-              elements: {
-                userButtonAvatarBox:
-                  "w-12 h-12 rounded-xl border-2 border-electric-blue",
-                userButtonPopover:
-                  "bg-background border border-border shadow-lg rounded-xl",
-                card: "rounded-xl",
-                formButtonPrimary:
-                  "bg-electric-blue hover:bg-electric-blue/90 text-white rounded-lg",
-              },
-            }}
-          />
-        </div>
-      </div>
+      {error && <ToastOnMount message={error} type="error" />}
+      {updated && <ToastOnMount message={t("profileUpdated")} type="success" />}
 
       <PasskeyNudge />
+
+      <ClerkAccountCard />
+
+      <div className="space-y-4 border-border border-b pb-6">
+        <LocaleSelector />
+      </div>
 
       <form action={submitProfile} className="space-y-6">
         <div className="space-y-4">
           <div className="space-y-1">
-            <h3 className="font-medium text-base text-foreground">계정 설정</h3>
+            <h3 className="font-medium text-base text-foreground">
+              {t("anonymousRestriction")}
+            </h3>
             <p className="text-muted-foreground text-xs">
-              프로필 정보와 소셜 링크를 설정하세요.
+              {t("anonymousRestrictionDescription")}
             </p>
           </div>
 
           <Field>
-            <FieldLabel htmlFor="bio">소개</FieldLabel>
-            <Textarea
-              defaultValue={initialBio || ""}
-              id="bio"
-              name="bio"
-              placeholder="자기소개를 입력하세요…"
-              rows={4}
-            />
-          </Field>
-
-          <div className="space-y-4 pt-2">
-            <p className="text-muted-foreground text-xs">
-              소셜 링크 (사용자 이름만 입력)
-            </p>
-
-            <Field>
-              <FieldLabel htmlFor="instagram">Instagram</FieldLabel>
-              <FieldContent>
-                <Input
-                  autoCapitalize="none"
-                  autoCorrect="off"
-                  defaultValue={instagramHandle}
-                  id="instagram"
-                  name="instagram"
-                  placeholder="username"
-                />
-              </FieldContent>
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="github">GitHub</FieldLabel>
-              <FieldContent>
-                <Input
-                  autoCapitalize="none"
-                  autoCorrect="off"
-                  defaultValue={githubHandle}
-                  id="github"
-                  name="github"
-                  placeholder="username"
-                />
-              </FieldContent>
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="twitter">Twitter / X</FieldLabel>
-              <FieldContent>
-                <Input
-                  autoCapitalize="none"
-                  autoCorrect="off"
-                  defaultValue={twitterHandle}
-                  id="twitter"
-                  name="twitter"
-                  placeholder="username"
-                />
-              </FieldContent>
-            </Field>
-          </div>
-        </div>
-
-        <div className="space-y-4 border-border border-t pt-6">
-          <div className="space-y-1">
-            <h3 className="font-medium text-base text-foreground">질문 설정</h3>
-            <p className="text-muted-foreground text-xs">
-              익명 질문을 제한해 악성 질문을 줄일 수 있습니다.
-            </p>
-          </div>
-
-          <Field>
-            <FieldLabel>질문 보안 수준</FieldLabel>
+            <FieldLabel>{t("whoCanAsk")}</FieldLabel>
             <FieldContent>
               <RadioGroup
                 className="w-full"
@@ -298,7 +207,7 @@ export default async function SettingsPage({
                 name="questionSecurityLevel"
               >
                 {QUESTION_SECURITY_LEVELS.map((level) => {
-                  const option = QUESTION_SECURITY_OPTIONS[level]
+                  const option = securityOptions[level]
                   return (
                     <Label
                       className="flex items-start gap-2 rounded-lg border border-border p-3 transition-colors hover:bg-accent/50 has-[data-checked]:border-primary/48 has-[data-checked]:bg-accent/50"
@@ -321,8 +230,62 @@ export default async function SettingsPage({
           </Field>
         </div>
 
+        <div className="space-y-4 border-border border-t pt-6">
+          <div className="space-y-1">
+            <h3 className="font-medium text-base text-foreground">
+              {t("profileSettings")}
+            </h3>
+            <p className="text-muted-foreground text-xs">
+              {t("profileSettingsDescription")}
+            </p>
+          </div>
+
+          <Field>
+            <FieldLabel htmlFor="bio">{t("bioLabel")}</FieldLabel>
+            <Textarea
+              defaultValue={initialBio || ""}
+              id="bio"
+              name="bio"
+              placeholder={t("bioPlaceholder")}
+              rows={4}
+            />
+          </Field>
+
+          <div className="space-y-4 pt-2">
+            <p className="text-muted-foreground text-xs">{t("socialLinks")}</p>
+
+            <Field>
+              <FieldLabel htmlFor="instagram">Instagram</FieldLabel>
+              <FieldContent>
+                <Input
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  defaultValue={instagramHandle}
+                  id="instagram"
+                  name="instagram"
+                  placeholder="username"
+                />
+              </FieldContent>
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="twitter">Twitter / X</FieldLabel>
+              <FieldContent>
+                <Input
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  defaultValue={twitterHandle}
+                  id="twitter"
+                  name="twitter"
+                  placeholder="username"
+                />
+              </FieldContent>
+            </Field>
+          </div>
+        </div>
+
         <Button className="w-full" type="submit">
-          저장하기
+          {tCommon("save")}
         </Button>
       </form>
     </MainContent>

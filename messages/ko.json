@@ -1,0 +1,181 @@
+{
+  "common": {
+    "appName": "궁금닷컴",
+    "login": "로그인",
+    "logout": "로그아웃",
+    "start": "시작하기",
+    "cancel": "취소",
+    "save": "저장하기",
+    "submitting": "전송 중…",
+    "anonymous": "익명",
+    "identified": "실명",
+    "user": "사용자",
+    "menu": "메뉴"
+  },
+  "time": {
+    "justNow": "방금 전",
+    "minutesAgo": "{minutes}분 전",
+    "hoursAgo": "{hours}시간 전",
+    "daysAgo": "{days}일 전"
+  },
+  "metadata": {
+    "title": "궁금닷컴 - 익명 질문 답변 플랫폼",
+    "description": "궁금한 것을 물어보고 답변을 받아보세요"
+  },
+  "nav": {
+    "appName": "궁금닷컴"
+  },
+  "auth": {
+    "login": "로그인하기",
+    "createProfile": "내 프로필 만들기",
+    "viewProfile": "내 프로필 보기",
+    "loginRequired": "질문을 보내려면 로그인이 필요해요.",
+    "welcome": "궁금닷컴에 오신 것을 환영해요!",
+    "welcomeDescription": "로그인하고 익명 질문을 주고받아 보세요",
+    "openProfileMenu": "프로필 메뉴 열기",
+    "start": "시작"
+  },
+  "passkey": {
+    "setupError": "패스키 설정 중 오류가 발생했어요. 다시 시도해 주세요.",
+    "setupComplete": "설정 완료!",
+    "setupCompleteDescription": "이제 더 빠르고 안전하게 로그인할 수 있어요.",
+    "nudgeTitle": "누가 마음대로 답변하면 어쩌지?",
+    "nudgeDescription": "Face ID나 Touch ID로 더 빠르고 안전하게 로그인할 수 있어요",
+    "settingUp": "설정 중...",
+    "setupNow": "지금 설정하기",
+    "later": "다음에 하기",
+    "fasterTitle": "🔐 패스키로 더 빠르게!",
+    "fasterDescription": "Face ID, 지문, 또는 기기 잠금으로\n한 번의 터치로 로그인하세요."
+  },
+  "theme": {
+    "toggle": "테마 전환"
+  },
+  "share": {
+    "title": "공유하기",
+    "shareToInstagram": "궁금닷컴에서 공유",
+    "more": "더보기",
+    "instagramDescription": "이 답변을 인스타그램에 공유하세요",
+    "instagramImageShare": "인스타그램 이미지 공유",
+    "copyLink": "링크 복사",
+    "linkCopied": "링크 복사됨",
+    "easyShare": "쉬운 공유",
+    "easyShareDescription": "인스타그램, 트위터 어디든 링크를 공유하세요. 클릭 한 번으로 질문을 받을 수 있어요.",
+    "instagramShare": "인스타그램 공유",
+    "instagramShareDescription": "재치있는 답변을 이미지로 저장해 인스타그램 스토리와 피드에 바로 공유해보세요."
+  },
+  "questions": {
+    "sendQuestion": "질문 보내기",
+    "sending": "보내는 중...",
+    "inputPlaceholder": "질문을 입력하세요…",
+    "writeQuestion": "질문 작성하기",
+    "toRecipient": "{recipientName} 님에게",
+    "newQuestion": "새 질문을 남겨보세요",
+    "whoToAsk": "누구로 질문할까요?",
+    "anonymousOption": "익명",
+    "anonymousDescription": "익명으로 질문해요",
+    "identifiedOption": "실명",
+    "identifiedDescription": "내 이름으로 질문해요",
+    "termsAgreement": "질문 시 사용 약관에 동의하게 돼요",
+    "questionSent": "질문이 전송됐어요!",
+    "questionLabel": "질문",
+    "defaultQuestion": "궁금한 질문이 여기에 표시돼요.",
+    "defaultAnswer": "재치있는 답변을 공유해 보세요."
+  },
+  "answers": {
+    "answer": "답변",
+    "answerButton": "답변하기",
+    "answerDrawerTitle": "질문에 답변하기",
+    "answerPlaceholder": "답변을 입력하세요…",
+    "noAnswersYet": "아직 답변된 질문이 없어요."
+  },
+  "inbox": {
+    "title": "받은 질문",
+    "description": "아직 답변하지 않은 질문들이에요",
+    "emptyTitle": "새로운 질문이 없어요",
+    "emptyDescription": "질문이 오면 여기에 표시돼요."
+  },
+  "profile": {
+    "myProfile": "내 프로필",
+    "inboxMenu": "받은 질문함",
+    "settingsMenu": "설정",
+    "noBio": "한줄소개를 설정하지 않았어요",
+    "backToProfile": "← {displayName} 님의 프로필"
+  },
+  "settings": {
+    "title": "설정",
+    "description": "프로필 정보를 수정하세요",
+    "profileRequired": "프로필 설정이 필요해요",
+    "profileRequiredDescription": "계정 설정을 완료해 주세요.",
+    "profileUpdated": "프로필이 수정됐어요!",
+    "languageSettings": "언어 설정",
+    "languageSettingsDescription": "앱에서 사용할 언어를 선택하세요.",
+    "anonymousRestriction": "익명 제한 설정",
+    "anonymousRestrictionDescription": "익명 질문을 제한해 악성 질문을 줄일 수 있어요.",
+    "whoCanAsk": "누가 질문을 보낼 수 있나요?",
+    "profileSettings": "프로필 설정",
+    "profileSettingsDescription": "프로필 정보와 소셜 링크를 설정하세요.",
+    "bioLabel": "소개",
+    "bioPlaceholder": "자기소개를 입력하세요…",
+    "socialLinks": "소셜 링크 (사용자 이름만 입력)",
+    "accountSettings": "계정 설정",
+    "accountSettingsDescription": "이메일, 비밀번호, 보안 설정을 관리하세요."
+  },
+  "more": {
+    "title": "더보기",
+    "announcements": "공지사항",
+    "events": "이벤트",
+    "contact": "문의하기",
+    "settings": "환경설정"
+  },
+  "home": {
+    "hotTitle": "지금 가장 핫한 익명 Q&A",
+    "heroTitle": "궁금한 건 뭐든 물어보세요",
+    "heroDescription": "익명으로 질문하고, 솔직하게 답변하세요.\n여러분의 프로필을 공유하고 친구들의 질문을 들어보세요.",
+    "safeAnonymity": "안전한 익명성",
+    "safeAnonymityDescription": "질문하는 사람의 정보는 철저한 익명으로 유지돼요. 부담 없이 솔직한 대화를 시작해 보세요.",
+    "ctaTitle": "지금 바로 시작해보세요",
+    "ctaDescription": "이미 {userCount}명의 유저가 궁금닷컴을 사용하고 있어요."
+  },
+  "footer": {
+    "terms": "이용약관",
+    "privacy": "개인정보처리방침",
+    "contact": "문의하기"
+  },
+  "questionSecurity": {
+    "anyoneLabel": "누구나 질문 가능",
+    "anyoneDescription": "비회원도 익명 질문을 보낼 수 있어요.",
+    "verifiedLabel": "전화번호가 인증된 사용자만 익명 허용하기",
+    "verifiedDescription": "익명 질문은 전화번호가 인증된 사람만 보낼 수 있어요, 단, 궁금닷컴은 사법 기관의 요청 없이 질문자 정보를 공유하지 않아요.",
+    "identifiedOnlyLabel": "실명 질문만",
+    "identifiedOnlyDescription": "실명 질문만 받아요.",
+    "invalidSetting": "질문 보안 설정이 올바르지 않아요"
+  },
+  "restrictions": {
+    "anonymousLoginRequired": "사법 기관의 요청이 있는 경우 질문자 정보가 공유될 수 있어요.",
+    "identifiedOnly": "이 사용자는 실명 질문만 받아요.",
+    "loginForIdentified": "로그인하면 실명 질문도 보낼 수 있어요."
+  },
+  "errors": {
+    "loginRequired": "로그인이 필요해요",
+    "userNotFound": "사용자를 찾을 수 없어요",
+    "profileLoadError": "프로필 정보를 불러오는 중 오류가 발생했어요",
+    "invalidSecuritySetting": "잘못된 질문 보안 설정이에요",
+    "profileUpdateError": "프로필 수정 중 오류가 발생했어요",
+    "recipientAndContentRequired": "수신자와 질문 내용은 필수예요",
+    "userDoesNotExist": "존재하지 않는 사용자예요",
+    "publicQuestionLoginRequired": "공개 질문은 로그인 후 보낼 수 있어요",
+    "publicQuestionOnly": "이 사용자는 공개 질문만 받아요",
+    "anonymousLoginRequired": "익명 질문은 로그인한 사용자만 보낼 수 있어요",
+    "questionCreateFailed": "질문 생성에 실패했어요",
+    "questionCreateError": "질문 생성 중 오류가 발생했어요",
+    "questionIdAndContentRequired": "질문 ID와 답변 내용은 필수예요",
+    "questionNotFound": "질문을 찾을 수 없어요",
+    "onlyRecipientCanAnswer": "본인에게 온 질문만 답변할 수 있어요",
+    "answerCreateFailed": "답변 생성에 실패했어요",
+    "answerCreateError": "답변 생성 중 오류가 발생했어요",
+    "pleaseEnterQuestion": "질문을 입력해 주세요"
+  },
+  "instagram": {
+    "shareTitle": "Instagram 공유"
+  }
+}

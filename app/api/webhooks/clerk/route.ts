@@ -2,12 +2,12 @@ import type { WebhookEvent } from "@clerk/nextjs/server"
 import { eq } from "drizzle-orm"
 import { headers } from "next/headers"
 import { Webhook } from "svix"
-import { serverEnv } from "@/lib/env.server"
+import { env } from "@/env"
 import { db } from "@/src/db"
 import { users } from "@/src/db/schema"
 
 export async function POST(req: Request) {
-  const WEBHOOK_SECRET = serverEnv.CLERK_WEBHOOK_SECRET
+  const WEBHOOK_SECRET = env.CLERK_WEBHOOK_SECRET
 
   const headerPayload = await headers()
   const svix_id = headerPayload.get("svix-id")

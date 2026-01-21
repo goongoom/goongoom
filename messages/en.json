@@ -1,0 +1,181 @@
+{
+  "common": {
+    "appName": "Goongoom",
+    "login": "Log in",
+    "logout": "Log out",
+    "start": "Get started",
+    "cancel": "Cancel",
+    "save": "Save",
+    "submitting": "Sending…",
+    "anonymous": "Anonymous",
+    "identified": "Identified",
+    "user": "User",
+    "menu": "Menu"
+  },
+  "time": {
+    "justNow": "Just now",
+    "minutesAgo": "{minutes}m ago",
+    "hoursAgo": "{hours}h ago",
+    "daysAgo": "{days}d ago"
+  },
+  "metadata": {
+    "title": "Goongoom - Anonymous Q&A Platform",
+    "description": "Ask questions and get answers anonymously"
+  },
+  "nav": {
+    "appName": "Goongoom"
+  },
+  "auth": {
+    "login": "Log in",
+    "createProfile": "Create my profile",
+    "viewProfile": "View my profile",
+    "loginRequired": "Please log in to send a question.",
+    "welcome": "Welcome to Goongoom!",
+    "welcomeDescription": "Log in to send and receive anonymous questions",
+    "openProfileMenu": "Open profile menu",
+    "start": "Start"
+  },
+  "passkey": {
+    "setupError": "An error occurred while setting up passkey. Please try again.",
+    "setupComplete": "Setup complete!",
+    "setupCompleteDescription": "You can now log in faster and more securely.",
+    "nudgeTitle": "What if someone answers without permission?",
+    "nudgeDescription": "Log in faster and more securely with Face ID or Touch ID",
+    "settingUp": "Setting up...",
+    "setupNow": "Set up now",
+    "later": "Maybe later",
+    "fasterTitle": "🔐 Faster with Passkey!",
+    "fasterDescription": "Log in with Face ID, fingerprint, or device lock\nwith just one touch."
+  },
+  "theme": {
+    "toggle": "Toggle theme"
+  },
+  "share": {
+    "title": "Share",
+    "shareToInstagram": "Share from Goongoom",
+    "more": "More",
+    "instagramDescription": "Share this answer on Instagram",
+    "instagramImageShare": "Share Instagram image",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied",
+    "easyShare": "Easy sharing",
+    "easyShareDescription": "Share your link on Instagram, Twitter, anywhere. Get questions with just one click.",
+    "instagramShare": "Instagram sharing",
+    "instagramShareDescription": "Save witty answers as images and share them directly to Instagram Stories and feeds."
+  },
+  "questions": {
+    "sendQuestion": "Send question",
+    "sending": "Sending...",
+    "inputPlaceholder": "Type your question…",
+    "writeQuestion": "Write a question",
+    "toRecipient": "To {recipientName}",
+    "newQuestion": "Leave a new question",
+    "whoToAsk": "How do you want to ask?",
+    "anonymousOption": "Anonymous",
+    "anonymousDescription": "Ask anonymously",
+    "identifiedOption": "Identified",
+    "identifiedDescription": "Ask with my name",
+    "termsAgreement": "By asking, you agree to our terms of service",
+    "questionSent": "Question sent!",
+    "questionLabel": "Question",
+    "defaultQuestion": "Your question will appear here.",
+    "defaultAnswer": "Share your witty answer."
+  },
+  "answers": {
+    "answer": "Answer",
+    "answerButton": "Answer",
+    "answerDrawerTitle": "Answer this question",
+    "answerPlaceholder": "Type your answer…",
+    "noAnswersYet": "No answered questions yet."
+  },
+  "inbox": {
+    "title": "Inbox",
+    "description": "Questions waiting for your answer",
+    "emptyTitle": "No new questions",
+    "emptyDescription": "New questions will appear here."
+  },
+  "profile": {
+    "myProfile": "My profile",
+    "inboxMenu": "Inbox",
+    "settingsMenu": "Settings",
+    "noBio": "No bio set",
+    "backToProfile": "← {displayName}'s profile"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Edit your profile information",
+    "profileRequired": "Profile setup required",
+    "profileRequiredDescription": "Please complete your account setup.",
+    "profileUpdated": "Profile updated!",
+    "languageSettings": "Language",
+    "languageSettingsDescription": "Choose your preferred language.",
+    "anonymousRestriction": "Anonymous restriction",
+    "anonymousRestrictionDescription": "Restrict anonymous questions to reduce malicious messages.",
+    "whoCanAsk": "Who can send you questions?",
+    "profileSettings": "Profile settings",
+    "profileSettingsDescription": "Set your profile info and social links.",
+    "bioLabel": "Bio",
+    "bioPlaceholder": "Write a short bio…",
+    "socialLinks": "Social links (username only)",
+    "accountSettings": "Account settings",
+    "accountSettingsDescription": "Manage your email, password, and security settings."
+  },
+  "more": {
+    "title": "More",
+    "announcements": "Announcements",
+    "events": "Events",
+    "contact": "Contact us",
+    "settings": "Settings"
+  },
+  "home": {
+    "hotTitle": "The hottest anonymous Q&A",
+    "heroTitle": "Ask anything you're curious about",
+    "heroDescription": "Ask anonymously, answer honestly.\nShare your profile and hear your friends' true thoughts.",
+    "safeAnonymity": "Safe anonymity",
+    "safeAnonymityDescription": "Questioners' identities are kept strictly anonymous. Start honest conversations without pressure.",
+    "ctaTitle": "Get started now",
+    "ctaDescription": "Already {userCount} users are using Goongoom."
+  },
+  "footer": {
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "contact": "Contact"
+  },
+  "questionSecurity": {
+    "anyoneLabel": "Anyone can ask",
+    "anyoneDescription": "Non-members can also send anonymous questions.",
+    "verifiedLabel": "Allow anonymous only from verified users",
+    "verifiedDescription": "Only users with verified phone numbers can send anonymous questions. Goongoom will not share questioner information without a legal request.",
+    "identifiedOnlyLabel": "Identified questions only",
+    "identifiedOnlyDescription": "Only accept identified questions.",
+    "invalidSetting": "Invalid question security setting"
+  },
+  "restrictions": {
+    "anonymousLoginRequired": "Anonymous questions require login. Your identity won't be revealed unless required by law.",
+    "identifiedOnly": "This user only accepts identified questions.",
+    "loginForIdentified": "Log in to send identified questions."
+  },
+  "errors": {
+    "loginRequired": "Login required",
+    "userNotFound": "User not found",
+    "profileLoadError": "Error loading profile information",
+    "invalidSecuritySetting": "Invalid question security setting",
+    "profileUpdateError": "Error updating profile",
+    "recipientAndContentRequired": "Recipient and content are required",
+    "userDoesNotExist": "User does not exist",
+    "publicQuestionLoginRequired": "Login required to send public questions",
+    "publicQuestionOnly": "This user only accepts public questions",
+    "anonymousLoginRequired": "Login required to send anonymous questions",
+    "questionCreateFailed": "Failed to create question",
+    "questionCreateError": "Error creating question",
+    "questionIdAndContentRequired": "Question ID and content are required",
+    "questionNotFound": "Question not found",
+    "onlyRecipientCanAnswer": "Only the recipient can answer this question",
+    "answerCreateFailed": "Failed to create answer",
+    "answerCreateError": "Error creating answer",
+    "pleaseEnterQuestion": "Please enter a question"
+  },
+  "instagram": {
+    "shareTitle": "Instagram Share"
+  }
+}
