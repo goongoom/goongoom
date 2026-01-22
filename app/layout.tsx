@@ -18,7 +18,7 @@ const clerkLocalizations = {
 } as const
 
 export const metadata: Metadata = {
-  title: "궁금닷컴 - 익명 질문 답변 플랫폼",
+  title: "궁금닷컴",
   description: "궁금한 것을 물어보고 답변을 받아보세요",
 }
 
