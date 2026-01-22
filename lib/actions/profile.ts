@@ -9,8 +9,7 @@ import {
   DEFAULT_QUESTION_SECURITY_LEVEL,
   isQuestionSecurityLevel,
 } from "@/lib/question-security"
-import type { UserProfile } from "@/lib/types"
-import type { SocialLinks } from "@/src/db/schema"
+import type { SocialLinks, UserProfile } from "@/lib/types"
 
 export type ProfileActionResult<T = unknown> =
   | { success: true; data: T }
@@ -32,6 +31,11 @@ export async function getProfile(): Promise<ProfileActionResult<UserProfile>> {
 
     const dbUser = await getOrCreateUser(clerkId)
 
+    const securityLevel = dbUser?.questionSecurityLevel ?? ""
+    const validSecurityLevel = isQuestionSecurityLevel(securityLevel)
+      ? securityLevel
+      : DEFAULT_QUESTION_SECURITY_LEVEL
+
     return {
       success: true,
       data: {
@@ -41,8 +45,7 @@ export async function getProfile(): Promise<ProfileActionResult<UserProfile>> {
         avatarUrl: clerkUser.avatarUrl,
         bio: dbUser?.bio || null,
         socialLinks: dbUser?.socialLinks || null,
-        questionSecurityLevel:
-          dbUser?.questionSecurityLevel || DEFAULT_QUESTION_SECURITY_LEVEL,
+        questionSecurityLevel: validSecurityLevel,
       },
     }
   } catch (error) {
@@ -93,6 +96,11 @@ export async function updateProfile(data: {
 
         const clerkUser = await getClerkUserById(clerkId)
 
+        const updatedSecurityLevel = updated[0]?.questionSecurityLevel ?? ""
+        const finalSecurityLevel = isQuestionSecurityLevel(updatedSecurityLevel)
+          ? updatedSecurityLevel
+          : DEFAULT_QUESTION_SECURITY_LEVEL
+
         return {
           success: true,
           data: {
@@ -102,9 +110,7 @@ export async function updateProfile(data: {
             avatarUrl: clerkUser?.avatarUrl || null,
             bio: updated[0]?.bio || null,
             socialLinks: updated[0]?.socialLinks || null,
-            questionSecurityLevel:
-              updated[0]?.questionSecurityLevel ||
-              DEFAULT_QUESTION_SECURITY_LEVEL,
+            questionSecurityLevel: finalSecurityLevel,
           },
         }
       } catch (error) {

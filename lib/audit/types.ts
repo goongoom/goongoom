@@ -1,4 +1,3 @@
-// JSON-safe type for payload storage (defined first)
 export type JsonValue =
   | string
   | number
@@ -7,36 +6,29 @@ export type JsonValue =
   | JsonValue[]
   | { [key: string]: JsonValue }
 
-// Entity types that can be tracked
 export type EntityType = "question" | "answer"
 
 export interface AuditRequestData {
-  ipAddress: string | null
-  geoCity: string | null
-  geoCountry: string | null
-  geoCountryFlag: string | null
-  geoRegion: string | null
-  geoEdgeRegion: string | null
-  geoLatitude: string | null
-  geoLongitude: string | null
-  geoPostalCode: string | null
-  userAgent: string | null
-  referer: string | null
-  acceptLanguage: string | null
+  ipAddress?: string
+  geoCity?: string
+  geoCountry?: string
+  geoCountryFlag?: string
+  geoRegion?: string
+  geoEdgeRegion?: string
+  geoLatitude?: string
+  geoLongitude?: string
+  geoPostalCode?: string
+  userAgent?: string
+  referer?: string
+  acceptLanguage?: string
 }
 
-// Complete audit log entry (TypeScript representation)
 export interface AuditLogEntry extends AuditRequestData {
-  userId: string | null
+  userId?: string
   action: string
-  payload: JsonValue | null
+  payload?: JsonValue
   success: boolean
-  errorMessage: string | null
-  entityType: EntityType | null
-  entityId: number | null
-}
-
-// For DB insert (converts boolean to integer)
-export interface AuditLogInsert extends Omit<AuditLogEntry, "success"> {
-  success: number
+  errorMessage?: string
+  entityType?: EntityType
+  entityId?: string
 }

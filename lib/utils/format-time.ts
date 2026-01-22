@@ -13,9 +13,13 @@ const TIME_TRANSLATIONS = {
   },
 } as const
 
-export function formatRelativeTime(date: Date, locale: string): string {
+export function formatRelativeTime(
+  date: Date | number,
+  locale: string
+): string {
   const now = new Date()
-  const diffMs = now.getTime() - new Date(date).getTime()
+  const dateObj = typeof date === "number" ? new Date(date) : date
+  const diffMs = now.getTime() - dateObj.getTime()
   const diffMins = Math.floor(diffMs / (1000 * 60))
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
@@ -36,5 +40,5 @@ export function formatRelativeTime(date: Date, locale: string): string {
   if (diffDays < 7) {
     return t.daysAgo(diffDays)
   }
-  return new Date(date).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US")
+  return dateObj.toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US")
 }

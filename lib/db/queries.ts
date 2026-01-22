@@ -1,20 +1,17 @@
-import { count, desc, eq } from "drizzle-orm"
+import { fetchMutation, fetchQuery } from "convex/nextjs"
+import { api } from "@/convex/_generated/api"
+import type { Id } from "@/convex/_generated/dataModel"
 import type { QuestionSecurityLevel } from "@/lib/question-security"
-import { db } from "@/src/db"
-import type { SocialLinks } from "@/src/db/schema"
-import { answers, questions, users } from "@/src/db/schema"
+
+export interface SocialLinks {
+  instagram?: string
+  facebook?: string
+  github?: string
+  twitter?: string
+}
 
 export async function getOrCreateUser(clerkId: string) {
-  const existing = await db.query.users.findFirst({
-    where: eq(users.clerkId, clerkId),
-  })
-
-  if (existing) {
-    return existing
-  }
-
-  const [newUser] = await db.insert(users).values({ clerkId }).returning()
-  return newUser
+  return await fetchMutation(api.users.getOrCreate, { clerkId })
 }
 
 export async function updateUserProfile(
@@ -25,30 +22,13 @@ export async function updateUserProfile(
     questionSecurityLevel?: QuestionSecurityLevel | null
   }
 ) {
-  const updateData: {
-    bio?: string | null
-    socialLinks?: SocialLinks | null
-    questionSecurityLevel?: QuestionSecurityLevel
-    updatedAt: Date
-  } = {
-    updatedAt: new Date(),
-  }
-
-  if ("bio" in data) {
-    updateData.bio = data.bio
-  }
-  if ("socialLinks" in data) {
-    updateData.socialLinks = data.socialLinks
-  }
-  if (data.questionSecurityLevel) {
-    updateData.questionSecurityLevel = data.questionSecurityLevel
-  }
-
-  return await db
-    .update(users)
-    .set(updateData)
-    .where(eq(users.clerkId, clerkId))
-    .returning()
+  const result = await fetchMutation(api.users.updateProfile, {
+    clerkId,
+    bio: data.bio,
+    socialLinks: data.socialLinks ?? undefined,
+    questionSecurityLevel: data.questionSecurityLevel ?? undefined,
+  })
+  return result ? [result] : []
 }
 
 export async function createQuestion(data: {
@@ -57,134 +37,96 @@ export async function createQuestion(data: {
   content: string
   isAnonymous: number
 }) {
-  return await db.insert(questions).values(data).returning()
+  const result = await fetchMutation(api.questions.create, {
+    recipientClerkId: data.recipientClerkId,
+    senderClerkId: data.senderClerkId ?? undefined,
+    content: data.content,
+    isAnonymous: data.isAnonymous === 1,
+  })
+  return result ? [result] : []
 }
 
 export async function createAnswer(data: {
-  questionId: number
+  questionId: string
   content: string
 }) {
-  return await db.insert(answers).values(data).returning()
+  const result = await fetchMutation(api.answers.create, {
+    questionId: data.questionId as Id<"questions">,
+    content: data.content,
+  })
+  return result ? [result] : []
 }
 
-export async function getQuestionById(id: number) {
-  return await db.query.questions.findFirst({
-    where: eq(questions.id, id),
+export async function getQuestionById(id: string) {
+  return await fetchQuery(api.questions.getById, {
+    id: id as Id<"questions">,
   })
 }
 
 export async function getUserWithAnsweredQuestions(clerkId: string) {
-  const [user, allQuestions] = await Promise.all([
-    db.query.users.findFirst({
-      where: eq(users.clerkId, clerkId),
-    }),
-    db.query.questions.findMany({
-      where: eq(questions.recipientClerkId, clerkId),
-      orderBy: [desc(questions.createdAt)],
-      with: {
-        answers: true,
-      },
+  const [user, answeredQuestions] = await Promise.all([
+    fetchQuery(api.users.getByClerkId, { clerkId }),
+    fetchQuery(api.questions.getAnsweredByRecipient, {
+      recipientClerkId: clerkId,
     }),
   ])
 
   return {
     user,
-    answeredQuestions: allQuestions.filter((q) => q.answers.length > 0),
+    answeredQuestions: answeredQuestions ?? [],
   }
 }
 
 export async function getUnansweredQuestions(clerkId: string) {
-  const allQuestions = await db.query.questions.findMany({
-    where: eq(questions.recipientClerkId, clerkId),
-    orderBy: [desc(questions.createdAt)],
-    with: {
-      answers: true,
-    },
+  return await fetchQuery(api.questions.getUnanswered, {
+    recipientClerkId: clerkId,
   })
-
-  return allQuestions.filter((q) => q.answers.length === 0)
 }
 
 export async function getRecentAnsweredQuestions(limit = 20) {
-  const recentAnswers = await db.query.answers.findMany({
-    orderBy: [desc(answers.createdAt)],
-    limit,
-    with: {
-      question: true,
-    },
-  })
-
-  return recentAnswers.map((a) => ({
-    question: a.question,
-    answer: a,
-    recipientClerkId: a.question.recipientClerkId,
-  }))
+  return await fetchQuery(api.answers.getRecent, { limit })
 }
 
 export async function getQuestionsWithAnswers(
   recipientClerkId: string,
   options?: { limit?: number; offset?: number }
 ) {
-  return await db.query.questions.findMany({
-    where: eq(questions.recipientClerkId, recipientClerkId),
-    orderBy: [desc(questions.createdAt)],
-    with: {
-      answers: true,
-    },
+  return await fetchQuery(api.questions.getByRecipient, {
+    recipientClerkId,
     limit: options?.limit,
-    offset: options?.offset,
   })
 }
 
 export async function getTotalUserCount(): Promise<number> {
-  const result = await db.select({ count: count() }).from(users)
-  return result[0]?.count ?? 0
+  return await fetchQuery(api.users.count, {})
 }
 
 export async function getQuestionByIdAndRecipient(
-  questionId: number,
+  questionId: string,
   recipientClerkId: string
 ) {
-  return await db.query.questions.findFirst({
-    where: (questions, { and, eq }) =>
-      and(
-        eq(questions.id, questionId),
-        eq(questions.recipientClerkId, recipientClerkId)
-      ),
-    with: {
-      answers: true,
-    },
+  return await fetchQuery(api.questions.getByIdAndRecipient, {
+    id: questionId as Id<"questions">,
+    recipientClerkId,
   })
 }
 
 export async function getAnsweredQuestionNumber(
-  questionId: number,
+  questionId: string,
   recipientClerkId: string
 ): Promise<number> {
-  const result = await db.query.questions.findMany({
-    where: (questions, { and, eq, lte }) =>
-      and(
-        eq(questions.recipientClerkId, recipientClerkId),
-        lte(questions.id, questionId)
-      ),
-    with: {
-      answers: true,
-    },
+  return await fetchQuery(api.questions.getAnsweredNumber, {
+    questionId: questionId as Id<"questions">,
+    recipientClerkId,
   })
-  return result.filter((q) => q.answers.length > 0).length
 }
 
 export async function getSentQuestionsWithAnswers(
   senderClerkId: string,
   options?: { limit?: number; offset?: number }
 ) {
-  return await db.query.questions.findMany({
-    where: eq(questions.senderClerkId, senderClerkId),
-    orderBy: [desc(questions.createdAt)],
-    with: {
-      answers: true,
-    },
+  return await fetchQuery(api.questions.getSentByUser, {
+    senderClerkId,
     limit: options?.limit,
-    offset: options?.offset,
   })
 }

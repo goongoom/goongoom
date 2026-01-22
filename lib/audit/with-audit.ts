@@ -10,9 +10,9 @@ interface WithAuditOptions {
   entityType?: EntityType
 }
 
-function serializePayload(payload: unknown): JsonValue | null {
+function serializePayload(payload: unknown): JsonValue | undefined {
   if (payload === null || payload === undefined) {
-    return null
+    return undefined
   }
   try {
     return JSON.parse(JSON.stringify(payload)) as JsonValue
@@ -37,24 +37,24 @@ function hasIdProperty(data: unknown): data is { id: unknown } {
   return typeof data === "object" && data !== null && "id" in data
 }
 
-function extractEntityId(result: unknown): number | null {
+function extractEntityId(result: unknown): string | undefined {
   if (!isSuccessResult(result)) {
-    return null
+    return undefined
   }
 
   if (!hasIdProperty(result.data)) {
-    return null
+    return undefined
   }
 
   const id = result.data.id
-  return typeof id === "number" ? id : null
+  return typeof id === "string" ? id : undefined
 }
 
-function extractErrorMessage(result: unknown): string | null {
+function extractErrorMessage(result: unknown): string | undefined {
   if (typeof result === "object" && result !== null && "error" in result) {
     return (result as { error: string }).error
   }
-  return null
+  return undefined
 }
 
 function getActionSuccess(result: unknown): boolean {
@@ -70,18 +70,18 @@ async function buildRequestData(): Promise<AuditRequestData> {
   const geo = geolocation(request)
 
   return {
-    ipAddress: ipAddress(request) || null,
-    userAgent: headersList.get("user-agent") || null,
-    referer: headersList.get("referer") || null,
-    acceptLanguage: headersList.get("accept-language") || null,
-    geoCity: geo.city || null,
-    geoCountry: geo.country || null,
-    geoCountryFlag: geo.flag || null,
-    geoRegion: geo.countryRegion || null,
-    geoEdgeRegion: geo.region || null,
-    geoLatitude: geo.latitude || null,
-    geoLongitude: geo.longitude || null,
-    geoPostalCode: geo.postalCode || null,
+    ipAddress: ipAddress(request) || undefined,
+    userAgent: headersList.get("user-agent") || undefined,
+    referer: headersList.get("referer") || undefined,
+    acceptLanguage: headersList.get("accept-language") || undefined,
+    geoCity: geo.city || undefined,
+    geoCountry: geo.country || undefined,
+    geoCountryFlag: geo.flag || undefined,
+    geoRegion: geo.countryRegion || undefined,
+    geoEdgeRegion: geo.region || undefined,
+    geoLatitude: geo.latitude || undefined,
+    geoLongitude: geo.longitude || undefined,
+    geoPostalCode: geo.postalCode || undefined,
   }
 }
 
@@ -96,8 +96,8 @@ export async function withAudit<T>(
   const serializedPayload = serializePayload(payload)
 
   let success = true
-  let errorMessage: string | null = null
-  let entityId: number | null = null
+  let errorMessage: string | undefined
+  let entityId: string | undefined
   let result: T
 
   try {
@@ -116,12 +116,12 @@ export async function withAudit<T>(
   } finally {
     await logAuditEntry({
       ...requestData,
-      userId: userId || null,
+      userId: userId || undefined,
       action: actionName,
       payload: serializedPayload,
       success,
       errorMessage,
-      entityType: entityType || null,
+      entityType,
       entityId,
     })
   }

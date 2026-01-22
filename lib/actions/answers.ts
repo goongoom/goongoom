@@ -14,7 +14,7 @@ export type AnswerActionResult<T = unknown> =
   | { success: false; error: string }
 
 export async function createAnswer(data: {
-  questionId: number
+  questionId: string
   content: string
 }): Promise<AnswerActionResult<Answer>> {
   return await withAudit(
@@ -34,7 +34,7 @@ export async function createAnswer(data: {
           return { success: false, error: t("questionIdAndContentRequired") }
         }
 
-        const question = await getQuestionById(Number(questionId))
+        const question = await getQuestionById(questionId)
         if (!question) {
           return { success: false, error: t("questionNotFound") }
         }
@@ -44,7 +44,7 @@ export async function createAnswer(data: {
         }
 
         const [answer] = await createAnswerDB({
-          questionId: Number(questionId),
+          questionId,
           content,
         })
 

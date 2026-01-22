@@ -8,9 +8,10 @@ export function useRelativeTime() {
   const locale = useLocale()
 
   return useCallback(
-    (date: Date): string => {
+    (date: Date | number): string => {
       const now = new Date()
-      const diffMs = now.getTime() - new Date(date).getTime()
+      const dateObj = typeof date === "number" ? new Date(date) : date
+      const diffMs = now.getTime() - dateObj.getTime()
       const diffMins = Math.floor(diffMs / (1000 * 60))
       const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
       const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
@@ -27,9 +28,7 @@ export function useRelativeTime() {
       if (diffDays < 7) {
         return t("daysAgo", { days: diffDays })
       }
-      return new Date(date).toLocaleDateString(
-        locale === "ko" ? "ko-KR" : "en-US"
-      )
+      return dateObj.toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US")
     },
     [t, locale]
   )
