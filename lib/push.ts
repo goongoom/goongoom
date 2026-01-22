@@ -3,13 +3,10 @@ import { env } from "@/env"
 
 const vapidPublicKey = env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
 const vapidPrivateKey = env.VAPID_PRIVATE_KEY
+const vapidSubject = env.VAPID_SUBJECT
 
-if (vapidPublicKey && vapidPrivateKey) {
-  webpush.setVapidDetails(
-    "mailto:hello@goongoom.com",
-    vapidPublicKey,
-    vapidPrivateKey
-  )
+if (vapidPublicKey && vapidPrivateKey && vapidSubject) {
+  webpush.setVapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey)
 }
 
 export interface PushPayload {

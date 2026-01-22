@@ -5,6 +5,7 @@ const schema = z.object({
   CLERK_WEBHOOK_SECRET: z.string().optional().default(""),
   NEXT_PUBLIC_VAPID_PUBLIC_KEY: z.string().optional(),
   VAPID_PRIVATE_KEY: z.string().optional(),
+  VAPID_SUBJECT: z.string().url().optional(),
 })
 
 export const env = schema.parse(process.env)
