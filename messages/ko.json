@@ -118,6 +118,14 @@
     "profileRequired": "프로필 설정이 필요해요",
     "profileRequiredDescription": "계정 설정을 완료해 주세요.",
     "profileUpdated": "프로필이 수정됐어요!",
+    "themeSettings": "화면 테마",
+    "themeSettingsDescription": "원하는 테마를 선택하세요.",
+    "themeLight": "라이트",
+    "themeLightDescription": "밝은 테마",
+    "themeDark": "다크",
+    "themeDarkDescription": "어두운 테마",
+    "themeSystem": "시스템",
+    "themeSystemDescription": "시스템 설정을 따름",
     "languageSettings": "언어 설정",
     "languageSettingsDescription": "앱에서 사용할 언어를 선택하세요.",
     "anonymousRestriction": "익명 제한 설정",
@@ -192,5 +200,9 @@
     "androidStep1": "메뉴 버튼을 탭하세요",
     "androidStep2": "'홈 화면에 추가'를 선택하세요",
     "dismiss": "다음에 하기"
+  },
+  "push": {
+    "newQuestionTitle": "새로운 질문이 도착했어요!",
+    "newQuestionBody": "{content}"
   }
 }

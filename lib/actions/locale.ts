@@ -1,7 +1,10 @@
 "use server"
 
+import { auth } from "@clerk/nextjs/server"
+import { fetchMutation } from "convex/nextjs"
 import { revalidatePath } from "next/cache"
 import { cookies } from "next/headers"
+import { api } from "@/convex/_generated/api"
 import { type Locale, locales } from "@/i18n/config"
 
 const LOCALE_COOKIE = "NEXT_LOCALE"
@@ -18,6 +21,14 @@ export async function setUserLocale(locale: Locale) {
     maxAge: ONE_YEAR_IN_SECONDS,
     sameSite: "lax",
   })
+
+  const { userId } = await auth()
+  if (userId) {
+    await fetchMutation(api.users.updateLocale, {
+      clerkId: userId,
+      locale,
+    })
+  }
 
   revalidatePath("/", "layout")
   return { success: true }

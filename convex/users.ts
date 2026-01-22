@@ -102,3 +102,31 @@ export const deleteByClerkId = mutation({
     }
   },
 })
+
+export const updateLocale = mutation({
+  args: {
+    clerkId: v.string(),
+    locale: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+      .first()
+
+    if (!user) {
+      return await ctx.db.insert("users", {
+        clerkId: args.clerkId,
+        questionSecurityLevel: "anyone",
+        locale: args.locale,
+        updatedAt: Date.now(),
+      })
+    }
+
+    await ctx.db.patch(user._id, {
+      locale: args.locale,
+      updatedAt: Date.now(),
+    })
+    return user._id
+  },
+})

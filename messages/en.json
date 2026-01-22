@@ -118,6 +118,14 @@
     "profileRequired": "Profile setup required",
     "profileRequiredDescription": "Please complete your account setup.",
     "profileUpdated": "Profile updated!",
+    "themeSettings": "Appearance",
+    "themeSettingsDescription": "Choose your preferred theme.",
+    "themeLight": "Light",
+    "themeLightDescription": "Light theme",
+    "themeDark": "Dark",
+    "themeDarkDescription": "Dark theme",
+    "themeSystem": "System",
+    "themeSystemDescription": "Follow system setting",
     "languageSettings": "Language",
     "languageSettingsDescription": "Choose your preferred language.",
     "anonymousRestriction": "Anonymous restriction",
@@ -193,5 +201,9 @@
     "androidStep1": "Tap the menu button",
     "androidStep2": "Select 'Add to Home Screen'",
     "dismiss": "Maybe later"
+  },
+  "push": {
+    "newQuestionTitle": "You have a new question!",
+    "newQuestionBody": "{content}"
   }
 }

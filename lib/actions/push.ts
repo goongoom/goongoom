@@ -13,7 +13,7 @@ export async function subscribeToPush(subscription: {
     return { success: false }
   }
 
-  await fetchMutation(api.pushSubscriptions.upsert, {
+  await fetchMutation(api.push.upsert, {
     clerkId: userId,
     endpoint: subscription.endpoint,
     p256dh: subscription.keys.p256dh,
@@ -31,7 +31,7 @@ export async function unsubscribeFromPush(
     return { success: false }
   }
 
-  await fetchMutation(api.pushSubscriptions.remove, {
+  await fetchMutation(api.push.remove, {
     clerkId: userId,
     endpoint,
   })
@@ -40,5 +40,5 @@ export async function unsubscribeFromPush(
 }
 
 export async function getPushSubscriptions(clerkId: string) {
-  return await fetchQuery(api.pushSubscriptions.getByClerkId, { clerkId })
+  return await fetchQuery(api.push.getByClerkId, { clerkId })
 }

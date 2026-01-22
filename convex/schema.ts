@@ -14,6 +14,7 @@ export default defineSchema({
       })
     ),
     questionSecurityLevel: v.string(),
+    locale: v.optional(v.string()),
     updatedAt: v.number(),
   }).index("by_clerk_id", ["clerkId"]),
 

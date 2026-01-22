@@ -6,6 +6,7 @@ import { MainContent } from "@/components/layout/main-content"
 import { AccountSettingsButton } from "@/components/settings/account-settings-button"
 import { LocaleSelector } from "@/components/settings/locale-selector"
 import { LogoutButton } from "@/components/settings/logout-button"
+import { ThemeSelector } from "@/components/settings/theme-selector"
 import {
   Empty,
   EmptyDescription,
@@ -68,6 +69,10 @@ export default async function SettingsPage({
         <AccountSettingsButton />
 
         <PasskeyNudge />
+
+        <div className="rounded-2xl border border-border bg-card p-6">
+          <ThemeSelector />
+        </div>
 
         <div className="rounded-2xl border border-border bg-card p-6">
           <LocaleSelector />
