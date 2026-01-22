@@ -420,6 +420,9 @@
   .bottom-safe {
     bottom: env(safe-area-inset-bottom, 0px);
   }
+  .bottom-tab-bar {
+    bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  }
   .left-safe {
     left: env(safe-area-inset-left, 0px);
   }

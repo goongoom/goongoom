@@ -14,7 +14,7 @@ function QuestionInputTrigger({
   const t = useTranslations("questions")
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-16 z-40 bg-gradient-to-t from-background via-background/80 to-transparent p-4 pb-safe md:bottom-0 md:left-(--sidebar-width)">
+    <div className="pointer-events-none fixed inset-x-0 bottom-tab-bar z-40 bg-gradient-to-t from-background via-background/80 to-transparent p-4 md:bottom-0 md:left-(--sidebar-width)">
       <button
         aria-label={t("writeQuestion")}
         className={cn(
