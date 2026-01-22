@@ -183,5 +183,15 @@
   },
   "instagram": {
     "shareTitle": "Instagram Share"
+  },
+  "a2hs": {
+    "title": "Add to Home Screen",
+    "description": "Access instantly like an app\nand get notifications.",
+    "howTo": "How to add",
+    "iosStep1": "Tap the share button below",
+    "iosStep2": "Select 'Add to Home Screen'",
+    "androidStep1": "Tap the menu button",
+    "androidStep2": "Select 'Add to Home Screen'",
+    "dismiss": "Maybe later"
   }
 }

@@ -10,6 +10,18 @@ interface WithAuditOptions {
   entityType?: EntityType
 }
 
+interface SuccessResult {
+  success: true
+  data: unknown
+}
+
+interface ErrorResult {
+  success: false
+  error: string
+}
+
+type ActionResult = SuccessResult | ErrorResult | unknown
+
 function serializePayload(payload: unknown): JsonValue | undefined {
   if (payload === null || payload === undefined) {
     return undefined
@@ -21,15 +33,24 @@ function serializePayload(payload: unknown): JsonValue | undefined {
   }
 }
 
-function isSuccessResult(
-  result: unknown
-): result is { success: boolean; data: unknown } {
+function isSuccessResult(result: ActionResult): result is SuccessResult {
   return (
     typeof result === "object" &&
     result !== null &&
     "success" in result &&
-    (result as { success: boolean }).success &&
+    result.success === true &&
     "data" in result
+  )
+}
+
+function isErrorResult(result: ActionResult): result is ErrorResult {
+  return (
+    typeof result === "object" &&
+    result !== null &&
+    "success" in result &&
+    result.success === false &&
+    "error" in result &&
+    typeof result.error === "string"
   )
 }
 
@@ -37,7 +58,7 @@ function hasIdProperty(data: unknown): data is { id: unknown } {
   return typeof data === "object" && data !== null && "id" in data
 }
 
-function extractEntityId(result: unknown): string | undefined {
+function extractEntityId(result: ActionResult): string | undefined {
   if (!isSuccessResult(result)) {
     return undefined
   }
@@ -50,16 +71,16 @@ function extractEntityId(result: unknown): string | undefined {
   return typeof id === "string" ? id : undefined
 }
 
-function extractErrorMessage(result: unknown): string | undefined {
-  if (typeof result === "object" && result !== null && "error" in result) {
-    return (result as { error: string }).error
+function extractErrorMessage(result: ActionResult): string | undefined {
+  if (isErrorResult(result)) {
+    return result.error
   }
   return undefined
 }
 
-function getActionSuccess(result: unknown): boolean {
+function getActionSuccess(result: ActionResult): boolean {
   if (typeof result === "object" && result !== null && "success" in result) {
-    return (result as { success: boolean }).success
+    return result.success === true
   }
   return true
 }

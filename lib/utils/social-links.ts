@@ -42,10 +42,17 @@ export function normalizeHandle(value: string) {
   }
 }
 
+interface SocialLinkItem {
+  key: string
+  label: string
+  icon: typeof InstagramIcon
+  href: string
+}
+
 export function buildSocialLinks(
   socialLinks: { instagram?: string; facebook?: string } | null | undefined
-) {
-  return [
+): SocialLinkItem[] {
+  const links = [
     {
       key: "instagram",
       label: "Instagram",
@@ -58,7 +65,8 @@ export function buildSocialLinks(
       icon: FacebookIcon,
       href: toProfileUrl(socialLinks?.facebook, "facebook.com"),
     },
-  ].filter((link) => link.href)
+  ]
+  return links.filter((link): link is SocialLinkItem => link.href !== null)
 }
 
 export function getPageStatus(

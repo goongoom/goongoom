@@ -33,16 +33,11 @@ import { Empty, EmptyHeader, EmptyTitle } from "@/components/ui/empty"
 import { ToastOnMount } from "@/components/ui/toast-on-mount"
 import { createQuestion } from "@/lib/actions/questions"
 import { getClerkUserById } from "@/lib/clerk"
-import {
-  getOrCreateUser,
-  getTotalUserCount,
-  getUserWithAnsweredQuestions,
-} from "@/lib/db/queries"
+import { getOrCreateUser, getUserWithAnsweredQuestions } from "@/lib/db/queries"
 import {
   DEFAULT_QUESTION_SECURITY_LEVEL,
   getQuestionSecurityOptions,
 } from "@/lib/question-security"
-import type { QuestionWithAnswers } from "@/lib/types"
 import {
   buildSocialLinks,
   getPageStatus,
@@ -64,8 +59,7 @@ export default async function Home({ searchParams }: HomePageProps) {
 }
 
 async function LandingPage() {
-  const [userCount, t, tNav, tFooter, tShare] = await Promise.all([
-    getTotalUserCount(),
+  const [t, tNav, tFooter, tShare] = await Promise.all([
     getTranslations("home"),
     getTranslations("nav"),
     getTranslations("footer"),
@@ -162,7 +156,7 @@ async function LandingPage() {
               {t("ctaTitle")}
             </h2>
             <p className="mb-10 text-lg text-muted-foreground">
-              {t("ctaDescription", { userCount: userCount.toLocaleString() })}
+              {t("ctaDescription")}
             </p>
             <BottomCTAButton />
           </div>
@@ -265,11 +259,7 @@ async function MyProfile({ clerkId, searchParams }: MyProfileProps) {
     : ""
 
   const questionsWithAnswers = answeredQuestions
-    .map((qa) => {
-      const typed = qa as QuestionWithAnswers
-      const answer = typed.answers[0]
-      return answer ? { ...typed, firstAnswer: answer } : null
-    })
+    .map((qa) => (qa.answer ? { ...qa, firstAnswer: qa.answer } : null))
     .filter((qa) => qa !== null)
 
   const cardLabels = {
@@ -345,7 +335,7 @@ async function MyProfile({ clerkId, searchParams }: MyProfileProps) {
                     className="rounded-full"
                     render={
                       <Link
-                        href={link.href as string}
+                        href={link.href}
                         rel="noopener noreferrer"
                         target="_blank"
                       />

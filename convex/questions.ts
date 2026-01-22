@@ -37,12 +37,11 @@ export const getByIdAndRecipient = query({
       return null
     }
 
-    const answers = await ctx.db
-      .query("answers")
-      .withIndex("by_question", (q) => q.eq("questionId", args.id))
-      .collect()
+    const answer = question.answerId
+      ? await ctx.db.get(question.answerId)
+      : null
 
-    return { ...question, answers }
+    return { ...question, answer }
   },
 })
 
@@ -50,7 +49,6 @@ export const getByRecipient = query({
   args: {
     recipientClerkId: v.string(),
     limit: v.optional(v.number()),
-    cursor: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const questions = await ctx.db
@@ -61,42 +59,33 @@ export const getByRecipient = query({
       .order("desc")
       .take(args.limit ?? 100)
 
-    const questionsWithAnswers = await Promise.all(
-      questions.map(async (question) => {
-        const answers = await ctx.db
-          .query("answers")
-          .withIndex("by_question", (q) => q.eq("questionId", question._id))
-          .collect()
-        return { ...question, answers }
-      })
+    const answerIds = questions
+      .map((q) => q.answerId)
+      .filter((id): id is NonNullable<typeof id> => id !== undefined)
+    const answers = await Promise.all(answerIds.map((id) => ctx.db.get(id)))
+    const validAnswers = answers.filter(
+      (a): a is NonNullable<typeof a> => a !== null
     )
+    const answerMap = new Map(validAnswers.map((a) => [a._id, a]))
 
-    return questionsWithAnswers
+    return questions.map((question) => ({
+      ...question,
+      answer: question.answerId ? answerMap.get(question.answerId) : null,
+    }))
   },
 })
 
 export const getUnanswered = query({
   args: { recipientClerkId: v.string() },
   handler: async (ctx, args) => {
-    const questions = await ctx.db
+    return await ctx.db
       .query("questions")
       .withIndex("by_recipient", (q) =>
         q.eq("recipientClerkId", args.recipientClerkId)
       )
+      .filter((q) => q.eq(q.field("answerId"), undefined))
       .order("desc")
       .collect()
-
-    const unanswered = await Promise.all(
-      questions.map(async (question) => {
-        const answers = await ctx.db
-          .query("answers")
-          .withIndex("by_question", (q) => q.eq("questionId", question._id))
-          .collect()
-        return answers.length === 0 ? question : null
-      })
-    )
-
-    return unanswered.filter(Boolean)
   },
 })
 
@@ -108,20 +97,23 @@ export const getAnsweredByRecipient = query({
       .withIndex("by_recipient", (q) =>
         q.eq("recipientClerkId", args.recipientClerkId)
       )
+      .filter((q) => q.neq(q.field("answerId"), undefined))
       .order("desc")
       .collect()
 
-    const answered = await Promise.all(
-      questions.map(async (question) => {
-        const answers = await ctx.db
-          .query("answers")
-          .withIndex("by_question", (q) => q.eq("questionId", question._id))
-          .collect()
-        return answers.length > 0 ? { ...question, answers } : null
-      })
+    const answerIds = questions
+      .map((q) => q.answerId)
+      .filter((id): id is NonNullable<typeof id> => id !== undefined)
+    const answers = await Promise.all(answerIds.map((id) => ctx.db.get(id)))
+    const validAnswers = answers.filter(
+      (a): a is NonNullable<typeof a> => a !== null
     )
+    const answerMap = new Map(validAnswers.map((a) => [a._id, a]))
 
-    return answered.filter(Boolean)
+    return questions.map((question) => ({
+      ...question,
+      answer: question.answerId ? answerMap.get(question.answerId) : null,
+    }))
   },
 })
 
@@ -133,21 +125,23 @@ export const getSentByUser = query({
   handler: async (ctx, args) => {
     const questions = await ctx.db
       .query("questions")
-      .filter((q) => q.eq(q.field("senderClerkId"), args.senderClerkId))
+      .withIndex("by_sender", (q) => q.eq("senderClerkId", args.senderClerkId))
       .order("desc")
       .take(args.limit ?? 100)
 
-    const questionsWithAnswers = await Promise.all(
-      questions.map(async (question) => {
-        const answers = await ctx.db
-          .query("answers")
-          .withIndex("by_question", (q) => q.eq("questionId", question._id))
-          .collect()
-        return { ...question, answers }
-      })
+    const answerIds = questions
+      .map((q) => q.answerId)
+      .filter((id): id is NonNullable<typeof id> => id !== undefined)
+    const answers = await Promise.all(answerIds.map((id) => ctx.db.get(id)))
+    const validAnswers = answers.filter(
+      (a): a is NonNullable<typeof a> => a !== null
     )
+    const answerMap = new Map(validAnswers.map((a) => [a._id, a]))
 
-    return questionsWithAnswers
+    return questions.map((question) => ({
+      ...question,
+      answer: question.answerId ? answerMap.get(question.answerId) : null,
+    }))
   },
 })
 
@@ -162,28 +156,16 @@ export const getAnsweredNumber = query({
       return 0
     }
 
-    const allQuestions = await ctx.db
+    const answeredQuestions = await ctx.db
       .query("questions")
       .withIndex("by_recipient", (q) =>
         q.eq("recipientClerkId", args.recipientClerkId)
       )
+      .filter((q) => q.neq(q.field("answerId"), undefined))
       .collect()
 
-    const questionsBeforeOrEqual = allQuestions.filter(
+    return answeredQuestions.filter(
       (q) => q._creationTime <= question._creationTime
-    )
-
-    let count = 0
-    for (const q of questionsBeforeOrEqual) {
-      const answers = await ctx.db
-        .query("answers")
-        .withIndex("by_question", (qb) => qb.eq("questionId", q._id))
-        .collect()
-      if (answers.length > 0) {
-        count++
-      }
-    }
-
-    return count
+    ).length
   },
 })

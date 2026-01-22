@@ -7,11 +7,22 @@ export const create = mutation({
     content: v.string(),
   },
   handler: async (ctx, args) => {
-    const id = await ctx.db.insert("answers", {
+    const question = await ctx.db.get(args.questionId)
+    if (!question) {
+      throw new Error("Question not found")
+    }
+    if (question.answerId) {
+      throw new Error("Question already answered")
+    }
+
+    const answerId = await ctx.db.insert("answers", {
       questionId: args.questionId,
       content: args.content,
     })
-    return await ctx.db.get(id)
+
+    await ctx.db.patch(args.questionId, { answerId })
+
+    return await ctx.db.get(answerId)
   },
 })
 
@@ -23,17 +34,25 @@ export const getRecent = query({
       .order("desc")
       .take(args.limit ?? 20)
 
-    const result = await Promise.all(
-      answers.map(async (answer) => {
-        const question = await ctx.db.get(answer.questionId)
+    const questionIds = [...new Set(answers.map((a) => a.questionId))]
+    const questions = await Promise.all(questionIds.map((id) => ctx.db.get(id)))
+    const validQuestions = questions.filter(
+      (q): q is NonNullable<typeof q> => q !== null
+    )
+    const questionMap = new Map(validQuestions.map((q) => [q._id, q]))
+
+    return answers
+      .map((answer) => {
+        const question = questionMap.get(answer.questionId)
+        if (!question) {
+          return null
+        }
         return {
           question,
           answer,
-          recipientClerkId: question?.recipientClerkId ?? "",
+          recipientClerkId: question.recipientClerkId,
         }
       })
-    )
-
-    return result.filter((r) => r.question !== null)
+      .filter(Boolean)
   },
 })

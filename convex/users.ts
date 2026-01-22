@@ -102,11 +102,3 @@ export const deleteByClerkId = mutation({
     }
   },
 })
-
-export const count = query({
-  args: {},
-  handler: async (ctx) => {
-    const users = await ctx.db.query("users").collect()
-    return users.length
-  },
-})

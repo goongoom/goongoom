@@ -22,12 +22,25 @@ export default defineSchema({
     senderClerkId: v.optional(v.string()),
     content: v.string(),
     isAnonymous: v.boolean(),
-  }).index("by_recipient", ["recipientClerkId"]),
+    answerId: v.optional(v.id("answers")),
+  })
+    .index("by_recipient", ["recipientClerkId"])
+    .index("by_sender", ["senderClerkId"])
+    .index("by_recipient_unanswered", ["recipientClerkId", "answerId"]),
 
   answers: defineTable({
     questionId: v.id("questions"),
     content: v.string(),
   }).index("by_question", ["questionId"]),
+
+  pushSubscriptions: defineTable({
+    clerkId: v.string(),
+    endpoint: v.string(),
+    p256dh: v.string(),
+    auth: v.string(),
+  })
+    .index("by_clerk_id", ["clerkId"])
+    .index("by_endpoint", ["endpoint"]),
 
   logs: defineTable({
     ipAddress: v.optional(v.string()),

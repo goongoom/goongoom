@@ -182,5 +182,15 @@
   },
   "instagram": {
     "shareTitle": "Instagram 공유"
+  },
+  "a2hs": {
+    "title": "홈 화면에 추가하기",
+    "description": "앱처럼 빠르게 접속하고\n알림도 받아보세요.",
+    "howTo": "추가 방법",
+    "iosStep1": "하단의 공유 버튼을 탭하세요",
+    "iosStep2": "'홈 화면에 추가'를 선택하세요",
+    "androidStep1": "메뉴 버튼을 탭하세요",
+    "androidStep2": "'홈 화면에 추가'를 선택하세요",
+    "dismiss": "다음에 하기"
   }
 }

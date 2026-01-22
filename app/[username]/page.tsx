@@ -21,7 +21,6 @@ import {
   DEFAULT_QUESTION_SECURITY_LEVEL,
   getQuestionSecurityOptions,
 } from "@/lib/question-security"
-import type { QuestionWithAnswers } from "@/lib/types"
 import {
   buildSocialLinks,
   canAskAnonymousQuestion,
@@ -38,15 +37,9 @@ export default async function UserProfilePage({
   params,
   searchParams,
 }: UserProfilePageProps) {
-  const [{ username }, query = {}, { userId: viewerId }] = (await Promise.all([
-    params,
-    searchParams,
-    auth(),
-  ])) as [
-    { username: string },
-    Record<string, string | string[] | undefined> | undefined,
-    { userId: string | null },
-  ]
+  const { username } = await params
+  const query = await searchParams
+  const { userId: viewerId } = await auth()
 
   const clerkUser = await getClerkUserByUsername(username)
   if (!clerkUser) {
@@ -126,11 +119,7 @@ export default async function UserProfilePage({
     : ""
 
   const questionsWithAnswers = answeredQuestions
-    .map((qa) => {
-      const typed = qa as QuestionWithAnswers
-      const answer = typed.answers[0]
-      return answer ? { ...typed, firstAnswer: answer } : null
-    })
+    .map((qa) => (qa.answer ? { ...qa, firstAnswer: qa.answer } : null))
     .filter((qa) => qa !== null)
 
   const cardLabels = {
@@ -175,7 +164,7 @@ export default async function UserProfilePage({
                   className="rounded-full"
                   render={
                     <Link
-                      href={link.href as string}
+                      href={link.href}
                       rel="noopener noreferrer"
                       target="_blank"
                     />

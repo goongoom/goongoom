@@ -1,14 +1,9 @@
 import { fetchMutation, fetchQuery } from "convex/nextjs"
 import { api } from "@/convex/_generated/api"
-import type { Id } from "@/convex/_generated/dataModel"
+import type { QuestionId, SocialLinks } from "@/convex/types"
 import type { QuestionSecurityLevel } from "@/lib/question-security"
 
-export interface SocialLinks {
-  instagram?: string
-  facebook?: string
-  github?: string
-  twitter?: string
-}
+export type { SocialLinks } from "@/convex/types"
 
 export async function getOrCreateUser(clerkId: string) {
   return await fetchMutation(api.users.getOrCreate, { clerkId })
@@ -47,20 +42,18 @@ export async function createQuestion(data: {
 }
 
 export async function createAnswer(data: {
-  questionId: string
+  questionId: QuestionId
   content: string
 }) {
   const result = await fetchMutation(api.answers.create, {
-    questionId: data.questionId as Id<"questions">,
+    questionId: data.questionId,
     content: data.content,
   })
   return result ? [result] : []
 }
 
-export async function getQuestionById(id: string) {
-  return await fetchQuery(api.questions.getById, {
-    id: id as Id<"questions">,
-  })
+export async function getQuestionById(id: QuestionId) {
+  return await fetchQuery(api.questions.getById, { id })
 }
 
 export async function getUserWithAnsweredQuestions(clerkId: string) {
@@ -97,26 +90,22 @@ export async function getQuestionsWithAnswers(
   })
 }
 
-export async function getTotalUserCount(): Promise<number> {
-  return await fetchQuery(api.users.count, {})
-}
-
 export async function getQuestionByIdAndRecipient(
-  questionId: string,
+  questionId: QuestionId,
   recipientClerkId: string
 ) {
   return await fetchQuery(api.questions.getByIdAndRecipient, {
-    id: questionId as Id<"questions">,
+    id: questionId,
     recipientClerkId,
   })
 }
 
 export async function getAnsweredQuestionNumber(
-  questionId: string,
+  questionId: QuestionId,
   recipientClerkId: string
 ): Promise<number> {
   return await fetchQuery(api.questions.getAnsweredNumber, {
-    questionId: questionId as Id<"questions">,
+    questionId,
     recipientClerkId,
   })
 }

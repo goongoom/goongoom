@@ -8,8 +8,10 @@ import {
   createQuestion as createQuestionDB,
   getOrCreateUser,
 } from "@/lib/db/queries"
+import { sendPushToMany } from "@/lib/push"
 import { DEFAULT_QUESTION_SECURITY_LEVEL } from "@/lib/question-security"
 import type { Question } from "@/lib/types"
+import { getPushSubscriptions } from "./push"
 
 export type QuestionActionResult<T = unknown> =
   | { success: true; data: T }
@@ -88,6 +90,18 @@ export async function createQuestion(data: {
 
         if (!question) {
           return { success: false, error: t("questionCreateFailed") }
+        }
+
+        const subscriptions = await getPushSubscriptions(recipientClerkId)
+        if (subscriptions.length > 0) {
+          const truncatedContent =
+            content.length > 50 ? `${content.slice(0, 50)}...` : content
+          sendPushToMany(subscriptions, {
+            title: "새로운 질문이 도착했어요!",
+            body: truncatedContent,
+            url: "/inbox",
+            tag: `question-${question._id}`,
+          })
         }
 
         return { success: true, data: question }

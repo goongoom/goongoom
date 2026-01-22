@@ -28,8 +28,8 @@ export async function AppShellWrapper({ children }: AppShellWrapperProps) {
     const senderIds = Array.from(
       new Set(
         recentFive
-          .filter((q) => !q.isAnonymous && q.senderClerkId)
-          .map((q) => q.senderClerkId as string)
+          .map((q) => (q.isAnonymous ? undefined : q.senderClerkId))
+          .filter((id): id is string => id !== undefined)
       )
     )
 

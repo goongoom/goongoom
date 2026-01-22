@@ -16,7 +16,7 @@ import {
   getAnsweredQuestionNumber,
   getQuestionByIdAndRecipient,
 } from "@/lib/db/queries"
-import type { QuestionWithAnswers } from "@/lib/types"
+import type { QuestionId } from "@/lib/types"
 import { formatRelativeTime } from "@/lib/utils/format-time"
 
 interface QADetailPageProps {
@@ -43,7 +43,8 @@ function buildShareUrl({
 }
 
 export default async function QADetailPage({ params }: QADetailPageProps) {
-  const { username, questionId } = await params
+  const { username, questionId: questionIdParam } = await params
+  const questionId = questionIdParam as QuestionId
 
   const [clerkUser, { userId: viewerId }] = await Promise.all([
     getClerkUserByUsername(username),
@@ -57,7 +58,7 @@ export default async function QADetailPage({ params }: QADetailPageProps) {
     getQuestionByIdAndRecipient(questionId, clerkUser.clerkId),
     getAnsweredQuestionNumber(questionId, clerkUser.clerkId),
   ])
-  if (!qa || qa.answers.length === 0) {
+  if (!qa?.answer) {
     notFound()
   }
 
@@ -72,10 +73,7 @@ export default async function QADetailPage({ params }: QADetailPageProps) {
 
   const fullName = clerkUser.displayName || clerkUser.username || username
   const displayName = fullName.split(" ")[0] || fullName
-  const answer = (qa as QuestionWithAnswers).answers[0]
-  if (!answer) {
-    notFound()
-  }
+  const { answer } = qa
 
   const instagramShareUrl = buildShareUrl({
     question: qa.content,
