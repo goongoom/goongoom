@@ -152,7 +152,10 @@ export function ProfileEditDrawer({
               </div>
 
               <Field>
-                <FieldLabel className="font-medium text-sm" htmlFor="bio">
+                <FieldLabel
+                  className="font-medium text-muted-foreground text-xs"
+                  htmlFor="bio"
+                >
                   {t("bioLabel")}
                 </FieldLabel>
                 <Textarea

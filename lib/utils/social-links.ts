@@ -1,4 +1,4 @@
-import { FacebookIcon, InstagramIcon } from "@hugeicons/core-free-icons"
+import { InstagramIcon, NewTwitterIcon } from "@hugeicons/core-free-icons"
 
 export const HTTPS_PROTOCOL_REGEX = /^https?:\/\//i
 export const LEADING_SLASHES_REGEX = /^\/+/
@@ -50,7 +50,7 @@ interface SocialLinkItem {
 }
 
 export function buildSocialLinks(
-  socialLinks: { instagram?: string; facebook?: string } | null | undefined
+  socialLinks: { instagram?: string; twitter?: string } | null | undefined
 ): SocialLinkItem[] {
   const links = [
     {
@@ -60,10 +60,10 @@ export function buildSocialLinks(
       href: toProfileUrl(socialLinks?.instagram, "instagram.com"),
     },
     {
-      key: "facebook",
-      label: "Facebook",
-      icon: FacebookIcon,
-      href: toProfileUrl(socialLinks?.facebook, "facebook.com"),
+      key: "twitter",
+      label: "X",
+      icon: NewTwitterIcon,
+      href: toProfileUrl(socialLinks?.twitter, "x.com"),
     },
   ]
   return links.filter((link): link is SocialLinkItem => link.href !== null)

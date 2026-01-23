@@ -35,14 +35,14 @@ export function LocaleSelector() {
       </div>
 
       <RadioGroup
-        className="w-full space-y-2"
+        className="flex w-full gap-2"
         disabled={isPending}
         onValueChange={handleLocaleChange}
         value={selectedLocale}
       >
         {locales.map((locale) => (
           <Label
-            className="group flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-border/50 bg-background px-4 py-3 transition-all hover:border-electric-blue/30 hover:bg-electric-blue/5 disabled:opacity-50 has-data-checked:border-electric-blue/50 has-data-checked:bg-electric-blue/5"
+            className="group flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-border/50 bg-background px-4 py-3 transition-all hover:border-electric-blue/30 hover:bg-electric-blue/5 disabled:opacity-50 has-data-checked:border-electric-blue/50 has-data-checked:bg-electric-blue/5"
             key={locale}
           >
             <RadioGroupItem id={`locale-${locale}`} value={locale} />
