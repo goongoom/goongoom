@@ -195,6 +195,13 @@
   "instagram": {
     "shareTitle": "Instagram Share"
   },
+  "friends": {
+    "title": "Friends",
+    "description": "See what your friends are asking and answering",
+    "emptyTitle": "No friends activity yet",
+    "emptyDescription": "When your friends answer questions, they'll appear here.",
+    "questionLabel": "Question"
+  },
   "a2hs": {
     "title": "Add to Home Screen",
     "description": "Access instantly like an app\nand get notifications.",
@@ -208,169 +215,5 @@
   "push": {
     "newQuestionTitle": "You have a new question!",
     "newQuestionBody": "{content}"
-  },
-  "legal": {
-    "termsTitle": "Terms of Service",
-    "termsDescription": "Terms and conditions for using Goongoom",
-    "privacyTitle": "Privacy Policy",
-    "privacyDescription": "How we collect, use, and protect your information",
-    "contactTitle": "Contact Us",
-    "contactDescription": "Get in touch with the Goongoom team",
-    "effectiveDate": "Effective Date: {date}",
-    "terms": {
-      "acceptance": {
-        "title": "1. Acceptance of Terms",
-        "content": "By accessing or using Goongoom (\"the Service\"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service. We may update these terms from time to time, and your continued use of the Service constitutes acceptance of any changes."
-      },
-      "eligibility": {
-        "title": "2. Eligibility",
-        "content": "You must be at least 13 years old to use Goongoom. If you are under 18, you represent that you have your parent or guardian's permission to use the Service. By using the Service, you represent and warrant that you meet these eligibility requirements."
-      },
-      "account": {
-        "title": "3. Account Registration",
-        "content": "To access certain features of the Service, you may be required to create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account."
-      },
-      "userContent": {
-        "title": "4. User Content",
-        "content": "You retain ownership of content you submit to Goongoom. By posting content, you grant us a non-exclusive, worldwide, royalty-free license to use, display, and distribute your content in connection with the Service. You are solely responsible for the content you post and represent that you have all necessary rights to post such content."
-      },
-      "prohibited": {
-        "title": "5. Prohibited Conduct",
-        "content": "When using Goongoom, you agree not to engage in any of the following prohibited activities:",
-        "items": {
-          "harassment": "Harassment, bullying, threats, or intimidation of other users",
-          "spam": "Posting spam, unsolicited advertisements, or promotional content",
-          "impersonation": "Impersonating another person or entity",
-          "illegal": "Posting content that is illegal, defamatory, obscene, or violates any third-party rights",
-          "malware": "Attempting to introduce viruses, malware, or other harmful code",
-          "scraping": "Using automated systems to access the Service without our permission"
-        }
-      },
-      "intellectualProperty": {
-        "title": "6. Intellectual Property",
-        "content": "The Service and its original content, features, and functionality are owned by Goongoom and are protected by international copyright, trademark, and other intellectual property laws. Our trademarks and trade dress may not be used in connection with any product or service without our prior written consent."
-      },
-      "disclaimer": {
-        "title": "7. Disclaimer of Warranties",
-        "content": "THE SERVICE IS PROVIDED \"AS IS\" AND \"AS AVAILABLE\" WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED. WE DISCLAIM ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED, SECURE, OR ERROR-FREE."
-      },
-      "limitation": {
-        "title": "8. Limitation of Liability",
-        "content": "TO THE MAXIMUM EXTENT PERMITTED BY LAW, GOONGOOM SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS OR REVENUES, WHETHER INCURRED DIRECTLY OR INDIRECTLY, OR ANY LOSS OF DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES RESULTING FROM YOUR USE OF THE SERVICE."
-      },
-      "indemnification": {
-        "title": "9. Indemnification",
-        "content": "You agree to indemnify, defend, and hold harmless Goongoom and its officers, directors, employees, and agents from any claims, liabilities, damages, losses, and expenses, including reasonable attorney's fees, arising out of or related to your use of the Service or violation of these Terms."
-      },
-      "termination": {
-        "title": "10. Termination",
-        "content": "We may terminate or suspend your access to the Service immediately, without prior notice, for any reason, including if you breach these Terms. Upon termination, your right to use the Service will immediately cease. All provisions of the Terms which should survive termination shall survive."
-      },
-      "governing": {
-        "title": "11. Governing Law",
-        "content": "These Terms shall be governed by and construed in accordance with the laws of the State of California, United States, without regard to its conflict of law provisions. Any disputes arising under these Terms shall be resolved in the state or federal courts located in San Francisco County, California."
-      },
-      "changes": {
-        "title": "12. Changes to Terms",
-        "content": "We reserve the right to modify these Terms at any time. We will provide notice of significant changes by posting the new Terms on this page and updating the \"Effective Date.\" Your continued use of the Service after any changes constitutes your acceptance of the new Terms."
-      },
-      "contact": {
-        "title": "13. Contact Us",
-        "content": "If you have any questions about these Terms, please <link>contact us</link>."
-      }
-    },
-    "privacy": {
-      "intro": {
-        "title": "Introduction",
-        "content": "At Goongoom, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our service. Please read this policy carefully to understand our practices regarding your personal data."
-      },
-      "collection": {
-        "title": "1. Information We Collect",
-        "content": "We collect information you provide directly to us, including:",
-        "items": {
-          "account": "Account information (email address, username, profile picture)",
-          "content": "Content you create (questions, answers, comments)",
-          "communications": "Communications with us (support requests, feedback)",
-          "device": "Device and usage information (IP address, browser type, operating system)",
-          "cookies": "Information collected through cookies and similar technologies"
-        }
-      },
-      "use": {
-        "title": "2. How We Use Your Information",
-        "content": "We use the information we collect to:",
-        "items": {
-          "provide": "Provide, maintain, and improve the Service",
-          "personalize": "Personalize your experience",
-          "communicate": "Send you technical notices, updates, and support messages",
-          "security": "Detect, prevent, and address fraud and security issues",
-          "legal": "Comply with legal obligations"
-        }
-      },
-      "sharing": {
-        "title": "3. Information Sharing",
-        "content": "We may share your information in the following circumstances: with your consent; to comply with legal obligations; to protect our rights and the safety of users; with service providers who assist in operating the Service; in connection with a business transaction such as a merger or acquisition."
-      },
-      "anonymity": {
-        "title": "4. Anonymous Questions",
-        "content": "When you send an anonymous question, we do not reveal your identity to the recipient. However, we may retain information about who sent questions for safety and legal compliance purposes. We will only disclose this information when required by law or in response to valid legal process."
-      },
-      "security": {
-        "title": "5. Data Security",
-        "content": "We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic storage is 100% secure."
-      },
-      "retention": {
-        "title": "6. Data Retention",
-        "content": "We retain your personal information for as long as necessary to provide the Service and fulfill the purposes described in this Privacy Policy. We may also retain and use information to comply with legal obligations, resolve disputes, and enforce our agreements."
-      },
-      "rights": {
-        "title": "7. Your Rights",
-        "content": "Depending on your location, you may have certain rights regarding your personal information, including: the right to access, correct, or delete your data; the right to object to or restrict processing; the right to data portability; the right to withdraw consent. To exercise these rights, please contact us."
-      },
-      "ccpa": {
-        "title": "8. California Privacy Rights (CCPA)",
-        "content": "California residents have additional rights under the California Consumer Privacy Act (CCPA). You have the right to know what personal information we collect; the right to request deletion of your data; the right to opt-out of the sale of personal information (we do not sell your data); and the right to non-discrimination for exercising your privacy rights."
-      },
-      "children": {
-        "title": "9. Children's Privacy",
-        "content": "The Service is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If we learn we have collected information from a child under 13, we will delete that information promptly."
-      },
-      "international": {
-        "title": "10. International Data Transfers",
-        "content": "Your information may be transferred to and processed in countries other than your country of residence. These countries may have data protection laws different from your country. By using the Service, you consent to such transfers."
-      },
-      "changes": {
-        "title": "11. Changes to This Policy",
-        "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Effective Date.\" We encourage you to review this policy periodically."
-      },
-      "contact": {
-        "title": "12. Contact Us",
-        "content": "If you have questions about this Privacy Policy or our privacy practices, please <link>contact us</link>."
-      }
-    },
-    "contact": {
-      "heading": "Get in Touch",
-      "description": "Have questions, feedback, or need support? We'd love to hear from you.",
-      "form": {
-        "name": "Name",
-        "namePlaceholder": "Your name",
-        "email": "Email",
-        "emailPlaceholder": "your@email.com",
-        "subject": "Subject",
-        "subjectPlaceholder": "How can we help?",
-        "message": "Message",
-        "messagePlaceholder": "Tell us more about your inquiry...",
-        "submit": "Send Message",
-        "submitting": "Sending..."
-      },
-      "success": {
-        "title": "Message Sent!",
-        "description": "Thank you for reaching out. We'll get back to you as soon as possible."
-      },
-      "info": {
-        "title": "Other Ways to Reach Us",
-        "email": "Email us directly at",
-        "response": "We typically respond within 24-48 hours."
-      }
-    }
   }
 }

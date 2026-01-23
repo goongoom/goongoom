@@ -194,6 +194,13 @@
   "instagram": {
     "shareTitle": "Instagram 공유"
   },
+  "friends": {
+    "title": "친구들",
+    "description": "친구들의 질문과 답변을 확인하세요",
+    "emptyTitle": "아직 친구들의 활동이 없어요",
+    "emptyDescription": "친구들이 질문에 답변하면 여기에 표시돼요.",
+    "questionLabel": "질문"
+  },
   "a2hs": {
     "title": "홈 화면에 추가하기",
     "description": "앱처럼 빠르게 접속하고\n알림도 받아보세요.",

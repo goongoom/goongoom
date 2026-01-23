@@ -65,6 +65,9 @@ export default async function InboxPage({ searchParams }: InboxPageProps) {
           ? tCommon("anonymous")
           : sender?.displayName || sender?.username || tCommon("user"),
         senderAvatarUrl: isAnonymous ? undefined : sender?.avatarUrl,
+        anonymousAvatarSeed: isAnonymous
+          ? question.anonymousAvatarSeed
+          : undefined,
       }
     })
 

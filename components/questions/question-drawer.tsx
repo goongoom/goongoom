@@ -242,7 +242,7 @@ export function QuestionDrawer({
   const isAnonymous = questionType === "anonymous"
 
   return (
-    <Drawer onOpenChange={setOpen} open={open}>
+    <Drawer onOpenChange={setOpen} open={open} repositionInputs={false}>
       <QuestionInputTrigger onClick={() => setOpen(true)} />
       <DrawerContent className="pb-safe">
         <div className="mx-auto w-full max-w-lg">
@@ -266,10 +266,7 @@ export function QuestionDrawer({
               <SignInPrompt />
             ) : (
               <form action={submitAction} className="space-y-6 py-2">
-                <div className="space-y-2">
-                  <Label className="ml-1 font-semibold text-foreground/90 text-sm">
-                    {t("inputPlaceholder")}
-                  </Label>
+                <div>
                   <Textarea
                     className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-electric-blue focus:bg-background focus:ring-2 focus:ring-electric-blue/20"
                     name="question"

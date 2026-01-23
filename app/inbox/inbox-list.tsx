@@ -25,6 +25,17 @@ import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
 import { createAnswer } from "@/lib/actions/answers"
 
+function getDicebearUrl(seed: string) {
+  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`
+}
+
+function getQuestionAvatarUrl(question: QuestionItem): string | undefined {
+  if (question.isAnonymous) {
+    return getDicebearUrl(question.anonymousAvatarSeed || `anon_${question.id}`)
+  }
+  return question.senderAvatarUrl ?? undefined
+}
+
 interface QuestionItem {
   id: string
   content: string
@@ -32,6 +43,7 @@ interface QuestionItem {
   createdAt: number
   senderName: string
   senderAvatarUrl?: string | null
+  anonymousAvatarSeed?: string | null
 }
 
 interface InboxListProps {
@@ -89,12 +101,10 @@ export function InboxList({ questions }: InboxListProps) {
             <div className="flex items-start gap-4 rounded-2xl border border-border/50 bg-background p-4 transition-all group-hover:border-electric-blue/50 group-hover:bg-electric-blue/5 group-hover:ring-2 group-hover:ring-electric-blue/10 group-active:scale-[0.98]">
               <div className="relative flex-shrink-0">
                 <Avatar className="size-12 ring-2 ring-background">
-                  {!question.isAnonymous && question.senderAvatarUrl ? (
-                    <AvatarImage
-                      alt={question.senderName}
-                      src={question.senderAvatarUrl}
-                    />
-                  ) : null}
+                  <AvatarImage
+                    alt={question.senderName}
+                    src={getQuestionAvatarUrl(question)}
+                  />
                   <AvatarFallback className="bg-gradient-to-br from-muted to-muted/50 font-semibold text-muted-foreground">
                     {question.senderName[0] || "?"}
                   </AvatarFallback>
@@ -150,6 +160,7 @@ export function InboxList({ questions }: InboxListProps) {
       <Drawer
         onOpenChange={(open) => !open && setSelectedQuestion(null)}
         open={!!selectedQuestion}
+        repositionInputs={false}
       >
         <DrawerContent className="pb-safe">
           <div className="mx-auto w-full max-w-lg">
@@ -204,30 +215,22 @@ export function InboxList({ questions }: InboxListProps) {
               />
             </div>
 
-            <DrawerFooter className="flex-row gap-3 pt-4">
+            <DrawerFooter className="pt-4">
               <Button
-                className="h-12 flex-1 rounded-xl font-semibold"
-                onClick={() => setSelectedQuestion(null)}
-                type="button"
-                variant="outline"
-              >
-                {tCommon("cancel")}
-              </Button>
-              <Button
-                className="h-12 flex-1 rounded-xl bg-gradient-to-r from-electric-blue to-electric-blue/90 font-semibold ring-1 ring-electric-blue/50 transition-all hover:ring-2 hover:ring-electric-blue/70 disabled:opacity-70"
+                className="h-14 w-full rounded-2xl bg-gradient-to-r from-electric-blue to-electric-blue/90 font-semibold text-base ring-1 ring-electric-blue/50 transition-all hover:ring-2 hover:ring-electric-blue/70 disabled:opacity-70"
                 disabled={!answer.trim() || isSubmitting}
                 onClick={handleSubmit}
                 type="button"
               >
                 {isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    <Spinner className="size-4 text-white" />
+                  <span className="flex items-center gap-2.5">
+                    <Spinner className="size-5 text-white" />
                     <span>{tCommon("submitting")}</span>
                   </span>
                 ) : (
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-2.5">
                     <HugeiconsIcon
-                      className="size-4"
+                      className="size-5"
                       icon={SentIcon}
                       strokeWidth={2.5}
                     />

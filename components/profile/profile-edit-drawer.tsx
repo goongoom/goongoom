@@ -126,7 +126,7 @@ export function ProfileEditDrawer({
   )
 
   return (
-    <Drawer>
+    <Drawer repositionInputs={false}>
       <DrawerTrigger asChild>
         <Button className="flex-1" variant="outline">
           <HugeiconsIcon className="mr-2 size-4" icon={PencilEdit01Icon} />
