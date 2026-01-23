@@ -1,5 +1,5 @@
 import { v } from "convex/values"
-import { mutation, query } from "./_generated/server"
+import { internalMutation, mutation, query } from "./_generated/server"
 
 export const count = query({
   args: {},
@@ -136,5 +136,39 @@ export const updateLocale = mutation({
       updatedAt: Date.now(),
     })
     return user._id
+  },
+})
+
+export const createFromWebhook = internalMutation({
+  args: { clerkId: v.string() },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+      .first()
+
+    if (existing) {
+      return existing._id
+    }
+
+    return await ctx.db.insert("users", {
+      clerkId: args.clerkId,
+      questionSecurityLevel: "anyone",
+      updatedAt: Date.now(),
+    })
+  },
+})
+
+export const deleteFromWebhook = internalMutation({
+  args: { clerkId: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+      .first()
+
+    if (user) {
+      await ctx.db.delete(user._id)
+    }
   },
 })
