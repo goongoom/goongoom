@@ -6,7 +6,7 @@ import { getQuestionByIdAndRecipient } from "@/lib/db/queries"
 import type { QuestionId } from "@/lib/types"
 
 function getDicebearUrl(seed: string) {
-  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&backgroundColor=f97316,f59e0b,84cc16,22c55e,06b6d4,3b82f6,8b5cf6,d946ef,ec4899&backgroundType=gradientLinear`
+  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&backgroundColor=10b981,059669,047857,34d399,6ee7b7&backgroundType=gradientLinear`
 }
 
 export const runtime = "nodejs"
@@ -118,7 +118,7 @@ export default async function Image({ params }: PageProps) {
         display: "flex",
         flexDirection: "column",
         padding: "56px",
-        backgroundColor: "#FFF7ED",
+        backgroundColor: "#ecfdf5",
         fontFamily: "Pretendard",
         color: "#111827",
       }}

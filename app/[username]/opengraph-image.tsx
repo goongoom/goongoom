@@ -70,7 +70,7 @@ export default async function Image({ params }: PageProps) {
         display: "flex",
         flexDirection: "column",
         padding: "72px",
-        backgroundColor: "#FFF7ED",
+        backgroundColor: "#ecfdf5",
         fontFamily: "Pretendard",
         color: "#111827",
       }}

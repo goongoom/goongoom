@@ -29,7 +29,7 @@ function getShareAvatarUrl(
   if (clerkAvatarUrl) {
     return clerkAvatarUrl
   }
-  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&backgroundColor=f97316,f59e0b,84cc16,22c55e,06b6d4,3b82f6,8b5cf6,d946ef,ec4899&backgroundType=gradientLinear`
+  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&backgroundColor=10b981,059669,047857,34d399,6ee7b7&backgroundType=gradientLinear`
 }
 
 function getDicebearAvatarUrl(seed: string) {
