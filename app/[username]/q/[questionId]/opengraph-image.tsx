@@ -1,9 +1,13 @@
 import { readFile } from "node:fs/promises"
 import { join } from "node:path"
 import { ImageResponse } from "next/og"
-import { getClerkUserByUsername } from "@/lib/clerk"
+import { getClerkUserById, getClerkUserByUsername } from "@/lib/clerk"
 import { getQuestionByIdAndRecipient } from "@/lib/db/queries"
 import type { QuestionId } from "@/lib/types"
+
+function getDicebearUrl(seed: string) {
+  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&backgroundColor=f97316,f59e0b,84cc16,22c55e,06b6d4,3b82f6,8b5cf6,d946ef,ec4899&backgroundType=gradientLinear`
+}
 
 export const runtime = "nodejs"
 export const alt = "Question & Answer"
@@ -19,6 +23,7 @@ const fontSemiBoldPromise = readFile(
 const fontBoldPromise = readFile(
   join(process.cwd(), "public/fonts/Pretendard-Bold.otf")
 )
+const logoPromise = readFile(join(process.cwd(), "assets/logo.png"))
 
 const clamp = (value: string, max: number) =>
   value.length > max ? `${value.slice(0, max - 1)}…` : value
@@ -30,11 +35,13 @@ interface PageProps {
 export default async function Image({ params }: PageProps) {
   const { username, questionId: questionIdParam } = await params
   const questionId = questionIdParam as QuestionId
-  const [fontRegular, fontSemiBold, fontBold] = await Promise.all([
+  const [fontRegular, fontSemiBold, fontBold, logoData] = await Promise.all([
     fontRegularPromise,
     fontSemiBoldPromise,
     fontBoldPromise,
+    logoPromise,
   ])
+  const logoBase64 = `data:image/png;base64,${logoData.toString("base64")}`
 
   const clerkUser = await getClerkUserByUsername(username)
   if (!clerkUser) {
@@ -90,6 +97,19 @@ export default async function Image({ params }: PageProps) {
   const question = clamp(qa.content, 100)
   const answer = clamp(qa.answer.content, 120)
 
+  let askerAvatarUrl: string
+  if (qa.isAnonymous) {
+    askerAvatarUrl = getDicebearUrl(qa.anonymousAvatarSeed || qa._id)
+  } else if (qa.senderClerkId) {
+    const sender = await getClerkUserById(qa.senderClerkId)
+    askerAvatarUrl = sender?.avatarUrl || getDicebearUrl(qa.senderClerkId)
+  } else {
+    askerAvatarUrl = getDicebearUrl(qa._id)
+  }
+
+  const answererAvatarUrl =
+    clerkUser.avatarUrl || getDicebearUrl(clerkUser.clerkId)
+
   return new ImageResponse(
     <div
       style={{
@@ -111,22 +131,14 @@ export default async function Image({ params }: PageProps) {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-          <div
-            style={{
-              width: "48px",
-              height: "48px",
-              borderRadius: "14px",
-              backgroundColor: "#F97316",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#FFFFFF",
-              fontSize: "24px",
-              fontWeight: 700,
-            }}
-          >
-            궁
-          </div>
+          {/* biome-ignore lint/performance/noImgElement: OG images require native img */}
+          <img
+            alt="궁금닷컴"
+            height={48}
+            src={logoBase64}
+            style={{ borderRadius: "14px" }}
+            width={48}
+          />
           <div style={{ display: "flex", fontSize: "28px", fontWeight: 700 }}>
             궁금닷컴
           </div>
@@ -175,37 +187,62 @@ export default async function Image({ params }: PageProps) {
           marginTop: "24px",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignSelf: "flex-start",
-            maxWidth: "85%",
-            backgroundColor: "#FFFFFF",
-            borderRadius: "28px",
-            padding: "28px 36px",
-            fontSize: "36px",
-            fontWeight: 600,
-            lineHeight: 1.4,
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
-          }}
-        >
-          {question}
+        <div style={{ display: "flex", alignItems: "flex-end", gap: "12px" }}>
+          {/* biome-ignore lint/performance/noImgElement: OG images require native img */}
+          <img
+            alt="Asker"
+            height={48}
+            src={askerAvatarUrl}
+            style={{ borderRadius: "24px" }}
+            width={48}
+          />
+          <div
+            style={{
+              display: "flex",
+              maxWidth: "80%",
+              backgroundColor: "#FFFFFF",
+              borderRadius: "28px",
+              padding: "28px 36px",
+              fontSize: "36px",
+              fontWeight: 600,
+              lineHeight: 1.4,
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
+            }}
+          >
+            {question}
+          </div>
         </div>
         <div
           style={{
             display: "flex",
-            alignSelf: "flex-end",
-            maxWidth: "85%",
-            background: "linear-gradient(135deg, #A855F7 0%, #EC4899 100%)",
-            borderRadius: "28px",
-            padding: "28px 36px",
-            fontSize: "36px",
-            fontWeight: 600,
-            lineHeight: 1.4,
-            color: "#FFFFFF",
+            alignItems: "flex-end",
+            justifyContent: "flex-end",
+            gap: "12px",
           }}
         >
-          {answer}
+          <div
+            style={{
+              display: "flex",
+              maxWidth: "80%",
+              background: "linear-gradient(135deg, #A855F7 0%, #EC4899 100%)",
+              borderRadius: "28px",
+              padding: "28px 36px",
+              fontSize: "36px",
+              fontWeight: 600,
+              lineHeight: 1.4,
+              color: "#FFFFFF",
+            }}
+          >
+            {answer}
+          </div>
+          {/* biome-ignore lint/performance/noImgElement: OG images require native img */}
+          <img
+            alt={displayName}
+            height={48}
+            src={answererAvatarUrl}
+            style={{ borderRadius: "24px" }}
+            width={48}
+          />
         </div>
       </div>
 

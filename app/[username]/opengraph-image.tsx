@@ -15,6 +15,7 @@ const fontRegularPromise = readFile(
 const fontBoldPromise = readFile(
   join(process.cwd(), "public/fonts/Pretendard-Bold.otf")
 )
+const logoPromise = readFile(join(process.cwd(), "assets/logo.png"))
 
 const clamp = (value: string, max: number) =>
   value.length > max ? `${value.slice(0, max - 1)}…` : value
@@ -25,10 +26,12 @@ interface PageProps {
 
 export default async function Image({ params }: PageProps) {
   const { username } = await params
-  const [fontRegular, fontBold] = await Promise.all([
+  const [fontRegular, fontBold, logoData] = await Promise.all([
     fontRegularPromise,
     fontBoldPromise,
+    logoPromise,
   ])
+  const logoBase64 = `data:image/png;base64,${logoData.toString("base64")}`
 
   const clerkUser = await getClerkUserByUsername(username)
   if (!clerkUser) {
@@ -79,23 +82,17 @@ export default async function Image({ params }: PageProps) {
           gap: "16px",
         }}
       >
-        <div
-          style={{
-            width: "56px",
-            height: "56px",
-            borderRadius: "16px",
-            backgroundColor: "#F97316",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#FFFFFF",
-            fontSize: "28px",
-            fontWeight: 700,
-          }}
-        >
-          궁
+        {/* biome-ignore lint/performance/noImgElement: OG images require native img */}
+        <img
+          alt="궁금닷컴"
+          height={56}
+          src={logoBase64}
+          style={{ borderRadius: "16px" }}
+          width={56}
+        />
+        <div style={{ display: "flex", fontSize: "32px", fontWeight: 700 }}>
+          궁금닷컴
         </div>
-        <div style={{ fontSize: "32px", fontWeight: 700 }}>궁금닷컴</div>
       </div>
 
       <div

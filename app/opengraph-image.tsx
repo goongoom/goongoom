@@ -14,7 +14,7 @@ const fontBoldPromise = readFile(
   join(process.cwd(), "public/fonts/Pretendard-Bold.otf")
 )
 
-const logoPromise = readFile(join(process.cwd(), "assets/logo-squircle.png"))
+const logoPromise = readFile(join(process.cwd(), "assets/logo.png"))
 
 export default async function Image() {
   const [fontRegular, fontBold, logoData] = await Promise.all([
