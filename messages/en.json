@@ -162,13 +162,13 @@
     "anyoneLabel": "Anyone can ask",
     "anyoneDescription": "Even non-members can send anonymous questions.",
     "verifiedLabel": "Only verified users can ask anonymously",
-    "verifiedDescription": "Only users with verified phone numbers can send anonymous questions. Don't worry—we won't share questioner info without a legal request.",
+    "verifiedDescription": "Only users with verified phone numbers can send anonymous questions.",
     "identifiedOnlyLabel": "Identified questions only",
     "identifiedOnlyDescription": "Only accept identified questions.",
     "invalidSetting": "Please check your question security setting"
   },
   "restrictions": {
-    "anonymousLoginRequired": "Don't worry, you can still ask anonymously. Your identity won't be revealed unless required by law.",
+    "anonymousLoginRequired": "Don't worry, you can still ask anonymously.",
     "identifiedOnly": "This user only accepts identified questions.",
     "loginForIdentified": "Log in to send questions with your name."
   },
