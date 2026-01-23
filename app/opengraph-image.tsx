@@ -36,16 +36,16 @@ export default async function Image() {
         backgroundColor: "#FFF7ED",
         fontFamily: "Pretendard",
         color: "#111827",
-        gap: "32px",
+        gap: "40px",
       }}
     >
       {/* biome-ignore lint/performance/noImgElement: OG images require native img */}
       <img
         alt="궁금닷컴 로고"
-        height={200}
+        height={260}
         src={logoBase64}
-        style={{ borderRadius: "40px" }}
-        width={200}
+        style={{ borderRadius: "52px" }}
+        width={260}
       />
 
       <div
@@ -53,11 +53,11 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "16px",
+          gap: "20px",
         }}
       >
-        <div style={{ fontSize: "72px", fontWeight: 700 }}>궁금닷컴</div>
-        <div style={{ fontSize: "32px", color: "#6B7280" }}>
+        <div style={{ fontSize: "92px", fontWeight: 700 }}>궁금닷컴</div>
+        <div style={{ fontSize: "42px", color: "#6B7280" }}>
           무엇이든 물어보세요
         </div>
       </div>
@@ -66,7 +66,7 @@ export default async function Image() {
         style={{
           position: "absolute",
           bottom: "40px",
-          fontSize: "24px",
+          fontSize: "28px",
           color: "#9CA3AF",
         }}
       >

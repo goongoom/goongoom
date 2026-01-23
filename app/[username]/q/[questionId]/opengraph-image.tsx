@@ -94,8 +94,8 @@ export default async function Image({ params }: PageProps) {
   }
 
   const displayName = clerkUser.displayName || clerkUser.username || username
-  const question = clamp(qa.content, 100)
-  const answer = clamp(qa.answer.content, 120)
+  const question = clamp(qa.content, 80)
+  const answer = clamp(qa.answer.content, 100)
 
   let askerAvatarUrl: string
   if (qa.isAnonymous) {
@@ -117,7 +117,7 @@ export default async function Image({ params }: PageProps) {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        padding: "48px",
+        padding: "56px",
         backgroundColor: "#FFF7ED",
         fontFamily: "Pretendard",
         color: "#111827",
@@ -130,40 +130,40 @@ export default async function Image({ params }: PageProps) {
           justifyContent: "space-between",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           {/* biome-ignore lint/performance/noImgElement: OG images require native img */}
           <img
             alt="궁금닷컴"
-            height={48}
+            height={64}
             src={logoBase64}
-            style={{ borderRadius: "14px" }}
-            width={48}
+            style={{ borderRadius: "18px" }}
+            width={64}
           />
-          <div style={{ display: "flex", fontSize: "28px", fontWeight: 700 }}>
+          <div style={{ display: "flex", fontSize: "36px", fontWeight: 700 }}>
             궁금닷컴
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
           {clerkUser.avatarUrl ? (
             // biome-ignore lint/performance/noImgElement: OG images require native img
             <img
               alt={displayName}
-              height={44}
+              height={56}
               src={clerkUser.avatarUrl}
-              style={{ borderRadius: "22px" }}
-              width={44}
+              style={{ borderRadius: "28px" }}
+              width={56}
             />
           ) : (
             <div
               style={{
-                width: "44px",
-                height: "44px",
-                borderRadius: "22px",
+                width: "56px",
+                height: "56px",
+                borderRadius: "28px",
                 backgroundColor: "#FFEDD5",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "20px",
+                fontSize: "24px",
                 fontWeight: 700,
                 color: "#F97316",
               }}
@@ -171,8 +171,8 @@ export default async function Image({ params }: PageProps) {
               {displayName[0] || "?"}
             </div>
           )}
-          <div style={{ display: "flex", fontSize: "24px", fontWeight: 600 }}>
-            {clamp(displayName, 20)}
+          <div style={{ display: "flex", fontSize: "30px", fontWeight: 600 }}>
+            {clamp(displayName, 16)}
           </div>
         </div>
       </div>
@@ -183,27 +183,27 @@ export default async function Image({ params }: PageProps) {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          gap: "24px",
-          marginTop: "24px",
+          gap: "28px",
+          marginTop: "20px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "flex-end", gap: "12px" }}>
+        <div style={{ display: "flex", alignItems: "flex-end", gap: "14px" }}>
           {/* biome-ignore lint/performance/noImgElement: OG images require native img */}
           <img
             alt="Asker"
-            height={48}
+            height={60}
             src={askerAvatarUrl}
-            style={{ borderRadius: "24px" }}
-            width={48}
+            style={{ borderRadius: "30px" }}
+            width={60}
           />
           <div
             style={{
               display: "flex",
               maxWidth: "80%",
               backgroundColor: "#FFFFFF",
-              borderRadius: "28px",
-              padding: "28px 36px",
-              fontSize: "36px",
+              borderRadius: "32px",
+              padding: "32px 40px",
+              fontSize: "40px",
               fontWeight: 600,
               lineHeight: 1.4,
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
@@ -217,7 +217,7 @@ export default async function Image({ params }: PageProps) {
             display: "flex",
             alignItems: "flex-end",
             justifyContent: "flex-end",
-            gap: "12px",
+            gap: "14px",
           }}
         >
           <div
@@ -225,9 +225,9 @@ export default async function Image({ params }: PageProps) {
               display: "flex",
               maxWidth: "80%",
               background: "linear-gradient(135deg, #A855F7 0%, #EC4899 100%)",
-              borderRadius: "28px",
-              padding: "28px 36px",
-              fontSize: "36px",
+              borderRadius: "32px",
+              padding: "32px 40px",
+              fontSize: "40px",
               fontWeight: 600,
               lineHeight: 1.4,
               color: "#FFFFFF",
@@ -238,10 +238,10 @@ export default async function Image({ params }: PageProps) {
           {/* biome-ignore lint/performance/noImgElement: OG images require native img */}
           <img
             alt={displayName}
-            height={48}
+            height={60}
             src={answererAvatarUrl}
-            style={{ borderRadius: "24px" }}
-            width={48}
+            style={{ borderRadius: "30px" }}
+            width={60}
           />
         </div>
       </div>
@@ -251,13 +251,13 @@ export default async function Image({ params }: PageProps) {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          fontSize: "20px",
+          fontSize: "24px",
           color: "#9CA3AF",
         }}
       >
         <div style={{ display: "flex" }}>무엇이든 물어보세요</div>
         <div style={{ display: "flex" }}>
-          goongoom.com/{clamp(clerkUser.username || username, 20)}
+          goongoom.com/{clamp(clerkUser.username || username, 16)}
         </div>
       </div>
     </div>,

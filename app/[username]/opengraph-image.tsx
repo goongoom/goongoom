@@ -69,7 +69,7 @@ export default async function Image({ params }: PageProps) {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        padding: "60px",
+        padding: "72px",
         backgroundColor: "#FFF7ED",
         fontFamily: "Pretendard",
         color: "#111827",
@@ -79,18 +79,18 @@ export default async function Image({ params }: PageProps) {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "16px",
+          gap: "20px",
         }}
       >
         {/* biome-ignore lint/performance/noImgElement: OG images require native img */}
         <img
           alt="궁금닷컴"
-          height={56}
+          height={72}
           src={logoBase64}
-          style={{ borderRadius: "16px" }}
-          width={56}
+          style={{ borderRadius: "20px" }}
+          width={72}
         />
-        <div style={{ display: "flex", fontSize: "32px", fontWeight: 700 }}>
+        <div style={{ display: "flex", fontSize: "40px", fontWeight: 700 }}>
           궁금닷컴
         </div>
       </div>
@@ -100,33 +100,33 @@ export default async function Image({ params }: PageProps) {
           flex: 1,
           display: "flex",
           alignItems: "center",
-          gap: "48px",
-          marginTop: "40px",
+          gap: "56px",
+          marginTop: "32px",
         }}
       >
         {clerkUser.avatarUrl ? (
           // biome-ignore lint/performance/noImgElement: OG images require native img
           <img
             alt={displayName}
-            height={180}
+            height={220}
             src={clerkUser.avatarUrl}
             style={{
-              borderRadius: "90px",
-              border: "4px solid rgba(249, 115, 22, 0.3)",
+              borderRadius: "110px",
+              border: "6px solid rgba(249, 115, 22, 0.3)",
             }}
-            width={180}
+            width={220}
           />
         ) : (
           <div
             style={{
-              width: "180px",
-              height: "180px",
-              borderRadius: "90px",
+              width: "220px",
+              height: "220px",
+              borderRadius: "110px",
               backgroundColor: "#FFEDD5",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "72px",
+              fontSize: "88px",
               fontWeight: 700,
               color: "#F97316",
             }}
@@ -139,20 +139,20 @@ export default async function Image({ params }: PageProps) {
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: "12px",
+            gap: "16px",
             flex: 1,
           }}
         >
-          <div style={{ fontSize: "56px", fontWeight: 700, lineHeight: 1.2 }}>
-            {clamp(displayName, 24)}
+          <div style={{ fontSize: "68px", fontWeight: 700, lineHeight: 1.2 }}>
+            {clamp(displayName, 20)}
           </div>
-          <div style={{ fontSize: "32px", color: "#6B7280" }}>
-            @{clamp(clerkUser.username || username, 30)}
+          <div style={{ fontSize: "40px", color: "#6B7280" }}>
+            @{clamp(clerkUser.username || username, 24)}
           </div>
           {bio && (
             <div
               style={{
-                fontSize: "28px",
+                fontSize: "34px",
                 color: "#374151",
                 marginTop: "8px",
                 lineHeight: 1.4,
@@ -169,12 +169,12 @@ export default async function Image({ params }: PageProps) {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          fontSize: "24px",
+          fontSize: "28px",
           color: "#9CA3AF",
         }}
       >
         <div>무엇이든 물어보세요</div>
-        <div>goongoom.com/{clamp(clerkUser.username || username, 20)}</div>
+        <div>goongoom.com/{clamp(clerkUser.username || username, 16)}</div>
       </div>
     </div>,
     {
