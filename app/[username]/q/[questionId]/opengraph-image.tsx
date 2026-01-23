@@ -121,7 +121,9 @@ export default async function Image({ params }: PageProps) {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           {clerkUser.avatarUrl ? (
+            // biome-ignore lint/performance/noImgElement: OG images require native img
             <img
+              alt=""
               height={44}
               src={clerkUser.avatarUrl}
               style={{ borderRadius: "22px" }}

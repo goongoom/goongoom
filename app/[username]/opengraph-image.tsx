@@ -102,7 +102,9 @@ export default async function Image({ params }: PageProps) {
         }}
       >
         {clerkUser.avatarUrl ? (
+          // biome-ignore lint/performance/noImgElement: OG images require native img
           <img
+            alt=""
             height={180}
             src={clerkUser.avatarUrl}
             style={{
