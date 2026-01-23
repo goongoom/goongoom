@@ -18,13 +18,13 @@ interface RecentQuestion {
 interface AppShellProps {
   children: React.ReactNode
   recentQuestions?: RecentQuestion[]
-  defaultSidebarOpen?: boolean
+  isLoggedIn?: boolean
 }
 
 export function AppShell({
   children,
   recentQuestions = [],
-  defaultSidebarOpen = true,
+  isLoggedIn = false,
 }: AppShellProps) {
   const [selectedQuestion, setSelectedQuestion] =
     useState<RecentQuestion | null>(null)
@@ -51,8 +51,24 @@ export function AppShell({
     createdAt: q.createdAt,
   }))
 
+  if (!isLoggedIn) {
+    return (
+      <>
+        <div className="flex h-full flex-1 flex-col pb-20 md:pb-0">
+          {children}
+        </div>
+        <MobileTabBar />
+        <QuickAnswerDialog
+          onOpenChange={handleDialogChange}
+          open={dialogOpen}
+          question={selectedQuestion}
+        />
+      </>
+    )
+  }
+
   return (
-    <SidebarProvider defaultOpen={defaultSidebarOpen}>
+    <SidebarProvider defaultOpen>
       <AppSidebar
         onQuestionClick={handleQuestionClick}
         recentQuestions={sidebarQuestions}

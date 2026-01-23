@@ -56,7 +56,7 @@ export async function AppShellWrapper({ children }: AppShellWrapperProps) {
   const isLoggedIn = !!clerkId
 
   return (
-    <AppShell defaultSidebarOpen={isLoggedIn} recentQuestions={recentQuestions}>
+    <AppShell isLoggedIn={isLoggedIn} recentQuestions={recentQuestions}>
       {children}
     </AppShell>
   )

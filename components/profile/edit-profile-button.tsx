@@ -12,6 +12,7 @@ export function EditProfileButton() {
   return (
     <Button
       className="flex-1"
+      nativeButton={false}
       render={<Link href="/settings/profile" />}
       variant="outline"
     >
