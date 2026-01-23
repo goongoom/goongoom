@@ -178,13 +178,13 @@ export const getAnsweredNumber = query({
       .order("asc")
 
     for await (const q of queryIter) {
-      // Stop once we've reached our target question
-      if (q._id === args.questionId) {
-        break
-      }
       // Only count questions that have been answered
       if (q.answerId !== undefined) {
         count++
+      }
+      // Stop once we've counted our target question
+      if (q._id === args.questionId) {
+        break
       }
     }
 
