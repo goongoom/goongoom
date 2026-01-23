@@ -9,8 +9,11 @@ export const alt = "User Profile"
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
-const fontPromise = readFile(
-  join(process.cwd(), "public/fonts/PretendardVariable.ttf")
+const fontRegularPromise = readFile(
+  join(process.cwd(), "public/fonts/Pretendard-Regular.ttf")
+)
+const fontBoldPromise = readFile(
+  join(process.cwd(), "public/fonts/Pretendard-Bold.ttf")
 )
 
 const clamp = (value: string, max: number) =>
@@ -22,7 +25,10 @@ interface PageProps {
 
 export default async function Image({ params }: PageProps) {
   const { username } = await params
-  const fontData = await fontPromise
+  const [fontRegular, fontBold] = await Promise.all([
+    fontRegularPromise,
+    fontBoldPromise,
+  ])
 
   const clerkUser = await getClerkUserByUsername(username)
   if (!clerkUser) {
@@ -35,7 +41,7 @@ export default async function Image({ params }: PageProps) {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "#FFF7ED",
-          fontFamily: "Pretendard Variable",
+          fontFamily: "Pretendard",
           fontSize: 48,
           color: "#6B7280",
         }}
@@ -44,7 +50,7 @@ export default async function Image({ params }: PageProps) {
       </div>,
       {
         ...size,
-        fonts: [{ name: "Pretendard Variable", data: fontData, weight: 400 }],
+        fonts: [{ name: "Pretendard", data: fontRegular, weight: 400 }],
       }
     )
   }
@@ -62,7 +68,7 @@ export default async function Image({ params }: PageProps) {
         flexDirection: "column",
         padding: "60px",
         backgroundColor: "#FFF7ED",
-        fontFamily: "Pretendard Variable",
+        fontFamily: "Pretendard",
         color: "#111827",
       }}
     >
@@ -177,8 +183,8 @@ export default async function Image({ params }: PageProps) {
     {
       ...size,
       fonts: [
-        { name: "Pretendard Variable", data: fontData, weight: 400 },
-        { name: "Pretendard Variable", data: fontData, weight: 700 },
+        { name: "Pretendard", data: fontRegular, weight: 400 },
+        { name: "Pretendard", data: fontBold, weight: 700 },
       ],
     }
   )

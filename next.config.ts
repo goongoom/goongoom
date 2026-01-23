@@ -42,6 +42,18 @@ export default withSentryConfig(withMDX(withNextIntl(nextConfig)), {
   // Upload a larger set of source maps for prettier stack traces (increases build time)
   widenClientFileUpload: true,
 
+  // Ignore Next.js internal files that don't have source maps
+  sourcemaps: {
+    ignore: [
+      "node_modules/**",
+      "**/*_client-reference-manifest.js",
+      "**/interception-route-rewrite-manifest.js",
+      "**/middleware-build-manifest.js",
+      "**/next-font-manifest.js",
+      "**/server-reference-manifest.js",
+    ],
+  },
+
   // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
   // This can increase your server load as well as your hosting bill.
   // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
