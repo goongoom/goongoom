@@ -11,7 +11,7 @@ export function AccountSettingsButton() {
   const { openUserProfile } = useClerk()
   const { user } = useUser()
 
-  const displayName = user?.fullName || user?.username || "?"
+  const displayName = user?.firstName || user?.username || "?"
 
   return (
     <button

@@ -1,5 +1,6 @@
 import type { User } from "@clerk/nextjs/server"
 import { clerkClient } from "@clerk/nextjs/server"
+import { cache } from "react"
 
 export interface ClerkUserInfo {
   clerkId: string
@@ -31,7 +32,7 @@ export async function getClerkUserByUsername(
   }
 }
 
-export async function getClerkUserById(
+async function fetchClerkUserById(
   clerkId: string
 ): Promise<ClerkUserInfo | null> {
   try {
@@ -39,10 +40,12 @@ export async function getClerkUserById(
     const user = await client.users.getUser(clerkId)
     return clerkUserToInfo(user)
   } catch (error) {
-    console.error("Error fetching Clerk user by ID:", error)
+    console.error("Error fetching Clerk user by ID:", clerkId, error)
     return null
   }
 }
+
+export const getClerkUserById = cache(fetchClerkUserById)
 
 export async function getClerkUsersByIds(
   clerkIds: string[]
@@ -63,15 +66,26 @@ export async function getClerkUsersByIds(
       map.set(user.id, clerkUserToInfo(user))
     }
     return map
-  } catch (error) {
-    console.error("Error fetching Clerk users by IDs:", error)
-    return new Map()
+  } catch (batchError) {
+    console.error(
+      "Batch fetch failed, falling back to individual lookups:",
+      batchError
+    )
+    const map = new Map<string, ClerkUserInfo>()
+    const results = await Promise.all(
+      clerkIds.map((id) => getClerkUserById(id).then((user) => ({ id, user })))
+    )
+    for (const { id, user } of results) {
+      if (user) {
+        map.set(id, user)
+      }
+    }
+    return map
   }
 }
 
 function clerkUserToInfo(user: User): ClerkUserInfo {
-  const displayName =
-    [user.firstName, user.lastName].filter(Boolean).join(" ") || null
+  const displayName = user.firstName || null
 
   return {
     clerkId: user.id,

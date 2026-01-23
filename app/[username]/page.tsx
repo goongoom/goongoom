@@ -57,8 +57,7 @@ export default async function UserProfilePage({
       getLocale(),
     ])
 
-  const fullName = clerkUser.displayName || clerkUser.username || username
-  const displayName = fullName.split(" ")[0] || fullName
+  const displayName = clerkUser.displayName || clerkUser.username || username
   const recipientClerkId = clerkUser.clerkId
   const recipientUsername = clerkUser.username || username
 

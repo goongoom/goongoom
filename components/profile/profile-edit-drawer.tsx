@@ -181,7 +181,7 @@ export function ProfileEditDrawer({
                 <p className="mb-3 font-medium text-muted-foreground text-xs">
                   {t("socialLinks")}
                 </p>
-                <div className="grid gap-3">
+                <div className="grid grid-cols-2 gap-3">
                   <div className="relative">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <HugeiconsIcon
@@ -217,7 +217,7 @@ export function ProfileEditDrawer({
                       id="twitter"
                       name="twitter"
                       onChange={(e) => handleTwitterChange(e.target.value)}
-                      placeholder="X (Twitter)"
+                      placeholder="Twitter"
                       value={twitter}
                     />
                   </div>

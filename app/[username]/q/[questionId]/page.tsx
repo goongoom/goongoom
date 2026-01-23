@@ -79,8 +79,7 @@ export default async function QADetailPage({ params }: QADetailPageProps) {
 
   const isOwner = viewerId === clerkUser.clerkId
 
-  const fullName = clerkUser.displayName || clerkUser.username || username
-  const displayName = fullName.split(" ")[0] || fullName
+  const displayName = clerkUser.displayName || clerkUser.username || username
   const { answer } = qa
 
   const questionerAvatarUrl = qa.isAnonymous

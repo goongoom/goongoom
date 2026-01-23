@@ -5,9 +5,8 @@ const schema = z.object({
   CLERK_WEBHOOK_SECRET: z.string().optional().default(""),
   NEXT_PUBLIC_VAPID_PUBLIC_KEY: z.string().optional(),
   VAPID_PRIVATE_KEY: z.string().optional(),
-  VAPID_SUBJECT: z.string().url().optional(),
-  NEXT_PUBLIC_CONVEX_CLOUD_URL: z.string().url(),
-  NEXT_PUBLIC_CONVEX_SITE_URL: z.string().url(),
+  VAPID_SUBJECT: z.url().optional(),
+  NEXT_PUBLIC_CONVEX_URL: z.url(),
 })
 
 export const env = schema.parse(process.env)

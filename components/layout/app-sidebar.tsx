@@ -90,11 +90,11 @@ export function AppSidebar({
                 <>
                   <Avatar className="size-8 rounded-lg">
                     <AvatarImage
-                      alt={user.fullName || user.username || ""}
+                      alt={user.firstName || user.username || ""}
                       src={user.imageUrl}
                     />
                     <AvatarFallback className="rounded-lg bg-electric-blue text-electric-blue-foreground">
-                      {user.fullName?.[0] || user.username?.[0] || "U"}
+                      {user.firstName?.[0] || user.username?.[0] || "U"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
