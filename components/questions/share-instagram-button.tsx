@@ -34,7 +34,7 @@ export function ShareInstagramButton({
   const sharingRef = useRef(false)
   const fileRef = useRef<File | null>(null)
   const [open, setOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const fetchImage = useCallback(async (): Promise<File | null> => {
     try {
@@ -55,8 +55,11 @@ export function ShareInstagramButton({
 
     async function prefetch() {
       const file = await fetchImage()
-      if (!cancelled && file) {
-        fileRef.current = file
+      if (!cancelled) {
+        if (file) {
+          fileRef.current = file
+        }
+        setIsLoading(false)
       }
     }
 

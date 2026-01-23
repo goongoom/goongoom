@@ -6,6 +6,7 @@ import {
   InboxIcon,
   Message01Icon,
   Settings01Icon,
+  UserGroupIcon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { formatDistanceToNow } from "date-fns"
@@ -58,6 +59,11 @@ export function AppSidebar({
       title: tSidebar("inbox"),
       url: "/inbox",
       icon: InboxIcon,
+    },
+    {
+      title: tSidebar("friends"),
+      url: "/friends",
+      icon: UserGroupIcon,
     },
     {
       title: tSidebar("settings"),

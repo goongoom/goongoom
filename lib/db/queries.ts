@@ -130,3 +130,11 @@ export async function getUserLocale(clerkId: string) {
 export async function getUserCount() {
   return await fetchQuery(api.users.count, {})
 }
+
+export async function getFriends(clerkId: string) {
+  return await fetchQuery(api.questions.getFriends, { clerkId })
+}
+
+export async function getFriendsAnswers(clerkId: string, limit = 20) {
+  return await fetchQuery(api.answers.getFriendsAnswers, { clerkId, limit })
+}

@@ -4,6 +4,7 @@ import {
   Home01Icon,
   InboxIcon,
   Settings01Icon,
+  UserGroupIcon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { usePathname } from "next/navigation"
@@ -14,6 +15,7 @@ import { cn } from "@/lib/utils"
 const tabItems = [
   { titleKey: "home" as const, href: "/", icon: Home01Icon },
   { titleKey: "inbox" as const, href: "/inbox", icon: InboxIcon },
+  { titleKey: "friends" as const, href: "/friends", icon: UserGroupIcon },
   { titleKey: "settings" as const, href: "/settings", icon: Settings01Icon },
 ]
 

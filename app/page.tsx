@@ -181,19 +181,19 @@ async function LandingPage() {
           <div className="flex gap-6 text-muted-foreground text-sm">
             <Link
               className="inline-flex min-h-11 items-center rounded transition-colors hover:text-foreground hover:underline focus-visible:text-foreground focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              href="#"
+              href="/terms"
             >
               {tFooter("terms")}
             </Link>
             <Link
               className="inline-flex min-h-11 items-center rounded transition-colors hover:text-foreground hover:underline focus-visible:text-foreground focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              href="#"
+              href="/privacy"
             >
               {tFooter("privacy")}
             </Link>
             <Link
               className="inline-flex min-h-11 items-center rounded transition-colors hover:text-foreground hover:underline focus-visible:text-foreground focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              href="#"
+              href="/contact"
             >
               {tFooter("contact")}
             </Link>

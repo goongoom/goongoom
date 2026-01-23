@@ -5,17 +5,17 @@ import { MainContent } from "@/components/layout/main-content"
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("footer")
   return {
-    title: t("terms"),
+    title: t("privacy"),
   }
 }
 
-export default async function TermsPage() {
+export default async function PrivacyPage() {
   const locale = await getLocale()
 
   const Content =
     locale === "ko"
-      ? (await import("@/content/legal/terms.ko.mdx")).default
-      : (await import("@/content/legal/terms.en.mdx")).default
+      ? (await import("@/content/legal/privacy.ko.mdx")).default
+      : (await import("@/content/legal/privacy.en.mdx")).default
 
   return (
     <MainContent>

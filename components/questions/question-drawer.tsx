@@ -1,11 +1,12 @@
 "use client"
 
-import { SignInButton, SignUpButton, useUser } from "@clerk/nextjs"
+import { SignUpButton, useUser } from "@clerk/nextjs"
 import { LockIcon, SentIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { useFormStatus } from "react-dom"
+import { PasskeySignInButton } from "@/components/auth/passkey-sign-in-button"
 import { QuestionInputTrigger } from "@/components/questions/question-input-trigger"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -85,7 +86,7 @@ function SignInPrompt() {
         </p>
       </div>
       <div className="flex gap-3">
-        <SignInButton mode="modal">
+        <PasskeySignInButton>
           <Button
             className="h-12 flex-1 rounded-xl font-semibold"
             size="lg"
@@ -93,7 +94,7 @@ function SignInPrompt() {
           >
             {tCommon("login")}
           </Button>
-        </SignInButton>
+        </PasskeySignInButton>
         <SignUpButton mode="modal">
           <Button
             className="h-12 flex-1 rounded-xl bg-gradient-to-r from-electric-blue to-electric-blue/90 font-semibold ring-1 ring-electric-blue/50"

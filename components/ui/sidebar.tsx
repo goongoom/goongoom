@@ -222,6 +222,7 @@ function Sidebar({
       data-slot="sidebar"
       data-state={state}
       data-variant={variant}
+      style={{ viewTransitionName: "app-sidebar" }}
     >
       {/* This is what handles the sidebar gap on desktop */}
       <div

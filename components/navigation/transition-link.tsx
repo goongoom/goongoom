@@ -5,11 +5,12 @@ import type { ComponentProps } from "react"
 
 type TransitionLinkProps = ComponentProps<typeof Link>
 
-export function TransitionLink({ ...props }: TransitionLinkProps) {
+export function TransitionLink({ onNavigate, ...props }: TransitionLinkProps) {
   return (
     <Link
-      onNavigate={() => {
+      onNavigate={(e) => {
         document.documentElement.dataset.navDirection = "forward"
+        onNavigate?.(e)
       }}
       {...props}
     />

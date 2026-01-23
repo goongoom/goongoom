@@ -29,6 +29,7 @@
   "sidebar": {
     "home": "홈",
     "inbox": "받은 질문",
+    "friends": "친구들",
     "settings": "설정",
     "recentQuestions": "최근 질문"
   },

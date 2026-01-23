@@ -56,3 +56,82 @@ export const getRecent = query({
       .filter(Boolean)
   },
 })
+
+export const getFriendsAnswers = query({
+  args: {
+    clerkId: v.string(),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const friendIds = new Set<string>()
+
+    const receivedQuestions = await ctx.db
+      .query("questions")
+      .withIndex("by_recipient", (q) => q.eq("recipientClerkId", args.clerkId))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("isAnonymous"), false),
+          q.neq(q.field("answerId"), undefined),
+          q.neq(q.field("senderClerkId"), undefined)
+        )
+      )
+      .collect()
+
+    for (const question of receivedQuestions) {
+      if (question.senderClerkId && question.senderClerkId !== args.clerkId) {
+        friendIds.add(question.senderClerkId)
+      }
+    }
+
+    const sentQuestions = await ctx.db
+      .query("questions")
+      .withIndex("by_sender", (q) => q.eq("senderClerkId", args.clerkId))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("isAnonymous"), false),
+          q.neq(q.field("answerId"), undefined)
+        )
+      )
+      .collect()
+
+    for (const question of sentQuestions) {
+      if (question.recipientClerkId !== args.clerkId) {
+        friendIds.add(question.recipientClerkId)
+      }
+    }
+
+    if (friendIds.size === 0) {
+      return []
+    }
+
+    const answers = await ctx.db
+      .query("answers")
+      .order("desc")
+      .take((args.limit ?? 20) * 3)
+
+    const questionIds = [...new Set(answers.map((a) => a.questionId))]
+    const questions = await Promise.all(questionIds.map((id) => ctx.db.get(id)))
+    const validQuestions = questions.filter(
+      (q): q is NonNullable<typeof q> => q !== null
+    )
+    const questionMap = new Map(validQuestions.map((q) => [q._id, q]))
+
+    return answers
+      .map((answer) => {
+        const question = questionMap.get(answer.questionId)
+        if (!question) {
+          return null
+        }
+        if (!friendIds.has(question.recipientClerkId)) {
+          return null
+        }
+        return {
+          question,
+          answer,
+          recipientClerkId: question.recipientClerkId,
+        }
+      })
+      .filter((item): item is NonNullable<typeof item> => item !== null)
+      .slice(0, args.limit ?? 20)
+  },
+})

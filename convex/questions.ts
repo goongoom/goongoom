@@ -191,3 +191,91 @@ export const getAnsweredNumber = query({
     return count
   },
 })
+
+export const getFriends = query({
+  args: { clerkId: v.string() },
+  handler: async (ctx, args) => {
+    const friendsMap = new Map<
+      string,
+      {
+        clerkId: string
+        questionsReceived: number
+        questionsSent: number
+        lastInteractionTime: number
+      }
+    >()
+
+    const receivedQuestions = await ctx.db
+      .query("questions")
+      .withIndex("by_recipient", (q) => q.eq("recipientClerkId", args.clerkId))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("isAnonymous"), false),
+          q.neq(q.field("answerId"), undefined),
+          q.neq(q.field("senderClerkId"), undefined)
+        )
+      )
+      .collect()
+
+    for (const question of receivedQuestions) {
+      const senderId = question.senderClerkId
+      if (!senderId || senderId === args.clerkId) {
+        continue
+      }
+
+      const existing = friendsMap.get(senderId)
+      if (existing) {
+        existing.questionsReceived++
+        existing.lastInteractionTime = Math.max(
+          existing.lastInteractionTime,
+          question._creationTime
+        )
+      } else {
+        friendsMap.set(senderId, {
+          clerkId: senderId,
+          questionsReceived: 1,
+          questionsSent: 0,
+          lastInteractionTime: question._creationTime,
+        })
+      }
+    }
+
+    const sentQuestions = await ctx.db
+      .query("questions")
+      .withIndex("by_sender", (q) => q.eq("senderClerkId", args.clerkId))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("isAnonymous"), false),
+          q.neq(q.field("answerId"), undefined)
+        )
+      )
+      .collect()
+
+    for (const question of sentQuestions) {
+      const recipientId = question.recipientClerkId
+      if (recipientId === args.clerkId) {
+        continue
+      }
+
+      const existing = friendsMap.get(recipientId)
+      if (existing) {
+        existing.questionsSent++
+        existing.lastInteractionTime = Math.max(
+          existing.lastInteractionTime,
+          question._creationTime
+        )
+      } else {
+        friendsMap.set(recipientId, {
+          clerkId: recipientId,
+          questionsReceived: 0,
+          questionsSent: 1,
+          lastInteractionTime: question._creationTime,
+        })
+      }
+    }
+
+    return Array.from(friendsMap.values()).sort(
+      (a, b) => b.lastInteractionTime - a.lastInteractionTime
+    )
+  },
+})

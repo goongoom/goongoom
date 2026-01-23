@@ -13,12 +13,9 @@ const pickText = (value: string | null, fallback: string, max: number) => {
   return clamp(trimmed, max)
 }
 
-const fontDir = join(process.cwd(), "public/fonts")
-const fontsPromise = Promise.all([
-  readFile(join(fontDir, "Pretendard-Regular.ttf")),
-  readFile(join(fontDir, "Pretendard-SemiBold.ttf")),
-  readFile(join(fontDir, "Pretendard-Bold.ttf")),
-])
+const fontPromise = readFile(
+  join(process.cwd(), "public/fonts/PretendardVariable.ttf")
+)
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -35,7 +32,7 @@ export async function GET(request: Request) {
   )
   const name = pickText(searchParams.get("name"), "사용자", 40)
 
-  const [regular, semibold, bold] = await fontsPromise
+  const fontData = await fontPromise
 
   return new ImageResponse(
     <div
@@ -44,9 +41,9 @@ export async function GET(request: Request) {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        padding: "160px",
+        padding: "80px",
         backgroundColor: "#FFF7ED",
-        fontFamily: "Pretendard",
+        fontFamily: "Pretendard Variable",
         color: "#111827",
         wordWrap: "break-word",
         wordBreak: "keep-all",
@@ -59,32 +56,32 @@ export async function GET(request: Request) {
           justifyContent: "space-between",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "48px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
           <div
             style={{
-              width: "176px",
-              height: "176px",
-              borderRadius: "48px",
+              width: "88px",
+              height: "88px",
+              borderRadius: "24px",
               backgroundColor: "#F97316",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               color: "#FFFFFF",
-              fontSize: "96px",
+              fontSize: "48px",
               fontWeight: 700,
             }}
           >
             궁
           </div>
-          <div style={{ fontSize: "128px", fontWeight: 700 }}>궁금닷컴</div>
+          <div style={{ fontSize: "64px", fontWeight: 700 }}>궁금닷컴</div>
         </div>
         <div
           style={{
-            padding: "40px 72px",
+            padding: "20px 36px",
             borderRadius: "999px",
             backgroundColor: "#FFEDD5",
             color: "#9A3412",
-            fontSize: "80px",
+            fontSize: "40px",
             fontWeight: 600,
           }}
         >
@@ -94,21 +91,20 @@ export async function GET(request: Request) {
 
       <div
         style={{
-          marginTop: "240px",
+          marginTop: "120px",
           display: "flex",
           flexDirection: "column",
-          gap: "112px",
+          gap: "56px",
         }}
       >
         <div
           style={{
             backgroundColor: "#FFFFFF",
-            borderRadius: "112px",
-            padding: "120px 136px",
-            fontSize: "144px",
+            borderRadius: "56px",
+            padding: "60px 68px",
+            fontSize: "72px",
             fontWeight: 600,
             lineHeight: 1.4,
-            boxShadow: "0 80px 160px rgba(249, 115, 22, 0.12)",
           }}
         >
           {question}
@@ -117,13 +113,12 @@ export async function GET(request: Request) {
           style={{
             alignSelf: "flex-end",
             backgroundColor: "#F97316",
-            borderRadius: "112px",
-            padding: "120px 136px",
-            fontSize: "144px",
+            borderRadius: "56px",
+            padding: "60px 68px",
+            fontSize: "72px",
             fontWeight: 600,
             lineHeight: 1.4,
             color: "#FFFFFF",
-            boxShadow: "0 96px 192px rgba(249, 115, 22, 0.28)",
           }}
         >
           {answer}
@@ -136,7 +131,7 @@ export async function GET(request: Request) {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          fontSize: "88px",
+          fontSize: "44px",
           color: "#6B7280",
         }}
       >
@@ -145,12 +140,12 @@ export async function GET(request: Request) {
       </div>
     </div>,
     {
-      width: 2160,
-      height: 3840,
+      width: 1080,
+      height: 1920,
       fonts: [
-        { name: "Pretendard", data: regular, weight: 400 },
-        { name: "Pretendard", data: semibold, weight: 600 },
-        { name: "Pretendard", data: bold, weight: 700 },
+        { name: "Pretendard Variable", data: fontData, weight: 400 },
+        { name: "Pretendard Variable", data: fontData, weight: 600 },
+        { name: "Pretendard Variable", data: fontData, weight: 700 },
       ],
       headers: {
         "Cache-Control": "public, max-age=31536000, immutable",

@@ -5,7 +5,6 @@ import {
   ClerkLoading,
   SignedIn,
   SignedOut,
-  SignInButton,
   SignUpButton,
   UserButton,
   useUser,
@@ -14,6 +13,7 @@ import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import Link from "next/link"
 import { useTranslations } from "next-intl"
+import { PasskeySignInButton } from "@/components/auth/passkey-sign-in-button"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -27,11 +27,11 @@ export function NavAuthButtons() {
       </ClerkLoading>
       <ClerkLoaded>
         <SignedOut>
-          <SignInButton mode="modal">
+          <PasskeySignInButton>
             <Button size="sm" variant="ghost">
               {t("login")}
             </Button>
-          </SignInButton>
+          </PasskeySignInButton>
           <SignUpButton mode="modal">
             <Button size="sm">{t("start")}</Button>
           </SignUpButton>
@@ -66,11 +66,11 @@ export function HeroAuthButtons() {
               />
             </Button>
           </SignUpButton>
-          <SignInButton mode="modal">
+          <PasskeySignInButton>
             <Button className="w-full sm:w-auto" size="lg" variant="outline">
               {t("login")}
             </Button>
-          </SignInButton>
+          </PasskeySignInButton>
         </SignedOut>
         <SignedIn>
           <Button
