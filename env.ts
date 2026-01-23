@@ -6,6 +6,8 @@ const schema = z.object({
   NEXT_PUBLIC_VAPID_PUBLIC_KEY: z.string().optional(),
   VAPID_PRIVATE_KEY: z.string().optional(),
   VAPID_SUBJECT: z.string().url().optional(),
+  NEXT_PUBLIC_CONVEX_CLOUD_URL: z.string().url(),
+  NEXT_PUBLIC_CONVEX_SITE_URL: z.string().url(),
 })
 
 export const env = schema.parse(process.env)
