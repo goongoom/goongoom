@@ -82,6 +82,7 @@ export function PasskeySetupModal() {
 
         {!success && (
           <button
+            aria-label={t("later")}
             className="absolute top-4 right-4 z-50 flex size-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             onClick={handleDismiss}
             type="button"

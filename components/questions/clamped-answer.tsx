@@ -34,7 +34,7 @@ export function ClampedAnswer({ content }: ClampedAnswerProps) {
         {content}
       </p>
       {isClamped && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-primary to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-neon-pink to-transparent" />
       )}
     </div>
   )

@@ -180,19 +180,19 @@ async function LandingPage() {
           </div>
           <div className="flex gap-6 text-muted-foreground text-sm">
             <Link
-              className="inline-flex min-h-11 items-center transition-colors"
+              className="inline-flex min-h-11 items-center rounded transition-colors hover:text-foreground hover:underline focus-visible:text-foreground focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               href="#"
             >
               {tFooter("terms")}
             </Link>
             <Link
-              className="inline-flex min-h-11 items-center transition-colors"
+              className="inline-flex min-h-11 items-center rounded transition-colors hover:text-foreground hover:underline focus-visible:text-foreground focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               href="#"
             >
               {tFooter("privacy")}
             </Link>
             <Link
-              className="inline-flex min-h-11 items-center transition-colors"
+              className="inline-flex min-h-11 items-center rounded transition-colors hover:text-foreground hover:underline focus-visible:text-foreground focus-visible:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               href="#"
             >
               {tFooter("contact")}

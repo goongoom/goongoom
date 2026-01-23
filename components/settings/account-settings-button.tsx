@@ -15,7 +15,7 @@ export function AccountSettingsButton() {
 
   return (
     <button
-      className="group flex w-full items-center gap-4 rounded-2xl bg-card p-5 text-left ring-1 ring-foreground/10 transition-all hover:bg-accent/50 hover:ring-electric-blue/30 active:scale-[0.99]"
+      className="group flex w-full items-center gap-4 rounded-2xl bg-card p-5 text-left ring-1 ring-foreground/10 transition-all hover:bg-accent/50 hover:ring-electric-blue/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.99]"
       onClick={() => openUserProfile()}
       type="button"
     >

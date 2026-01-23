@@ -81,7 +81,7 @@ export function InboxList({ questions }: InboxListProps) {
       <div className="space-y-3">
         {questions.map((question) => (
           <button
-            className="group w-full text-left"
+            className="group w-full rounded-2xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             key={question.id}
             onClick={() => handleQuestionClick(question)}
             type="button"
@@ -126,7 +126,7 @@ export function InboxList({ questions }: InboxListProps) {
                       ? tCommon("anonymous")
                       : question.senderName}
                   </span>
-                  <span className="text-muted-foreground/40">·</span>
+                  <span className="text-muted-foreground/60">·</span>
                   <span>
                     {formatDistanceToNow(question.createdAt, {
                       addSuffix: true,

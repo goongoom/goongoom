@@ -132,7 +132,7 @@ function QuestionTypeSelector({
   return (
     <div className="grid grid-cols-2 gap-2">
       <button
-        className={`group flex flex-col items-center justify-center gap-2 rounded-2xl border-2 bg-background p-4 transition-all ${
+        className={`group flex flex-col items-center justify-center gap-2 rounded-2xl border-2 bg-background p-4 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
           canAskAnonymously
             ? `cursor-pointer hover:border-border hover:bg-muted/50 ${
                 isAnonymous
@@ -168,7 +168,7 @@ function QuestionTypeSelector({
       </button>
 
       <button
-        className={`group flex flex-col items-center justify-center gap-2 rounded-2xl border-2 bg-background p-4 transition-all ${
+        className={`group flex flex-col items-center justify-center gap-2 rounded-2xl border-2 bg-background p-4 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
           canAskPublic
             ? `cursor-pointer hover:border-border hover:bg-muted/50 ${
                 isAnonymous
@@ -302,7 +302,7 @@ export function QuestionDrawer({
 
                 <div className="space-y-3 pt-2">
                   <SubmitButton />
-                  <p className="text-balance text-center text-muted-foreground/50 text-xs leading-relaxed">
+                  <p className="text-balance text-center text-muted-foreground text-xs leading-relaxed">
                     {t("termsAgreement")}
                   </p>
                 </div>

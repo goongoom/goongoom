@@ -96,6 +96,7 @@ export function AddToHomeScreenNudge() {
         <div className="pointer-events-none absolute bottom-0 left-0 -translate-x-1/3 translate-y-1/3 rounded-full bg-purple/30 p-16 blur-2xl" />
 
         <button
+          aria-label={t("dismiss")}
           className="absolute top-4 right-4 z-50 flex size-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
           onClick={handleDismiss}
           type="button"

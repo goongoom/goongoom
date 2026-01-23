@@ -11,7 +11,7 @@ export function LogoutButton() {
 
   return (
     <button
-      className="group flex w-full items-center gap-3 rounded-xl py-3 text-left transition-colors hover:text-destructive"
+      className="group flex w-full items-center gap-3 rounded-xl py-3 text-left transition-colors hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       onClick={() => signOut({ redirectUrl: "/" })}
       type="button"
     >
