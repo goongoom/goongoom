@@ -104,8 +104,8 @@ export function QuickAnswerDialog({
                 <div
                   className={`flex size-6 items-center justify-center rounded-full ${
                     question.isAnonymous
-                      ? "bg-gradient-to-br from-purple to-purple/80"
-                      : "bg-gradient-to-br from-electric-blue to-electric-blue/80"
+                      ? "bg-gradient-to-br from-emerald to-emerald/80"
+                      : "bg-gradient-to-br from-emerald to-emerald/80"
                   }`}
                 >
                   <HugeiconsIcon
@@ -116,7 +116,7 @@ export function QuickAnswerDialog({
                 </div>
                 <span
                   className={`font-semibold text-sm ${
-                    question.isAnonymous ? "text-purple" : "text-electric-blue"
+                    question.isAnonymous ? "text-emerald" : "text-emerald"
                   }`}
                 >
                   {question.isAnonymous
@@ -132,7 +132,7 @@ export function QuickAnswerDialog({
 
           <div className="mt-4">
             <Textarea
-              className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-electric-blue focus:bg-background focus:ring-2 focus:ring-electric-blue/20"
+              className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-emerald focus:bg-background focus:ring-2 focus:ring-emerald/20"
               onChange={(e) => setAnswer(e.target.value)}
               placeholder={t("answerPlaceholder")}
               value={answer}
@@ -149,7 +149,7 @@ export function QuickAnswerDialog({
               {tCommon("cancel")}
             </Button>
             <Button
-              className="h-14 flex-1 rounded-2xl bg-gradient-to-r from-electric-blue to-electric-blue/90 font-semibold text-base transition-all disabled:opacity-70"
+              className="h-14 flex-1 rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold text-base transition-all disabled:opacity-70"
               disabled={!answer.trim() || isSubmitting}
               onClick={handleSubmit}
               type="button"

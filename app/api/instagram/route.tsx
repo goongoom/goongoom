@@ -64,7 +64,7 @@ export async function GET(request: Request) {
         display: "flex",
         flexDirection: "column",
         padding: "80px",
-        backgroundColor: "#FFF7ED",
+        backgroundColor: "#ecfdf5",
         fontFamily: "Pretendard",
         color: "#111827",
         wordWrap: "break-word",
@@ -163,7 +163,7 @@ export async function GET(request: Request) {
             style={{
               display: "flex",
               maxWidth: "85%",
-              background: "linear-gradient(135deg, #A855F7 0%, #EC4899 100%)",
+              background: "linear-gradient(135deg, #059669 0%, #10b981 100%)",
               borderRadius: "48px",
               padding: "48px 56px",
               fontSize: "56px",

@@ -43,7 +43,7 @@ export default async function Image({ params }: PageProps) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#FFF7ED",
+          backgroundColor: "#ecfdf5",
           fontFamily: "Pretendard",
           fontSize: 48,
           color: "#6B7280",
@@ -112,7 +112,7 @@ export default async function Image({ params }: PageProps) {
             src={clerkUser.avatarUrl}
             style={{
               borderRadius: "110px",
-              border: "6px solid rgba(249, 115, 22, 0.3)",
+              border: "6px solid rgba(16, 185, 129, 0.3)",
             }}
             width={220}
           />
@@ -122,13 +122,13 @@ export default async function Image({ params }: PageProps) {
               width: "220px",
               height: "220px",
               borderRadius: "110px",
-              backgroundColor: "#FFEDD5",
+              backgroundColor: "#d1fae5",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontSize: "88px",
               fontWeight: 700,
-              color: "#F97316",
+              color: "#10b981",
             }}
           >
             {displayName[0] || "?"}

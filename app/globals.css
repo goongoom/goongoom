@@ -75,26 +75,8 @@
   --color-info-foreground: var(--info-foreground);
   --color-info: var(--info);
   --color-destructive-foreground: var(--destructive-foreground);
-  --color-electric-blue: var(--electric-blue);
-  --color-electric-blue-foreground: var(--electric-blue-foreground);
-  --color-neon-pink: var(--neon-pink);
-  --color-neon-pink-foreground: var(--neon-pink-foreground);
-  --color-lime: var(--lime);
-  --color-lime-foreground: var(--lime-foreground);
-  --color-sunset-orange: var(--sunset-orange);
-  --color-sunset-orange-foreground: var(--sunset-orange-foreground);
-  --color-purple: var(--purple);
-  --color-purple-foreground: var(--purple-foreground);
-  --gradient-sunset: var(--gradient-sunset);
-  --gradient-ocean: var(--gradient-ocean);
-  --gradient-forest: var(--gradient-forest);
-  --gradient-candy: var(--gradient-candy);
-  --gradient-electric: var(--gradient-electric);
-  --gradient-neon: var(--gradient-neon);
-  --gradient-cosmic: var(--gradient-cosmic);
-  --gradient-tropical: var(--gradient-tropical);
-  --gradient-fire: var(--gradient-fire);
-  --gradient-aurora: var(--gradient-aurora);
+  --color-emerald: var(--emerald);
+  --color-emerald-foreground: var(--emerald-foreground);
 }
 
 :root {
@@ -142,74 +124,8 @@
   --success-foreground: var(--color-emerald-700);
   --warning: var(--color-amber-500);
   --warning-foreground: var(--color-amber-700);
-  --electric-blue: oklch(0.6 0.2 240);
-  --electric-blue-foreground: oklch(0.98 0 0);
-  --neon-pink: oklch(0.65 0.25 350);
-  --neon-pink-foreground: oklch(0.98 0 0);
-  --lime: oklch(0.75 0.2 130);
-  --lime-foreground: oklch(0.2 0 0);
-  --sunset-orange: oklch(0.7 0.18 50);
-  --sunset-orange-foreground: oklch(0.98 0 0);
-  --purple: oklch(0.65 0.25 300);
-  --purple-foreground: oklch(0.98 0 0);
-  --gradient-sunset: linear-gradient(
-    135deg,
-    oklch(0.7 0.18 50) 0%,
-    oklch(0.65 0.25 350) 50%,
-    oklch(0.65 0.25 300) 100%
-  );
-  --gradient-ocean: linear-gradient(
-    135deg,
-    oklch(0.6 0.2 240) 0%,
-    oklch(0.7 0.15 200) 50%,
-    oklch(0.65 0.18 180) 100%
-  );
-  --gradient-forest: linear-gradient(
-    135deg,
-    oklch(0.75 0.2 130) 0%,
-    oklch(0.65 0.18 160) 50%,
-    oklch(0.55 0.15 150) 100%
-  );
-  --gradient-candy: linear-gradient(
-    135deg,
-    oklch(0.65 0.25 350) 0%,
-    oklch(0.65 0.25 300) 50%,
-    oklch(0.6 0.2 240) 100%
-  );
-  --gradient-electric: linear-gradient(
-    135deg,
-    oklch(0.6 0.2 240) 0%,
-    oklch(0.65 0.25 300) 100%
-  );
-  --gradient-neon: linear-gradient(
-    135deg,
-    oklch(0.65 0.25 350) 0%,
-    oklch(0.7 0.18 50) 100%
-  );
-  --gradient-cosmic: linear-gradient(
-    135deg,
-    oklch(0.65 0.25 300) 0%,
-    oklch(0.6 0.2 240) 50%,
-    oklch(0.65 0.25 350) 100%
-  );
-  --gradient-tropical: linear-gradient(
-    135deg,
-    oklch(0.75 0.2 130) 0%,
-    oklch(0.7 0.18 50) 50%,
-    oklch(0.65 0.25 350) 100%
-  );
-  --gradient-fire: linear-gradient(
-    135deg,
-    oklch(0.7 0.18 50) 0%,
-    oklch(0.65 0.25 350) 50%,
-    oklch(0.65 0.25 300) 100%
-  );
-  --gradient-aurora: linear-gradient(
-    135deg,
-    oklch(0.6 0.2 240) 0%,
-    oklch(0.75 0.2 130) 50%,
-    oklch(0.65 0.25 350) 100%
-  );
+  --emerald: #00ba7a;
+  --emerald-foreground: oklch(0.98 0 0);
 }
 
 .dark {
@@ -263,74 +179,8 @@
   --success-foreground: var(--color-emerald-400);
   --warning: var(--color-amber-500);
   --warning-foreground: var(--color-amber-400);
-  --electric-blue: oklch(0.68 0.18 240);
-  --electric-blue-foreground: oklch(0.98 0 0);
-  --neon-pink: oklch(0.72 0.22 350);
-  --neon-pink-foreground: oklch(0.98 0 0);
-  --lime: oklch(0.8 0.18 130);
-  --lime-foreground: oklch(0.2 0 0);
-  --sunset-orange: oklch(0.75 0.16 50);
-  --sunset-orange-foreground: oklch(0.98 0 0);
-  --purple: oklch(0.72 0.22 300);
-  --purple-foreground: oklch(0.98 0 0);
-  --gradient-sunset: linear-gradient(
-    135deg,
-    oklch(0.75 0.16 50) 0%,
-    oklch(0.72 0.22 350) 50%,
-    oklch(0.72 0.22 300) 100%
-  );
-  --gradient-ocean: linear-gradient(
-    135deg,
-    oklch(0.68 0.18 240) 0%,
-    oklch(0.75 0.13 200) 50%,
-    oklch(0.7 0.16 180) 100%
-  );
-  --gradient-forest: linear-gradient(
-    135deg,
-    oklch(0.8 0.18 130) 0%,
-    oklch(0.7 0.16 160) 50%,
-    oklch(0.6 0.13 150) 100%
-  );
-  --gradient-candy: linear-gradient(
-    135deg,
-    oklch(0.72 0.22 350) 0%,
-    oklch(0.72 0.22 300) 50%,
-    oklch(0.68 0.18 240) 100%
-  );
-  --gradient-electric: linear-gradient(
-    135deg,
-    oklch(0.68 0.18 240) 0%,
-    oklch(0.72 0.22 300) 100%
-  );
-  --gradient-neon: linear-gradient(
-    135deg,
-    oklch(0.72 0.22 350) 0%,
-    oklch(0.75 0.16 50) 100%
-  );
-  --gradient-cosmic: linear-gradient(
-    135deg,
-    oklch(0.72 0.22 300) 0%,
-    oklch(0.68 0.18 240) 50%,
-    oklch(0.72 0.22 350) 100%
-  );
-  --gradient-tropical: linear-gradient(
-    135deg,
-    oklch(0.8 0.18 130) 0%,
-    oklch(0.75 0.16 50) 50%,
-    oklch(0.72 0.22 350) 100%
-  );
-  --gradient-fire: linear-gradient(
-    135deg,
-    oklch(0.75 0.16 50) 0%,
-    oklch(0.72 0.22 350) 50%,
-    oklch(0.72 0.22 300) 100%
-  );
-  --gradient-aurora: linear-gradient(
-    135deg,
-    oklch(0.68 0.18 240) 0%,
-    oklch(0.8 0.18 130) 50%,
-    oklch(0.72 0.22 350) 100%
-  );
+  --emerald: oklch(0.75 0.16 162);
+  --emerald-foreground: oklch(0.98 0 0);
 }
 
 @layer base {
@@ -341,6 +191,12 @@
   }
   body {
     @apply bg-background text-foreground;
+    accent-color: var(--emerald);
+    caret-color: var(--emerald);
+  }
+  ::selection {
+    background-color: oklch(0.69 0.17 162 / 0.3);
+    color: inherit;
   }
 }
 

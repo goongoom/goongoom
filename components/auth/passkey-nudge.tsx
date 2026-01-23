@@ -50,17 +50,17 @@ export function PasskeyNudge() {
 
   if (success) {
     return (
-      <Card className="relative my-6 overflow-hidden border-lime/20 bg-lime/10">
+      <Card className="relative my-6 overflow-hidden border-emerald/20 bg-emerald/10">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-lime/5 to-transparent" />
         <CardContent className="flex flex-col items-center justify-center gap-4 p-8 text-center">
-          <div className="flex size-12 items-center justify-center rounded-full bg-lime/20 text-lime">
+          <div className="flex size-12 items-center justify-center rounded-full bg-emerald/20 text-emerald">
             <HugeiconsIcon className="size-6" icon={CheckmarkCircle02Icon} />
           </div>
           <div className="space-y-1">
-            <h3 className="font-semibold text-lg text-lime-700 dark:text-lime-400">
+            <h3 className="font-semibold text-emerald-700 text-lg dark:text-emerald-400">
               {t("setupComplete")}
             </h3>
-            <p className="text-lime-600/80 text-sm dark:text-lime-300/80">
+            <p className="text-emerald-600/80 text-sm dark:text-emerald-300/80">
               {t("setupCompleteDescription")}
             </p>
           </div>
@@ -77,7 +77,7 @@ export function PasskeyNudge() {
       )}
     >
       <div className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 rounded-full bg-white/10 p-12 blur-3xl transition-colors duration-500 group-hover:bg-white/20" />
-      <div className="absolute bottom-0 left-0 -translate-x-1/3 translate-y-1/3 rounded-full bg-purple/20 p-10 blur-2xl" />
+      <div className="absolute bottom-0 left-0 -translate-x-1/3 translate-y-1/3 rounded-full bg-emerald/20 p-10 blur-2xl" />
 
       <CardHeader className="relative z-10 pb-2">
         <div className="flex items-start justify-between">

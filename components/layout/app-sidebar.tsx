@@ -100,7 +100,7 @@ export function AppSidebar({
                       alt={user.firstName || user.username || ""}
                       src={user.imageUrl}
                     />
-                    <AvatarFallback className="rounded-lg bg-electric-blue text-electric-blue-foreground">
+                    <AvatarFallback className="rounded-lg bg-emerald text-emerald-foreground">
                       {user.firstName?.[0] || user.username?.[0] || "U"}
                     </AvatarFallback>
                   </Avatar>
@@ -114,7 +114,7 @@ export function AppSidebar({
                 </>
               ) : (
                 <>
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-electric-blue text-electric-blue-foreground">
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-emerald text-emerald-foreground">
                     <HugeiconsIcon className="size-4" icon={Message01Icon} />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">

@@ -67,13 +67,13 @@ async function LandingPage() {
   return (
     <div className="flex-1">
       <div className="relative overflow-hidden pt-16 md:pt-32">
-        <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-neon-pink/10 blur-3xl filter" />
-        <div className="absolute top-48 -left-24 h-72 w-72 rounded-full bg-electric-blue/10 blur-3xl filter" />
+        <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-emerald/10 blur-3xl filter" />
+        <div className="absolute top-48 -left-24 h-72 w-72 rounded-full bg-emerald/10 blur-3xl filter" />
 
         <div className="relative mx-auto max-w-5xl px-6 pb-24 text-center">
           <Badge className="mb-6 gap-2" variant="secondary">
-            <span className="size-2 rounded-full bg-neon-pink" />
-            <span className="font-semibold text-neon-pink text-xs tracking-wide">
+            <span className="size-2 rounded-full bg-emerald" />
+            <span className="font-semibold text-emerald text-xs tracking-wide">
               {t("hotTitle")}
             </span>
           </Badge>
@@ -96,7 +96,7 @@ async function LandingPage() {
             <div className="grid gap-8 sm:grid-cols-3">
               <Card>
                 <CardContent className="space-y-4">
-                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-electric-blue/10 text-electric-blue">
+                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-emerald/10 text-emerald">
                     <HugeiconsIcon icon={ShieldKeyIcon} size={24} />
                   </div>
                   <div className="space-y-2">
@@ -112,7 +112,7 @@ async function LandingPage() {
 
               <Card>
                 <CardContent className="space-y-4">
-                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-neon-pink/10 text-neon-pink">
+                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-emerald/10 text-emerald">
                     <HugeiconsIcon icon={Share01Icon} size={24} />
                   </div>
                   <div className="space-y-2">
@@ -128,7 +128,7 @@ async function LandingPage() {
 
               <Card>
                 <CardContent className="space-y-4">
-                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-lime/10 text-lime">
+                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-emerald/10 text-emerald">
                     <HugeiconsIcon icon={SparklesIcon} size={24} />
                   </div>
                   <div className="space-y-2">
@@ -147,7 +147,7 @@ async function LandingPage() {
 
         <div className="relative overflow-hidden py-24">
           <div className="mx-auto max-w-5xl px-6 text-center">
-            <div className="mb-8 inline-flex items-center justify-center rounded-full bg-sunset-orange/15 p-3 text-sunset-orange">
+            <div className="mb-8 inline-flex items-center justify-center rounded-full bg-emerald/15 p-3 text-emerald">
               <HugeiconsIcon icon={SentIcon} size={24} />
             </div>
             <h2 className="mb-6 font-bold text-3xl text-foreground sm:text-4xl">

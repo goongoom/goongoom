@@ -88,12 +88,12 @@ export function AddToHomeScreenNudge() {
     <Drawer onOpenChange={(val) => !val && handleDismiss()} open={open}>
       <DrawerContent
         className={cn(
-          "overflow-hidden border-electric-blue/20 bg-electric-blue text-electric-blue-foreground",
+          "overflow-hidden border-emerald/20 bg-emerald text-emerald-foreground",
           "w-full max-w-md gap-0 p-0"
         )}
       >
         <div className="pointer-events-none absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 rounded-full bg-white/10 p-20 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-0 left-0 -translate-x-1/3 translate-y-1/3 rounded-full bg-purple/30 p-16 blur-2xl" />
+        <div className="pointer-events-none absolute bottom-0 left-0 -translate-x-1/3 translate-y-1/3 rounded-full bg-emerald/30 p-16 blur-2xl" />
 
         <button
           aria-label={t("dismiss")}
@@ -115,7 +115,7 @@ export function AddToHomeScreenNudge() {
             <DrawerTitle className="mb-2 font-bold text-2xl text-white">
               {t("title")}
             </DrawerTitle>
-            <DrawerDescription className="max-w-xs whitespace-pre-line text-base text-electric-blue-foreground/90">
+            <DrawerDescription className="max-w-xs whitespace-pre-line text-base text-emerald-foreground/90">
               {t("description")}
             </DrawerDescription>
           </DrawerHeader>

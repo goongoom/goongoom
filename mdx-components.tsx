@@ -35,7 +35,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       if (isInternal && href) {
         return (
           <Link
-            className="text-foreground underline underline-offset-4 hover:text-electric-blue"
+            className="text-foreground underline underline-offset-4 hover:text-emerald"
             href={href}
           >
             {children}
@@ -44,7 +44,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       }
       return (
         <a
-          className="text-foreground underline underline-offset-4 hover:text-electric-blue"
+          className="text-foreground underline underline-offset-4 hover:text-emerald"
           href={href}
           rel="noopener noreferrer"
           target="_blank"
@@ -55,7 +55,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     },
     hr: () => <hr className="my-8 border-border" />,
     blockquote: ({ children }) => (
-      <blockquote className="border-electric-blue/50 border-l-4 pl-4 text-muted-foreground italic">
+      <blockquote className="border-emerald/50 border-l-4 pl-4 text-muted-foreground italic">
         {children}
       </blockquote>
     ),

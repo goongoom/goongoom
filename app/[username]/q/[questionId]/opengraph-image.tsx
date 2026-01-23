@@ -53,7 +53,7 @@ export default async function Image({ params }: PageProps) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#FFF7ED",
+          backgroundColor: "#ecfdf5",
           fontFamily: "Pretendard",
           fontSize: 48,
           color: "#6B7280",
@@ -78,7 +78,7 @@ export default async function Image({ params }: PageProps) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#FFF7ED",
+          backgroundColor: "#ecfdf5",
           fontFamily: "Pretendard",
           fontSize: 48,
           color: "#6B7280",
@@ -159,13 +159,13 @@ export default async function Image({ params }: PageProps) {
                 width: "56px",
                 height: "56px",
                 borderRadius: "28px",
-                backgroundColor: "#FFEDD5",
+                backgroundColor: "#d1fae5",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: "24px",
                 fontWeight: 700,
-                color: "#F97316",
+                color: "#10b981",
               }}
             >
               {displayName[0] || "?"}
@@ -224,7 +224,7 @@ export default async function Image({ params }: PageProps) {
             style={{
               display: "flex",
               maxWidth: "80%",
-              background: "linear-gradient(135deg, #A855F7 0%, #EC4899 100%)",
+              background: "linear-gradient(135deg, #059669 0%, #10b981 100%)",
               borderRadius: "32px",
               padding: "32px 40px",
               fontSize: "40px",

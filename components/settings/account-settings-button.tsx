@@ -15,15 +15,15 @@ export function AccountSettingsButton() {
 
   return (
     <button
-      className="group flex w-full items-center gap-4 rounded-2xl bg-card p-5 text-left ring-1 ring-foreground/10 transition-all hover:bg-accent/50 hover:ring-electric-blue/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.99]"
+      className="group flex w-full items-center gap-4 rounded-2xl bg-card p-5 text-left ring-1 ring-foreground/10 transition-all hover:bg-accent/50 hover:ring-emerald/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.99]"
       onClick={() => openUserProfile()}
       type="button"
     >
-      <Avatar className="size-12 shrink-0 ring-2 ring-electric-blue/20">
+      <Avatar className="size-12 shrink-0 ring-2 ring-emerald/20">
         {user?.imageUrl && (
           <AvatarImage alt={displayName} src={user.imageUrl} />
         )}
-        <AvatarFallback className="bg-electric-blue/10 font-semibold text-electric-blue">
+        <AvatarFallback className="bg-emerald/10 font-semibold text-emerald">
           {displayName[0] || "?"}
         </AvatarFallback>
       </Avatar>
@@ -34,7 +34,7 @@ export function AccountSettingsButton() {
         </p>
       </div>
       <HugeiconsIcon
-        className="size-5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-electric-blue"
+        className="size-5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-emerald"
         icon={ArrowRight01Icon}
         strokeWidth={2}
       />

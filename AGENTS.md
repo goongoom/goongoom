@@ -18,20 +18,20 @@ Goongoom follows Apple's Human Interface Guidelines, embracing clarity, deferenc
 ## Color System
 
 Use semantic pastel colors to create a calm and inviting atmosphere. These tokens are designed to look like soft, paper-like highlights:
-- **Electric Blue** (`bg-electric-blue`, `text-electric-blue`): Primary actions, links, and stable UI elements.
-- **Neon Pink** (`bg-neon-pink`, `text-neon-pink`): Friendly accents, playful highlights, and notifications.
-- **Lime** (`bg-lime`, `text-lime`): Success states, growth indicators, and confirmations.
-- **Sunset Orange** (`bg-sunset-orange`, `text-sunset-orange`): Warm accents, trending content, and gentle alerts.
-- **Purple** (`bg-purple`, `text-purple`): Creative features, special details, and organized categories.
+- **Electric Blue** (`bg-emerald`, `text-emerald`): Primary actions, links, and stable UI elements.
+- **Neon Pink** (`bg-emerald`, `text-emerald`): Friendly accents, playful highlights, and notifications.
+- **Lime** (`bg-emerald`, `text-emerald`): Success states, growth indicators, and confirmations.
+- **Sunset Orange** (`bg-emerald`, `text-emerald`): Warm accents, trending content, and gentle alerts.
+- **Purple** (`bg-emerald`, `text-emerald`): Creative features, special details, and organized categories.
 
 All colors support dark mode with optimized contrast (AA/AAA compliant).
 
 **Foreground Text**: Use `-foreground` variants for text on colored backgrounds:
-- `text-electric-blue-foreground` (on electric blue)
-- `text-neon-pink-foreground` (on neon pink)
-- `text-lime-foreground` (on lime)
-- `text-sunset-orange-foreground` (on sunset orange)
-- `text-purple-foreground` (on purple)
+- `text-emerald-foreground` (on electric blue)
+- `text-emerald-foreground` (on neon pink)
+- `text-emerald-foreground` (on lime)
+- `text-emerald-foreground` (on sunset orange)
+- `text-emerald-foreground` (on purple)
 
 **Color Pairing Recommendations**:
 - Electric Blue + Neon Pink: Gentle, balanced combinations
@@ -44,16 +44,16 @@ All colors support dark mode with optimized contrast (AA/AAA compliant).
 10 gradients available for cards, buttons, and backgrounds, designed to be used as gentle accents:
 
 **Available Gradients**:
-- `sunset`: Warm sunset vibes (sunset-orange → neon-pink) - Featured sections
-- `ocean`: Calm ocean waves (electric-blue → deep-azure) - Cool, calm sections
+- `sunset`: Warm sunset vibes (emerald → emerald) - Featured sections
+- `ocean`: Calm ocean waves (emerald → deep-azure) - Cool, calm sections
 - `forest`: Fresh forest greens (lime → sage) - Success states, growth
-- `candy`: Sweet candy pop (neon-pink → purple) - Playful, social elements
-- `electric`: Electric energy (electric-blue → purple) - Primary CTAs
-- `neon`: Neon lights (neon-pink → sunset-orange) - Notifications
-- `cosmic`: Cosmic space (purple → electric-blue) - Premium features
-- `tropical`: Tropical paradise (lime → sunset-orange) - Fresh content
-- `fire`: Warm fire (sunset-orange → deep-orange) - Trending content
-- `aurora`: Northern lights (electric-blue → lime) - Highlights
+- `candy`: Sweet candy pop (emerald → purple) - Playful, social elements
+- `electric`: Electric energy (emerald → purple) - Primary CTAs
+- `neon`: Neon lights (emerald → emerald) - Notifications
+- `cosmic`: Cosmic space (purple → emerald) - Premium features
+- `tropical`: Tropical paradise (lime → emerald) - Fresh content
+- `fire`: Warm fire (emerald → deep-orange) - Trending content
+- `aurora`: Northern lights (emerald → lime) - Highlights
 
 **Best Practices**:
 - Use gradients sparingly for emphasis (1-2 per screen)
@@ -110,13 +110,13 @@ Animation utility classes are available in `globals.css` for micro-interactions:
 - Keep colors subtle: `/5` for backgrounds, `/50` for borders, `/20` for icon backgrounds
 - Text should stay neutral on selection (`text-foreground`, not accent colors)
 - Only the border and icon should carry the accent color
-- Example: `has-data-checked:border-lime/50 has-data-checked:bg-lime/5`
+- Example: `has-data-checked:border-emerald/50 has-data-checked:bg-emerald/5`
 
 **Radio Card Pattern** (Base UI):
 ```tsx
-<Label className="group ... border-2 border-transparent has-data-checked:border-lime/50 has-data-checked:bg-lime/5">
+<Label className="group ... border-2 border-transparent has-data-checked:border-emerald/50 has-data-checked:bg-emerald/5">
   <RadioGroupItem className="pointer-events-none absolute opacity-0" />
-  <div className="... bg-muted/80 group-has-data-checked:bg-lime/20 group-has-data-checked:text-lime">
+  <div className="... bg-muted/80 group-has-data-checked:bg-emerald/20 group-has-data-checked:text-emerald">
     <Icon />
   </div>
   <div>
@@ -146,7 +146,7 @@ Animation utility classes are available in `globals.css` for micro-interactions:
 **Tailwind Primitives Only**:
 - Use Tailwind utility classes exclusively
 - NO arbitrary values: Avoid `[#ff0000]`, `[32px]`, `[1.5rem]`
-- Use design tokens: `bg-electric-blue`, `text-neon-pink`, `rounded-lg`
+- Use design tokens: `bg-emerald`, `text-emerald`, `rounded-lg`
 - If you need a custom value, add it to `tailwind.config.ts`
 
 **Server Components Default**:

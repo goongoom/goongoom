@@ -118,7 +118,7 @@ export function ProfileEditForm({
       <Card>
         <CardContent className="space-y-4">
           <div className="flex items-center gap-2">
-            <div className="flex size-8 items-center justify-center rounded-full bg-electric-blue/10 text-electric-blue">
+            <div className="flex size-8 items-center justify-center rounded-full bg-emerald/10 text-emerald">
               <HugeiconsIcon className="size-4" icon={UserIcon} />
             </div>
             <h3 className="font-semibold text-foreground text-sm">
@@ -134,7 +134,7 @@ export function ProfileEditForm({
               {t("bioLabel")}
             </FieldLabel>
             <Textarea
-              className="min-h-24 resize-none rounded-xl border border-border/50 bg-background transition-all focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20"
+              className="min-h-24 resize-none rounded-xl border border-border/50 bg-background transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
               id="bio"
               name="bio"
               onBlur={handleBioBlur}
@@ -161,7 +161,7 @@ export function ProfileEditForm({
                 <Input
                   autoCapitalize="none"
                   autoCorrect="off"
-                  className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20"
+                  className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
                   id="instagram"
                   name="instagram"
                   onBlur={handleSocialLinksBlur}
@@ -182,7 +182,7 @@ export function ProfileEditForm({
                 <Input
                   autoCapitalize="none"
                   autoCorrect="off"
-                  className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-electric-blue focus:ring-2 focus:ring-electric-blue/20"
+                  className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
                   id="twitter"
                   name="twitter"
                   onBlur={handleSocialLinksBlur}
@@ -199,7 +199,7 @@ export function ProfileEditForm({
       <Card>
         <CardContent className="space-y-4">
           <div className="flex items-center gap-2">
-            <div className="flex size-8 items-center justify-center rounded-full bg-lime/10 text-lime">
+            <div className="flex size-8 items-center justify-center rounded-full bg-emerald/10 text-emerald">
               <HugeiconsIcon className="size-4" icon={LockIcon} />
             </div>
             <h3 className="font-semibold text-foreground text-sm">
@@ -220,7 +220,7 @@ export function ProfileEditForm({
               }
               return (
                 <Label
-                  className="group relative flex cursor-pointer items-start gap-3 rounded-xl border-2 border-transparent bg-muted/30 p-3 transition-all hover:border-border hover:bg-muted/50 has-data-checked:border-lime/50 has-data-checked:bg-lime/5"
+                  className="group relative flex cursor-pointer items-start gap-3 rounded-xl border-2 border-transparent bg-muted/30 p-3 transition-all hover:border-border hover:bg-muted/50 has-data-checked:border-emerald/50 has-data-checked:bg-emerald/5"
                   key={level}
                 >
                   <RadioGroupItem
@@ -228,7 +228,7 @@ export function ProfileEditForm({
                     id={`qsl-${level}`}
                     value={level}
                   />
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted/80 text-muted-foreground transition-colors group-has-data-checked:bg-lime/20 group-has-data-checked:text-lime">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted/80 text-muted-foreground transition-colors group-has-data-checked:bg-emerald/20 group-has-data-checked:text-emerald">
                     <HugeiconsIcon
                       className="size-5"
                       icon={IconComponent}

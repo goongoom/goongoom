@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "궁금한 것을 물어보고 답변을 받아보세요",
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
-    theme_color: "#ffffff",
+    background_color: "#ecfdf5",
+    theme_color: "#10b981",
     orientation: "portrait",
     icons: [
       {

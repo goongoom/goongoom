@@ -98,7 +98,7 @@ export function InboxList({ questions }: InboxListProps) {
             onClick={() => handleQuestionClick(question)}
             type="button"
           >
-            <div className="flex items-start gap-4 rounded-2xl border border-border/50 bg-background p-4 transition-all group-hover:border-electric-blue/50 group-hover:bg-electric-blue/5 group-hover:ring-2 group-hover:ring-electric-blue/10 group-active:scale-[0.98]">
+            <div className="flex items-start gap-4 rounded-2xl border border-border/50 bg-background p-4 transition-all group-hover:border-emerald/50 group-hover:bg-emerald/5 group-hover:ring-2 group-hover:ring-emerald/10 group-active:scale-[0.98]">
               <div className="relative flex-shrink-0">
                 <Avatar className="size-12 ring-2 ring-background">
                   <AvatarImage
@@ -112,8 +112,8 @@ export function InboxList({ questions }: InboxListProps) {
                 <div
                   className={`absolute -right-0.5 -bottom-0.5 flex size-5 items-center justify-center rounded-full ring-2 ring-background ${
                     question.isAnonymous
-                      ? "bg-gradient-to-br from-purple to-purple/80"
-                      : "bg-gradient-to-br from-electric-blue to-electric-blue/80"
+                      ? "bg-gradient-to-br from-emerald to-emerald/80"
+                      : "bg-gradient-to-br from-emerald to-emerald/80"
                   }`}
                 >
                   <HugeiconsIcon
@@ -130,7 +130,7 @@ export function InboxList({ questions }: InboxListProps) {
                 </p>
                 <div className="flex items-center gap-2 text-muted-foreground text-xs">
                   <span
-                    className={`font-medium ${question.isAnonymous ? "text-purple" : "text-electric-blue"}`}
+                    className={`font-medium ${question.isAnonymous ? "text-emerald" : "text-emerald"}`}
                   >
                     {question.isAnonymous
                       ? tCommon("anonymous")
@@ -145,7 +145,7 @@ export function InboxList({ questions }: InboxListProps) {
                 </div>
               </div>
 
-              <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-all group-hover:bg-electric-blue group-hover:text-white">
+              <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-all group-hover:bg-emerald group-hover:text-white">
                 <HugeiconsIcon
                   className="size-5"
                   icon={ArrowRight01Icon}
@@ -174,8 +174,8 @@ export function InboxList({ questions }: InboxListProps) {
                     <div
                       className={`flex size-6 items-center justify-center rounded-full ${
                         selectedQuestion.isAnonymous
-                          ? "bg-gradient-to-br from-purple to-purple/80"
-                          : "bg-gradient-to-br from-electric-blue to-electric-blue/80"
+                          ? "bg-gradient-to-br from-emerald to-emerald/80"
+                          : "bg-gradient-to-br from-emerald to-emerald/80"
                       }`}
                     >
                       <HugeiconsIcon
@@ -191,8 +191,8 @@ export function InboxList({ questions }: InboxListProps) {
                     <span
                       className={`font-semibold text-sm ${
                         selectedQuestion.isAnonymous
-                          ? "text-purple"
-                          : "text-electric-blue"
+                          ? "text-emerald"
+                          : "text-emerald"
                       }`}
                     >
                       {selectedQuestion.isAnonymous
@@ -207,7 +207,7 @@ export function InboxList({ questions }: InboxListProps) {
 
             <div className="space-y-2 px-4">
               <Textarea
-                className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-electric-blue focus:bg-background focus:ring-2 focus:ring-electric-blue/20"
+                className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-emerald focus:bg-background focus:ring-2 focus:ring-emerald/20"
                 onChange={(e) => setAnswer(e.target.value)}
                 placeholder={t("answerPlaceholder")}
                 rows={4}
@@ -217,7 +217,7 @@ export function InboxList({ questions }: InboxListProps) {
 
             <DrawerFooter className="pt-4">
               <Button
-                className="h-14 w-full rounded-2xl bg-gradient-to-r from-electric-blue to-electric-blue/90 font-semibold text-base transition-all disabled:opacity-70"
+                className="h-14 w-full rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold text-base transition-all disabled:opacity-70"
                 disabled={!answer.trim() || isSubmitting}
                 onClick={handleSubmit}
                 type="button"

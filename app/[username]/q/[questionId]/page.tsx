@@ -203,7 +203,7 @@ export default async function QADetailPage({ params }: QADetailPageProps) {
           </div>
           <div className="flex w-full items-start justify-end gap-3">
             <div className="flex flex-1 flex-col items-end">
-              <Card className="max-w-prose border-none bg-gradient-to-br from-purple to-neon-pink px-4 py-3 text-white">
+              <Card className="max-w-prose border-none bg-gradient-to-br from-emerald to-emerald px-4 py-3 text-white">
                 <p className="leading-relaxed">{answer.content}</p>
               </Card>
               <p className="mt-1 mr-1 text-muted-foreground text-xs">

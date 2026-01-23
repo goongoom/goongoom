@@ -76,7 +76,7 @@ export function ThemeSelector() {
       >
         {themes.map((themeOption) => (
           <Label
-            className="group flex min-h-16 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border border-border/50 bg-background p-3 transition-all hover:border-electric-blue/30 hover:bg-electric-blue/5 has-data-checked:border-electric-blue/50 has-data-checked:bg-electric-blue/5"
+            className="group flex min-h-16 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border border-border/50 bg-background p-3 transition-all hover:border-emerald/30 hover:bg-emerald/5 has-data-checked:border-emerald/50 has-data-checked:bg-emerald/5"
             key={themeOption.value}
           >
             <RadioGroupItem
@@ -84,7 +84,7 @@ export function ThemeSelector() {
               id={`theme-${themeOption.value}`}
               value={themeOption.value}
             />
-            <div className="flex size-8 items-center justify-center rounded-full bg-muted/50 transition-colors group-has-data-checked:bg-electric-blue/20 group-has-data-checked:text-electric-blue">
+            <div className="flex size-8 items-center justify-center rounded-full bg-muted/50 transition-colors group-has-data-checked:bg-emerald/20 group-has-data-checked:text-emerald">
               <HugeiconsIcon
                 className="size-4"
                 icon={themeOption.icon}

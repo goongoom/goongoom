@@ -43,7 +43,7 @@ function SubmitButton() {
   const { pending } = useFormStatus()
   return (
     <Button
-      className="h-14 w-full rounded-2xl bg-gradient-to-r from-electric-blue to-electric-blue/90 font-semibold text-base transition-all disabled:opacity-70"
+      className="h-14 w-full rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold text-base transition-all disabled:opacity-70"
       disabled={pending}
       size="lg"
       type="submit"
@@ -71,9 +71,9 @@ function SignInPrompt() {
   return (
     <div className="space-y-6 py-4">
       <div className="rounded-2xl border border-border/50 bg-muted/30 p-6 text-center">
-        <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-electric-blue/20 to-purple/20">
+        <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-emerald/20 to-emerald/20">
           <HugeiconsIcon
-            className="size-7 text-electric-blue"
+            className="size-7 text-emerald"
             icon={LockIcon}
             strokeWidth={2}
           />
@@ -97,7 +97,7 @@ function SignInPrompt() {
         </PasskeySignInButton>
         <SignUpButton mode="modal">
           <Button
-            className="h-12 flex-1 rounded-xl bg-gradient-to-r from-electric-blue to-electric-blue/90 font-semibold"
+            className="h-12 flex-1 rounded-xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold"
             size="lg"
           >
             {tCommon("start")}
@@ -135,9 +135,9 @@ function QuestionTypeSelector({
       <button
         className={`group flex flex-col items-center justify-center gap-2 rounded-2xl border border-border/50 bg-background p-4 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
           canAskAnonymously
-            ? `cursor-pointer hover:border-electric-blue/50 hover:bg-electric-blue/5 ${
+            ? `cursor-pointer hover:border-emerald/50 hover:bg-emerald/5 ${
                 isAnonymous
-                  ? "border-electric-blue/50 bg-electric-blue/5 ring-2 ring-electric-blue/10"
+                  ? "border-emerald/50 bg-emerald/5 ring-2 ring-emerald/10"
                   : "border-border/50"
               }`
             : "cursor-not-allowed border-border/20 opacity-50"
@@ -148,7 +148,7 @@ function QuestionTypeSelector({
       >
         <Avatar
           className={`size-12 ring-2 ring-background transition-all ${
-            isAnonymous ? "ring-electric-blue/20" : ""
+            isAnonymous ? "ring-emerald/20" : ""
           }`}
         >
           <AvatarImage alt="Anonymous" src={getAvatarUrl(avatarSeed)} />
@@ -160,7 +160,7 @@ function QuestionTypeSelector({
           </p>
           <p
             className={`font-medium text-xs leading-relaxed ${
-              isAnonymous ? "text-purple" : "text-muted-foreground/70"
+              isAnonymous ? "text-emerald" : "text-muted-foreground/70"
             }`}
           >
             {t("anonymousDescription")}
@@ -171,10 +171,10 @@ function QuestionTypeSelector({
       <button
         className={`group flex flex-col items-center justify-center gap-2 rounded-2xl border border-border/50 bg-background p-4 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
           canAskPublic
-            ? `cursor-pointer hover:border-electric-blue/50 hover:bg-electric-blue/5 ${
+            ? `cursor-pointer hover:border-emerald/50 hover:bg-emerald/5 ${
                 isAnonymous
                   ? "border-border/50"
-                  : "border-electric-blue/50 bg-electric-blue/5 ring-2 ring-electric-blue/10"
+                  : "border-emerald/50 bg-emerald/5 ring-2 ring-emerald/10"
               }`
             : "cursor-not-allowed border-border/20 opacity-50"
         }`}
@@ -184,7 +184,7 @@ function QuestionTypeSelector({
       >
         <Avatar
           className={`size-12 ring-2 ring-background transition-all ${
-            isAnonymous ? "" : "ring-electric-blue/20"
+            isAnonymous ? "" : "ring-emerald/20"
           }`}
         >
           {user?.imageUrl && (
@@ -200,7 +200,7 @@ function QuestionTypeSelector({
           </p>
           <p
             className={`font-medium text-xs leading-relaxed ${
-              isAnonymous ? "text-muted-foreground/70" : "text-electric-blue"
+              isAnonymous ? "text-muted-foreground/70" : "text-emerald"
             }`}
           >
             {canAskPublic
@@ -248,7 +248,7 @@ export function QuestionDrawer({
         <div className="mx-auto w-full max-w-lg">
           <DrawerHeader className="pb-2 text-left">
             <DrawerTitle className="font-bold text-xl tracking-tight">
-              <span className="bg-gradient-to-r from-electric-blue to-purple bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-emerald to-emerald bg-clip-text text-transparent">
                 {recipientName}
               </span>
               <span className="text-foreground">
@@ -268,7 +268,7 @@ export function QuestionDrawer({
               <form action={submitAction} className="space-y-6 py-2">
                 <div>
                   <Textarea
-                    className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-electric-blue focus:bg-background focus:ring-2 focus:ring-electric-blue/20"
+                    className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-emerald focus:bg-background focus:ring-2 focus:ring-emerald/20"
                     name="question"
                     placeholder={t("inputPlaceholder")}
                     required
