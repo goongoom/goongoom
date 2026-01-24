@@ -12,8 +12,9 @@ import {
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { formatDistanceToNow } from "date-fns"
+import { enUS, ko } from "date-fns/locale"
 import { usePathname } from "next/navigation"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import type * as React from "react"
 import {
   GUEST_TAB_ROUTES,
@@ -47,6 +48,8 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   onQuestionClick?: (id: string) => void
 }
 
+const localeMap = { ko, en: enUS } as const
+
 export function AppSidebar({
   recentQuestions = [],
   onQuestionClick,
@@ -56,6 +59,7 @@ export function AppSidebar({
   const tSidebar = useTranslations("sidebar")
   const tFooter = useTranslations("footer")
   const pathname = usePathname()
+  const locale = useLocale()
   const { user } = useUser()
 
   usePrefetchRoutes(user ? TAB_ROUTES : GUEST_TAB_ROUTES)
@@ -202,6 +206,9 @@ export function AppSidebar({
                         <span className="text-[10px] text-muted-foreground">
                           {formatDistanceToNow(question.createdAt, {
                             addSuffix: true,
+                            locale:
+                              localeMap[locale as keyof typeof localeMap] ??
+                              enUS,
                           })}
                         </span>
                       </div>

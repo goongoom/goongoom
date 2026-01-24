@@ -52,6 +52,7 @@ export default async function UserProfilePage({
     tAnswers,
     locale,
     tProfile,
+    tSocial,
   ] = await Promise.all([
     getOrCreateUser(clerkUser.clerkId),
     getUserWithAnsweredQuestions(clerkUser.clerkId),
@@ -61,6 +62,7 @@ export default async function UserProfilePage({
     getTranslations("answers"),
     getLocale(),
     getTranslations("profile"),
+    getTranslations("social"),
   ])
 
   const displayName = clerkUser.displayName || clerkUser.username || username
@@ -71,7 +73,13 @@ export default async function UserProfilePage({
     typeof query?.error === "string" ? decodeURIComponent(query.error) : null
   const status = error ? { type: "error" as const, message: error } : null
 
-  const socialLinks = buildSocialLinks(dbUser?.socialLinks)
+  const socialLinks = buildSocialLinks(dbUser?.socialLinks, {
+    instagram: tSocial("instagram"),
+    twitter: tSocial("twitter"),
+    youtube: tSocial("youtube"),
+    github: tSocial("github"),
+    naverBlog: tSocial("naverBlog"),
+  })
 
   const securityLevel =
     dbUser?.questionSecurityLevel || DEFAULT_QUESTION_SECURITY_LEVEL

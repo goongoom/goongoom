@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
-import { updateProfile } from "@/lib/actions/profile"
+import { fetchNaverBlogTitleAction, updateProfile } from "@/lib/actions/profile"
 import type { SignatureColor } from "@/lib/colors/signature-colors"
 import { QUESTION_SECURITY_LEVELS } from "@/lib/question-security"
 import type { SocialLinkEntry, SocialLinks } from "@/lib/types"
@@ -330,6 +330,26 @@ export function ProfileEditForm({
       return next.length ? next : [createCustomRow()]
     })
   }
+
+  const handleNaverBlogHandleBlur = useCallback(
+    async (rowId: string, handle: string) => {
+      const normalizedHandle = normalizeNaverBlogHandle(handle)
+      if (!normalizedHandle) {
+        handleSocialLinksBlur()
+        return
+      }
+      const result = await fetchNaverBlogTitleAction(normalizedHandle)
+      if (result.success && result.data) {
+        setNaverBlogRows((prev) =>
+          prev.map((row) =>
+            row.id === rowId ? { ...row, label: result.data } : row
+          )
+        )
+      }
+      handleSocialLinksBlur()
+    },
+    [handleSocialLinksBlur]
+  )
 
   return (
     <div className="space-y-4">
@@ -647,7 +667,9 @@ export function ProfileEditForm({
                           autoCapitalize="none"
                           autoCorrect="off"
                           className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
-                          onBlur={handleSocialLinksBlur}
+                          onBlur={() =>
+                            handleNaverBlogHandleBlur(row.id, row.handle)
+                          }
                           onChange={(event) =>
                             updateCustomAt(
                               row.id,

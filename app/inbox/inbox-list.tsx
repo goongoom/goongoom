@@ -8,8 +8,9 @@ import {
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { formatDistanceToNow } from "date-fns"
+import { enUS, ko } from "date-fns/locale"
 import { useRouter } from "next/navigation"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useState } from "react"
 import {
   AlertDialog,
@@ -62,10 +63,13 @@ interface InboxListProps {
   questions: QuestionItem[]
 }
 
+const localeMap = { ko, en: enUS } as const
+
 export function InboxList({ questions }: InboxListProps) {
   const t = useTranslations("answers")
   const tCommon = useTranslations("common")
   const tInbox = useTranslations("inbox")
+  const locale = useLocale()
 
   const router = useRouter()
   const [dismissedQuestionIds, setDismissedQuestionIds] = useState<Set<string>>(
@@ -206,6 +210,8 @@ export function InboxList({ questions }: InboxListProps) {
                   <span>
                     {formatDistanceToNow(question.createdAt, {
                       addSuffix: true,
+                      locale:
+                        localeMap[locale as keyof typeof localeMap] ?? enUS,
                     })}
                   </span>
                 </div>

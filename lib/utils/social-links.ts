@@ -12,6 +12,7 @@ export const LEADING_SLASHES_REGEX = /^\/+/
 export const HANDLE_PREFIX_REGEX = /^@/
 export const URL_PATTERN_REGEX =
   /:\/\/|\/|instagram\.com|twitter\.com|x\.com|youtube\.com|youtu\.be|github\.com|blog\.naver\.com|naver\.com|www\./i
+export const HTML_TITLE_REGEX = /<title[^>]*>([^<]+)<\/title>/i
 
 const HANDLE_PLATFORMS = new Set(["instagram", "twitter", "youtube"])
 const CUSTOM_LABEL_PLATFORMS = new Set(["github", "naverBlog"])
@@ -215,17 +216,64 @@ interface SocialLinkItem {
   text: string
 }
 
+export interface SocialLabels {
+  instagram: string
+  twitter: string
+  youtube: string
+  github: string
+  naverBlog: string
+}
+
+const DEFAULT_LABELS: SocialLabels = {
+  instagram: "Instagram",
+  twitter: "X",
+  youtube: "YouTube",
+  github: "GitHub",
+  naverBlog: "Naver Blog",
+}
+
+const NAVER_BLOG_TITLE_SUFFIX = ": 네이버 블로그"
+
+export async function fetchNaverBlogTitle(handle: string): Promise<string> {
+  if (!handle) {
+    return handle
+  }
+  try {
+    const url = `https://blog.naver.com/${handle}`
+    const response = await fetch(url, {
+      next: { revalidate: 86_400 },
+    })
+    if (!response.ok) {
+      return handle
+    }
+    const html = await response.text()
+    const titleMatch = HTML_TITLE_REGEX.exec(html)
+    if (!titleMatch?.[1]) {
+      return handle
+    }
+    let title = titleMatch[1]
+    if (title.endsWith(NAVER_BLOG_TITLE_SUFFIX)) {
+      title = title.slice(0, -NAVER_BLOG_TITLE_SUFFIX.length)
+    }
+    return title.trim() || handle
+  } catch {
+    return handle
+  }
+}
+
 export function buildSocialLinks(
-  socialLinks: SocialLinks | null | undefined
+  socialLinks: SocialLinks | null | undefined,
+  labels?: Partial<SocialLabels>
 ): SocialLinkItem[] {
   const normalized = normalizeSocialLinks(socialLinks)
+  const resolvedLabels = { ...DEFAULT_LABELS, ...labels }
 
   return normalized
     .map((entry, index) => {
       if (entry.platform === "instagram" && typeof entry.content === "string") {
         return {
           key: `instagram-${entry.content}-${index}`,
-          label: "Instagram",
+          label: resolvedLabels.instagram,
           icon: InstagramIcon,
           href: toProfileUrl(entry.content, "instagram.com"),
           text: formatHandleLabel(entry.content),
@@ -234,7 +282,7 @@ export function buildSocialLinks(
       if (entry.platform === "twitter" && typeof entry.content === "string") {
         return {
           key: `twitter-${entry.content}-${index}`,
-          label: "X",
+          label: resolvedLabels.twitter,
           icon: NewTwitterIcon,
           href: toProfileUrl(entry.content, "x.com"),
           text: formatHandleLabel(entry.content),
@@ -243,7 +291,7 @@ export function buildSocialLinks(
       if (entry.platform === "youtube" && typeof entry.content === "string") {
         return {
           key: `youtube-${entry.content}-${index}`,
-          label: "YouTube",
+          label: resolvedLabels.youtube,
           icon: YoutubeIcon,
           href: toYoutubeUrl(entry.content),
           text: formatHandleLabel(entry.content),
@@ -252,16 +300,16 @@ export function buildSocialLinks(
       if (entry.platform === "github" && typeof entry.content !== "string") {
         return {
           key: `github-${entry.content.handle}-${index}`,
-          label: "GitHub",
+          label: resolvedLabels.github,
           icon: GithubIcon,
           href: toProfileUrl(entry.content.handle, "github.com"),
-          text: entry.content.label || entry.content.handle,
+          text: entry.content.handle,
         }
       }
       if (entry.platform === "naverBlog" && typeof entry.content !== "string") {
         return {
           key: `naver-${entry.content.handle}-${index}`,
-          label: "Naver Blog",
+          label: resolvedLabels.naverBlog,
           icon: BloggerIcon,
           href: toProfileUrl(entry.content.handle, "blog.naver.com"),
           text: entry.content.label || entry.content.handle,

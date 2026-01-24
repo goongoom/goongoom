@@ -10,6 +10,10 @@ import {
   isQuestionSecurityLevel,
 } from "@/lib/question-security"
 import type { SocialLinks, UserProfile } from "@/lib/types"
+import {
+  fetchNaverBlogTitle,
+  normalizeNaverBlogHandle,
+} from "@/lib/utils/social-links"
 
 export type ProfileActionResult<T = unknown> =
   | { success: true; data: T }
@@ -121,4 +125,21 @@ export async function updateProfile(data: {
       }
     }
   )
+}
+
+export async function fetchNaverBlogTitleAction(
+  handle: string
+): Promise<ProfileActionResult<string>> {
+  const t = await getTranslations("errors")
+  try {
+    const normalizedHandle = normalizeNaverBlogHandle(handle)
+    if (!normalizedHandle) {
+      return { success: false, error: t("invalidInput") }
+    }
+    const title = await fetchNaverBlogTitle(normalizedHandle)
+    return { success: true, data: title }
+  } catch (error) {
+    console.error("Naver Blog title fetch error:", error)
+    return { success: false, error: t("genericError") }
+  }
 }
