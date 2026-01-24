@@ -4,12 +4,10 @@ import { revalidatePath } from "next/cache"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { getLocale, getTranslations } from "next-intl/server"
-import {
-  LandingCTA,
-  LandingFeatures,
-  LandingFooter,
-  LandingHero,
-} from "@/components/landing"
+import { LandingCTA } from "@/components/landing/landing-cta"
+import { LandingFeatures } from "@/components/landing/landing-features"
+import { LandingFooter } from "@/components/landing/landing-footer"
+import { LandingHero } from "@/components/landing/landing-hero"
 import { MainContent } from "@/components/layout/main-content"
 import { EditProfileButton } from "@/components/profile/edit-profile-button"
 import { ProfileActions } from "@/components/profile/profile-actions"

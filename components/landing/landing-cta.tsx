@@ -3,7 +3,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { BottomCTAButton } from "@/components/auth/auth-buttons"
 
 interface LandingCTAProps {
-  t: (key: string, values?: any) => string
+  t: (key: string, values?: Record<string, string | number | Date>) => string
   userCount: number
 }
 
