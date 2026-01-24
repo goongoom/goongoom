@@ -51,6 +51,7 @@ export function ProfileEditForm({
   securityOptions,
 }: ProfileEditFormProps) {
   const t = useTranslations("settings")
+  const tErrors = useTranslations("errors")
 
   const [bio, setBio] = useState(initialBio || "")
   const [instagram, setInstagram] = useState(initialInstagramHandle)
@@ -72,10 +73,10 @@ export function ProfileEditForm({
       toast.promise(updateProfile(data), {
         loading: t("saving"),
         success: t("profileUpdated"),
-        error: (err) => err?.message || "Error",
+        error: (err) => err?.message || tErrors("genericError"),
       })
     },
-    [t]
+    [t, tErrors]
   )
 
   const handleBioBlur = useCallback(() => {

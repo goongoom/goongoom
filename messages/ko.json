@@ -145,7 +145,9 @@
     "about": "서비스 정보",
     "madeBy": "만든 사람",
     "reportBug": "버그 제보",
-    "suggestFeature": "기능 제안"
+    "suggestFeature": "기능 제안",
+    "signatureColor": "상징색",
+    "signatureColorUpdated": "상징색이 변경됐어요!"
   },
 
   "home": {
@@ -177,6 +179,7 @@
     "loginForIdentified": "로그인하면 내 이름으로도 질문할 수 있어요."
   },
   "errors": {
+    "genericError": "문제가 발생했어요",
     "loginRequired": "먼저 로그인해 주세요",
     "userNotFound": "사용자를 찾지 못했어요",
     "profileLoadError": "프로필을 불러오지 못했어요. 다시 시도해 주세요.",

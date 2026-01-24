@@ -1,5 +1,6 @@
 "use client"
 
+import { useTranslations } from "next-intl"
 import { useCallback } from "react"
 import { toast } from "sonner"
 import { Label } from "@/components/ui/label"
@@ -23,6 +24,7 @@ export function SignatureColorPicker({
   currentColor,
   labels,
 }: SignatureColorPickerProps) {
+  const tErrors = useTranslations("errors")
   const colorNames = getSignatureColorNames()
 
   const handleColorChange = useCallback(
@@ -30,10 +32,10 @@ export function SignatureColorPicker({
       toast.promise(updateProfile({ signatureColor: value }), {
         loading: labels.saving,
         success: labels.saved,
-        error: (err) => err?.message || "Error",
+        error: (err) => err?.message || tErrors("genericError"),
       })
     },
-    [labels]
+    [labels, tErrors]
   )
 
   return (

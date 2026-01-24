@@ -54,7 +54,7 @@ export function AppShell({
   if (!isLoggedIn) {
     return (
       <>
-        <div className="flex h-full flex-1 flex-col pb-20 md:pb-0">
+        <div className="flex h-full flex-1 flex-col pb-24 md:pb-0">
           {children}
         </div>
         <MobileTabBar />
@@ -73,7 +73,7 @@ export function AppShell({
         onQuestionClick={handleQuestionClick}
         recentQuestions={sidebarQuestions}
       />
-      <SidebarInset className="pb-20 md:pb-0">{children}</SidebarInset>
+      <SidebarInset className="pb-24 md:pb-0">{children}</SidebarInset>
       <MobileTabBar />
       <QuickAnswerDialog
         onOpenChange={handleDialogChange}
