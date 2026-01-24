@@ -13,7 +13,9 @@ import { formatDistanceToNow } from "date-fns"
 import { usePathname } from "next/navigation"
 import { useTranslations } from "next-intl"
 import type * as React from "react"
+import { TAB_ROUTES } from "@/components/navigation/navigation-routes"
 import { TransitionLink } from "@/components/navigation/transition-link"
+import { usePrefetchRoutes } from "@/components/navigation/use-prefetch-routes"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Sidebar,
@@ -48,6 +50,8 @@ export function AppSidebar({
   const tSidebar = useTranslations("sidebar")
   const pathname = usePathname()
   const { user } = useUser()
+
+  usePrefetchRoutes(TAB_ROUTES)
 
   const navItems = [
     {

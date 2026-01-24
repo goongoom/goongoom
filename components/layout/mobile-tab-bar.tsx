@@ -9,7 +9,9 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react"
 import { usePathname } from "next/navigation"
 import { useTranslations } from "next-intl"
+import { TAB_ROUTES } from "@/components/navigation/navigation-routes"
 import { TransitionLink } from "@/components/navigation/transition-link"
+import { usePrefetchRoutes } from "@/components/navigation/use-prefetch-routes"
 import { cn } from "@/lib/utils"
 
 const tabItems = [
@@ -22,6 +24,8 @@ const tabItems = [
 export function MobileTabBar() {
   const pathname = usePathname()
   const t = useTranslations("sidebar")
+
+  usePrefetchRoutes(TAB_ROUTES)
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -49,6 +53,7 @@ export function MobileTabBar() {
               )}
               href={item.href}
               key={item.href}
+              prefetch={false}
             >
               <HugeiconsIcon
                 icon={item.icon}
