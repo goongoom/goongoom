@@ -67,16 +67,17 @@ export default async function RootLayout({
               enableSystem
             >
               <ThemeCookieSync />
-              <SignatureColorProvider signatureColor={dbUser?.signatureColor} />
-              <NavigationProvider />
-              <EscapeInAppBrowser />
-              <AppShellWrapper>
-                <main className="flex-1">{children}</main>
-              </AppShellWrapper>
-              <PasskeySetupModal />
-              <AddToHomeScreenNudge />
-              <PushNotificationProvider />
-              <Toaster />
+              <SignatureColorProvider signatureColor={dbUser?.signatureColor}>
+                <NavigationProvider />
+                <EscapeInAppBrowser />
+                <AppShellWrapper>
+                  <main className="flex-1">{children}</main>
+                </AppShellWrapper>
+                <PasskeySetupModal />
+                <AddToHomeScreenNudge />
+                <PushNotificationProvider />
+                <Toaster />
+              </SignatureColorProvider>
             </ThemeProvider>
           </NextIntlClientProvider>
           <Analytics />

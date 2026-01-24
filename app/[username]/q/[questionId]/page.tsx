@@ -29,11 +29,11 @@ function getShareAvatarUrl(
   if (clerkAvatarUrl) {
     return clerkAvatarUrl
   }
-  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&backgroundColor=10b981,059669,047857,34d399,6ee7b7&backgroundType=gradientLinear`
+  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
 }
 
 function getDicebearAvatarUrl(seed: string) {
-  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`
+  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
 }
 
 interface QuestionerInfo {

@@ -12,7 +12,7 @@ export interface ClerkUserInfo {
   email: string | null
 }
 
-export async function getClerkUserByUsername(
+async function fetchClerkUserByUsername(
   username: string
 ): Promise<ClerkUserInfo | null> {
   try {
@@ -33,6 +33,8 @@ export async function getClerkUserByUsername(
     return null
   }
 }
+
+export const getClerkUserByUsername = cache(fetchClerkUserByUsername)
 
 async function fetchClerkUserById(
   clerkId: string

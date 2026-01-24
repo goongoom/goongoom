@@ -8,7 +8,7 @@ import { getOrCreateUser, getQuestionByIdAndRecipient } from "@/lib/db/queries"
 import type { QuestionId } from "@/lib/types"
 
 function getDicebearUrl(seed: string) {
-  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&backgroundColor=10b981,059669,047857,34d399,6ee7b7&backgroundType=gradientLinear`
+  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
 }
 
 async function fetchImageAsBase64(url: string): Promise<string> {

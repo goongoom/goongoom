@@ -30,10 +30,12 @@ export function useSignatureColor() {
 }
 
 interface SignatureColorProviderProps {
+  children?: React.ReactNode
   signatureColor: string | null | undefined
 }
 
 export function SignatureColorProvider({
+  children,
   signatureColor: initialColor,
 }: SignatureColorProviderProps) {
   const [mounted, setMounted] = useState(false)
@@ -72,7 +74,7 @@ export function SignatureColorProvider({
   if (!mounted) {
     return (
       <SignatureColorContext.Provider value={contextValue}>
-        {null}
+        {children}
       </SignatureColorContext.Provider>
     )
   }
@@ -81,6 +83,7 @@ export function SignatureColorProvider({
     <SignatureColorContext.Provider value={contextValue}>
       {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Server-controlled CSS for theme injection */}
       <style dangerouslySetInnerHTML={{ __html: colorOverrideCSS }} />
+      {children}
     </SignatureColorContext.Provider>
   )
 }

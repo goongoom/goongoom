@@ -27,7 +27,7 @@ function generateAvatarSeed() {
 }
 
 function getAvatarUrl(seed: string) {
-  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`
+  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
 }
 
 interface QuestionDrawerProps {

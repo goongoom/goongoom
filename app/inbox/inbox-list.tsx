@@ -26,7 +26,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { createAnswer } from "@/lib/actions/answers"
 
 function getDicebearUrl(seed: string) {
-  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`
+  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
 }
 
 function getQuestionAvatarUrl(question: QuestionItem): string | undefined {

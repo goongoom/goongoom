@@ -15,19 +15,11 @@ const pickText = (value: string | null, fallback: string, max: number) => {
   return clamp(trimmed, max)
 }
 
-function getDicebearUrl(
-  seed: string,
-  gradientColors: readonly [string, string]
-) {
-  const color1 = gradientColors[0].replace("#", "")
-  const color2 = gradientColors[1].replace("#", "")
-  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&backgroundColor=${color1},${color2}&backgroundType=gradientLinear`
+function getDicebearUrl(seed: string) {
+  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
 }
 
-async function fetchImageAsBase64(
-  url: string,
-  gradientColors: readonly [string, string]
-): Promise<string> {
+async function fetchImageAsBase64(url: string): Promise<string> {
   try {
     const response = await fetch(url)
     if (!response.ok) {
@@ -38,7 +30,7 @@ async function fetchImageAsBase64(
     const contentType = response.headers.get("content-type") || "image/png"
     return `data:${contentType};base64,${base64}`
   } catch {
-    return getDicebearUrl("fallback", gradientColors)
+    return getDicebearUrl("fallback")
   }
 }
 
@@ -93,10 +85,9 @@ export async function GET(request: Request) {
   const theme = isDark ? colors.dark : colors.light
 
   const askerAvatarSrc =
-    searchParams.get("askerAvatar") ||
-    getDicebearUrl("anonymous", colors.gradient)
+    searchParams.get("askerAvatar") || getDicebearUrl("anonymous")
   const answererAvatarSrc =
-    searchParams.get("answererAvatar") || getDicebearUrl(name, colors.gradient)
+    searchParams.get("answererAvatar") || getDicebearUrl(name)
 
   const [
     fontRegular,
@@ -108,8 +99,8 @@ export async function GET(request: Request) {
     fontRegularPromise,
     fontSemiBoldPromise,
     fontBoldPromise,
-    fetchImageAsBase64(askerAvatarSrc, colors.gradient),
-    fetchImageAsBase64(answererAvatarSrc, colors.gradient),
+    fetchImageAsBase64(askerAvatarSrc),
+    fetchImageAsBase64(answererAvatarSrc),
   ])
 
   const imageResponse = new ImageResponse(
