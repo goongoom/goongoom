@@ -347,13 +347,12 @@ export function InboxList({ questions }: InboxListProps) {
                   <AlertDialogFooter>
                     <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
                     <AlertDialogAction
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       disabled={isDeclining}
                       onClick={handleDecline}
                       type="button"
                     >
                       {isDeclining ? (
-                        <Spinner className="mr-2 size-4 text-destructive-foreground" />
+                        <Spinner className="mr-2 size-4" />
                       ) : null}
                       {tCommon("decline")}
                     </AlertDialogAction>

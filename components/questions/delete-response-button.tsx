@@ -73,14 +73,11 @@ export function DeleteResponseButton({
         <AlertDialogFooter>
           <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
           <AlertDialogAction
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             disabled={isDeleting}
             onClick={handleDelete}
             type="button"
           >
-            {isDeleting ? (
-              <Spinner className="mr-2 size-4 text-destructive-foreground" />
-            ) : null}
+            {isDeleting ? <Spinner className="mr-2 size-4" /> : null}
             {tCommon("delete")}
           </AlertDialogAction>
         </AlertDialogFooter>
