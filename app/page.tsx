@@ -1,4 +1,5 @@
 import { getLocale, getTranslations } from "next-intl/server"
+import { MainContent } from "@/components/layout/main-content"
 import { AnsweredQuestionCard } from "@/components/questions/answered-question-card"
 import {
   Empty,
@@ -68,46 +69,42 @@ export default async function Home() {
     .filter((qa) => qa !== null)
 
   return (
-    <div className="flex-1">
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8 space-y-2">
-          <h1 className="font-bold text-3xl text-foreground">
-            {t("feedTitle")}
-          </h1>
-        </div>
+    <MainContent>
+      <div className="mb-8 space-y-2">
+        <h1 className="font-bold text-3xl text-foreground">{t("feedTitle")}</h1>
+      </div>
 
-        {questionsWithInfo.length === 0 ? (
-          <Empty>
-            <EmptyHeader>
-              <EmptyTitle>{t("feedEmptyTitle")}</EmptyTitle>
-              <EmptyDescription>{t("feedEmptyDescription")}</EmptyDescription>
-            </EmptyHeader>
-          </Empty>
-        ) : (
-          <div className="space-y-6 pb-24">
-            {questionsWithInfo.map((qa) => (
-              <AnsweredQuestionCard
-                anonymousAvatarSeed={qa.question.anonymousAvatarSeed}
-                answerContent={qa.answer.content}
-                answerCreatedAt={qa.answer._creationTime}
-                avatarUrl={qa.recipientAvatarUrl}
-                displayName={qa.recipientDisplayName}
-                isAnonymous={qa.question.isAnonymous}
-                key={qa.question._id}
-                labels={cardLabels}
-                locale={locale}
-                questionContent={qa.question.content}
-                questionCreatedAt={qa.question._creationTime}
-                questionId={qa.question._id}
-                senderAvatarUrl={qa.senderAvatarUrl}
-                senderName={qa.senderName || undefined}
-                signatureColor={qa.recipientSignatureColor}
-                username={qa.recipientUsername}
-              />
-            ))}
-          </div>
-        )}
-      </main>
-    </div>
+      {questionsWithInfo.length === 0 ? (
+        <Empty>
+          <EmptyHeader>
+            <EmptyTitle>{t("feedEmptyTitle")}</EmptyTitle>
+            <EmptyDescription>{t("feedEmptyDescription")}</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      ) : (
+        <div className="space-y-6 pb-24">
+          {questionsWithInfo.map((qa) => (
+            <AnsweredQuestionCard
+              anonymousAvatarSeed={qa.question.anonymousAvatarSeed}
+              answerContent={qa.answer.content}
+              answerCreatedAt={qa.answer._creationTime}
+              avatarUrl={qa.recipientAvatarUrl}
+              displayName={qa.recipientDisplayName}
+              isAnonymous={qa.question.isAnonymous}
+              key={qa.question._id}
+              labels={cardLabels}
+              locale={locale}
+              questionContent={qa.question.content}
+              questionCreatedAt={qa.question._creationTime}
+              questionId={qa.question._id}
+              senderAvatarUrl={qa.senderAvatarUrl}
+              senderName={qa.senderName || undefined}
+              signatureColor={qa.recipientSignatureColor}
+              username={qa.recipientUsername}
+            />
+          ))}
+        </div>
+      )}
+    </MainContent>
   )
 }
