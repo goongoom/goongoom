@@ -152,7 +152,7 @@ export async function createQuestion(data: {
 
 export async function declineQuestion(data: {
   questionId: string
-}): Promise<QuestionActionResult<{ questionId: string }>> {
+}): Promise<QuestionActionResult<{ id: string; questionId: string }>> {
   return await withAudit(
     {
       action: "declineQuestion",
