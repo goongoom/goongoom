@@ -63,14 +63,14 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
-            "cn-toast !bg-popover !border-border !text-popover-foreground !shadow-lg",
+            "cn-toast !bg-popover/80 !backdrop-blur-md !border-border !text-popover-foreground !shadow-lg",
           success:
-            "!bg-emerald-50 !border-emerald-200 !text-emerald-800 dark:!bg-emerald-950/50 dark:!border-emerald-800 dark:!text-emerald-200 [&_[data-icon]]:!text-emerald-600 dark:[&_[data-icon]]:!text-emerald-400",
+            "!bg-emerald-50/80 !border-emerald-200 !text-emerald-800 dark:!bg-emerald-950/50 dark:!border-emerald-800 dark:!text-emerald-200 [&_[data-icon]]:!text-emerald-600 dark:[&_[data-icon]]:!text-emerald-400",
           error:
-            "!bg-red-50 !border-red-200 !text-red-800 dark:!bg-red-950/50 dark:!border-red-800 dark:!text-red-200 [&_[data-icon]]:!text-red-600 dark:[&_[data-icon]]:!text-red-400",
+            "!bg-red-50/80 !border-red-200 !text-red-800 dark:!bg-red-950/50 dark:!border-red-800 dark:!text-red-200 [&_[data-icon]]:!text-red-600 dark:[&_[data-icon]]:!text-red-400",
           warning:
-            "!bg-amber-50 !border-amber-200 !text-amber-800 dark:!bg-amber-950/50 dark:!border-amber-800 dark:!text-amber-200 [&_[data-icon]]:!text-amber-600 dark:[&_[data-icon]]:!text-amber-400",
-          info: "!bg-blue-50 !border-blue-200 !text-blue-800 dark:!bg-blue-950/50 dark:!border-blue-800 dark:!text-blue-200 [&_[data-icon]]:!text-blue-600 dark:[&_[data-icon]]:!text-blue-400",
+            "!bg-amber-50/80 !border-amber-200 !text-amber-800 dark:!bg-amber-950/50 dark:!border-amber-800 dark:!text-amber-200 [&_[data-icon]]:!text-amber-600 dark:[&_[data-icon]]:!text-amber-400",
+          info: "!bg-blue-50/80 !border-blue-200 !text-blue-800 dark:!bg-blue-950/50 dark:!border-blue-800 dark:!text-blue-200 [&_[data-icon]]:!text-blue-600 dark:[&_[data-icon]]:!text-blue-400",
         },
       }}
       {...props}
