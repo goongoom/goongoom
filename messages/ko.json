@@ -154,8 +154,8 @@
     "madeBy": "만든 사람",
     "reportBug": "버그 신고",
     "suggestFeature": "기능 제안",
-    "signatureColor": "대표 색",
-    "signatureColorUpdated": "대표 색이 바뀌었어요!",
+    "signatureColor": "상징색",
+    "signatureColorUpdated": "상징색이 바뀌었어요!",
     "notificationSettings": {
       "title": "알림 설정",
       "description": "푸시 알림 설정을 관리해요.",
@@ -285,7 +285,12 @@
   },
   "social": {
     "instagramPlaceholder": "인스타그램",
-    "twitterPlaceholder": "트위터"
+    "twitterPlaceholder": "트위터",
+    "instagram": "인스타그램",
+    "twitter": "X (트위터)",
+    "youtube": "유튜브",
+    "github": "깃허브",
+    "naverBlog": "네이버 블로그"
   },
   "legal": {
     "copyright": "© 2026 궁금닷컴. 모든 권리 보유."

@@ -285,7 +285,12 @@
   },
   "social": {
     "instagramPlaceholder": "Instagram",
-    "twitterPlaceholder": "Twitter"
+    "twitterPlaceholder": "Twitter",
+    "instagram": "Instagram",
+    "twitter": "X",
+    "youtube": "YouTube",
+    "github": "GitHub",
+    "naverBlog": "Naver Blog"
   },
   "legal": {
     "copyright": "© 2026 Goongoom. All rights reserved."
