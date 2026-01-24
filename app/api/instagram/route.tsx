@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- OG images require native img for ImageResponse */
 import { readFile } from "node:fs/promises"
 import { join } from "node:path"
 import { getCache } from "@vercel/functions"

@@ -55,6 +55,9 @@ export function InboxList({ questions }: InboxListProps) {
   const tCommon = useTranslations("common")
 
   const router = useRouter()
+  const [dismissedQuestionIds, setDismissedQuestionIds] = useState<Set<string>>(
+    new Set()
+  )
   const [selectedQuestion, setSelectedQuestion] = useState<QuestionItem | null>(
     null
   )
@@ -62,6 +65,10 @@ export function InboxList({ questions }: InboxListProps) {
   const [answer, setAnswer] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [shouldRefreshOnClose, setShouldRefreshOnClose] = useState(false)
+
+  const visibleQuestions = questions.filter(
+    (question) => !dismissedQuestionIds.has(question.id)
+  )
 
   function handleQuestionClick(question: QuestionItem) {
     setSelectedQuestion(question)
@@ -93,6 +100,11 @@ export function InboxList({ questions }: InboxListProps) {
       })
 
       if (result.success) {
+        setDismissedQuestionIds((prev) => {
+          const next = new Set(prev)
+          next.add(selectedQuestion.id)
+          return next
+        })
         setShouldRefreshOnClose(true)
         setIsDrawerOpen(false)
       }
@@ -104,7 +116,7 @@ export function InboxList({ questions }: InboxListProps) {
   return (
     <>
       <div className="space-y-3">
-        {questions.map((question) => (
+        {visibleQuestions.map((question) => (
           <button
             className="group w-full rounded-2xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             key={question.id}

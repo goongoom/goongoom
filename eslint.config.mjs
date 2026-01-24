@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // shadcn components
     "components/ui/**",
+    // convex generated files
+    "convex/_generated/**",
   ]),
 ])
 
