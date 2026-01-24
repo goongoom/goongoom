@@ -82,7 +82,7 @@ export async function getUnansweredQuestions(clerkId: string) {
   })
 }
 
-export async function getRecentAnsweredQuestions(limit = 20) {
+export function getRecentAnsweredQuestions(limit = 20) {
   return unstable_cache(
     () => fetchQuery(api.answers.getRecent, { limit }),
     [CACHE_TAGS.recentAnswers, `limit:${limit}`],
@@ -138,7 +138,7 @@ export async function getUserLocale(clerkId: string) {
   return user?.locale
 }
 
-export async function getUserCount() {
+export function getUserCount() {
   return unstable_cache(
     () => fetchQuery(api.users.count, {}),
     [CACHE_TAGS.userCount],
