@@ -201,7 +201,7 @@
     "invalidSetting": "Check your question security setting"
   },
   "restrictions": {
-    "anonymousLoginRequired": "Don't worry—you can still ask anonymously.",
+    "anonymousLoginRequired": "Don't worry. You can still ask anonymously.",
     "identifiedOnly": "This user only accepts identified questions.",
     "loginForIdentified": "Log in to ask with your name."
   },
