@@ -33,16 +33,6 @@ export interface SocialLinkEntry {
 
 export type SocialLinks = SocialLinkEntry[]
 
-export type LegacySocialLinks = {
-  instagram?: string
-  twitter?: string
-  youtube?: string
-  github?: string
-  naverBlog?: string
-}
-
-export type SocialLinksWithLegacy = SocialLinks | LegacySocialLinks
-
 export interface QuestionWithAnswer extends Question {
   answer: Answer | null | undefined
 }

@@ -27,11 +27,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { updateProfile } from "@/lib/actions/profile"
 import type { SignatureColor } from "@/lib/colors/signature-colors"
 import { QUESTION_SECURITY_LEVELS } from "@/lib/question-security"
-import type {
-  SocialLinkEntry,
-  SocialLinks,
-  SocialLinksWithLegacy,
-} from "@/lib/types"
+import type { SocialLinkEntry, SocialLinks } from "@/lib/types"
 import {
   normalizeHandle,
   normalizeNaverBlogHandle,
@@ -87,7 +83,7 @@ const extractCustom = (
     : { label: content.label ?? content.handle, handle: content.handle }
 
 const parseInitialSocialLinks = (
-  socialLinks: SocialLinksWithLegacy | null | undefined
+  socialLinks: SocialLinks | null | undefined
 ) => {
   const instagram: HandleRow[] = []
   const twitter: HandleRow[] = []
@@ -121,24 +117,6 @@ const parseInitialSocialLinks = (
         default:
           break
       }
-    }
-  } else if (socialLinks && typeof socialLinks === "object") {
-    if (socialLinks.instagram) {
-      instagram.push(createHandleRow(socialLinks.instagram))
-    }
-    if (socialLinks.twitter) {
-      twitter.push(createHandleRow(socialLinks.twitter))
-    }
-    if (socialLinks.youtube) {
-      youtube.push(createHandleRow(socialLinks.youtube))
-    }
-    if (socialLinks.github) {
-      github.push(createCustomRow(socialLinks.github, socialLinks.github))
-    }
-    if (socialLinks.naverBlog) {
-      naverBlog.push(
-        createCustomRow(socialLinks.naverBlog, socialLinks.naverBlog)
-      )
     }
   }
 
@@ -207,7 +185,7 @@ interface ProfileEditFormProps {
   initialBio: string | null
   initialQuestionSecurityLevel: string
   initialSignatureColor: SignatureColor
-  initialSocialLinks: SocialLinksWithLegacy | null
+  initialSocialLinks: SocialLinks | null
   securityOptions: Record<string, { label: string; description: string }>
 }
 

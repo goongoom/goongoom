@@ -174,11 +174,11 @@ export default async function UserProfilePage({
           </div>
         </CardContent>
         {socialLinks.length > 0 && (
-          <CardContent className="flex flex-wrap gap-4 pt-0">
+          <CardContent className="flex flex-wrap gap-2 pt-0">
             {socialLinks.map((link) => (
               <Button
                 aria-label={link.label}
-                className="rounded-full"
+                className="h-8 gap-1.5 rounded-full px-3"
                 key={link.key}
                 render={
                   <Link
@@ -187,10 +187,11 @@ export default async function UserProfilePage({
                     target="_blank"
                   />
                 }
-                size="icon"
+                size="sm"
                 variant="outline"
               >
                 <HugeiconsIcon className="size-4" icon={link.icon} />
+                <span className="text-sm">{link.text}</span>
               </Button>
             ))}
           </CardContent>
