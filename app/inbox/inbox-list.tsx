@@ -50,6 +50,8 @@ interface InboxListProps {
   questions: QuestionItem[]
 }
 
+const DRAWER_ANIMATION_DURATION = 300
+
 export function InboxList({ questions }: InboxListProps) {
   const t = useTranslations("answers")
   const tCommon = useTranslations("common")
@@ -58,12 +60,23 @@ export function InboxList({ questions }: InboxListProps) {
   const [selectedQuestion, setSelectedQuestion] = useState<QuestionItem | null>(
     null
   )
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [answer, setAnswer] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   function handleQuestionClick(question: QuestionItem) {
     setSelectedQuestion(question)
     setAnswer("")
+    setIsDrawerOpen(true)
+  }
+
+  function handleDrawerClose() {
+    setIsDrawerOpen(false)
+    // Wait for drawer close animation to complete before clearing state
+    setTimeout(() => {
+      setSelectedQuestion(null)
+      setAnswer("")
+    }, DRAWER_ANIMATION_DURATION)
   }
 
   async function handleSubmit() {
@@ -79,9 +92,13 @@ export function InboxList({ questions }: InboxListProps) {
       })
 
       if (result.success) {
-        setSelectedQuestion(null)
-        setAnswer("")
-        router.refresh()
+        // Close drawer first, let animation complete, then refresh
+        setIsDrawerOpen(false)
+        setTimeout(() => {
+          setSelectedQuestion(null)
+          setAnswer("")
+          router.refresh()
+        }, DRAWER_ANIMATION_DURATION)
       }
     } finally {
       setIsSubmitting(false)
@@ -158,8 +175,8 @@ export function InboxList({ questions }: InboxListProps) {
       </div>
 
       <Drawer
-        onOpenChange={(open) => !open && setSelectedQuestion(null)}
-        open={!!selectedQuestion}
+        onOpenChange={(open) => !open && handleDrawerClose()}
+        open={isDrawerOpen}
         repositionInputs={false}
       >
         <DrawerContent className="pb-safe">

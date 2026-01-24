@@ -85,7 +85,8 @@ export async function getClerkUsersByIds(
 }
 
 function clerkUserToInfo(user: User): ClerkUserInfo {
-  const displayName = user.firstName || null
+  const fullName = [user.firstName, user.lastName].filter(Boolean).join(" ")
+  const displayName = fullName || user.username || null
 
   return {
     clerkId: user.id,

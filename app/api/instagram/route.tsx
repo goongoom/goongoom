@@ -66,7 +66,9 @@ export async function GET(request: Request) {
   )
   const name = pickText(searchParams.get("name"), "사용자", 40)
   const colorKey = searchParams.get("color")
+  const isDark = searchParams.get("dark") === "1"
   const colors = getSignatureColor(colorKey)
+  const theme = isDark ? colors.dark : colors.light
 
   const askerAvatarSrc =
     searchParams.get("askerAvatar") ||
@@ -97,9 +99,9 @@ export async function GET(request: Request) {
         flexDirection: "column",
         justifyContent: "center",
         padding: "80px",
-        backgroundColor: colors.light.bg,
+        backgroundColor: theme.bg,
         fontFamily: "Pretendard",
-        color: "#111827",
+        color: isDark ? "#F9FAFB" : "#111827",
         wordWrap: "break-word",
         wordBreak: "keep-all",
       }}
@@ -124,13 +126,15 @@ export async function GET(request: Request) {
             style={{
               display: "flex",
               maxWidth: "85%",
-              backgroundColor: "#FFFFFF",
+              backgroundColor: isDark ? "#1F2937" : "#FFFFFF",
               borderRadius: "48px",
               padding: "48px 56px",
               fontSize: "56px",
               fontWeight: 600,
               lineHeight: 1.4,
-              boxShadow: "0 4px 24px rgba(0, 0, 0, 0.06)",
+              boxShadow: isDark
+                ? "0 4px 24px rgba(0, 0, 0, 0.3)"
+                : "0 4px 24px rgba(0, 0, 0, 0.06)",
             }}
           >
             {question}

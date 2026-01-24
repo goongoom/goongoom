@@ -214,7 +214,7 @@ export default async function QADetailPage({ params }: QADetailPageProps) {
                 })}
               </p>
             </div>
-            <Avatar className="size-10 flex-shrink-0">
+            <Avatar className="size-10 flex-shrink-0" key={clerkUser.avatarUrl}>
               {clerkUser.avatarUrl ? (
                 <AvatarImage alt={displayName} src={clerkUser.avatarUrl} />
               ) : null}

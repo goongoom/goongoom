@@ -153,7 +153,10 @@ export default async function UserProfilePage({
     <MainContent>
       <Card className="mb-6">
         <CardContent className="flex items-center gap-6">
-          <Avatar className="size-24 ring-2 ring-primary/30">
+          <Avatar
+            className="size-24 ring-2 ring-primary/30"
+            key={clerkUser.avatarUrl}
+          >
             {clerkUser.avatarUrl && (
               <AvatarImage alt={displayName} src={clerkUser.avatarUrl} />
             )}

@@ -7,7 +7,8 @@ import {
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useTranslations } from "next-intl"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useTheme } from "next-themes"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Drawer,
@@ -31,14 +32,23 @@ export function ShareInstagramButton({
 }: ShareInstagramButtonProps) {
   const t = useTranslations("share")
   const tCommon = useTranslations("common")
+  const { resolvedTheme } = useTheme()
   const sharingRef = useRef(false)
   const fileRef = useRef<File | null>(null)
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
+  const themedShareUrl = useMemo(() => {
+    const url = new URL(shareUrl, window.location.origin)
+    if (resolvedTheme === "dark") {
+      url.searchParams.set("dark", "1")
+    }
+    return url.pathname + url.search
+  }, [shareUrl, resolvedTheme])
+
   const fetchImage = useCallback(async (): Promise<File | null> => {
     try {
-      const response = await fetch(shareUrl)
+      const response = await fetch(themedShareUrl)
       if (!response.ok) {
         return null
       }
@@ -48,7 +58,7 @@ export function ShareInstagramButton({
       console.error("Failed to fetch Instagram share image:", error)
       return null
     }
-  }, [shareUrl])
+  }, [themedShareUrl])
 
   useEffect(() => {
     let cancelled = false
