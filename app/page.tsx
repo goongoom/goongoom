@@ -2,7 +2,8 @@ import Link from 'next/link'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { AnsweredQuestionCard } from '@/components/questions/answered-question-card'
 
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
+import { CarouselItem } from '@/components/ui/carousel'
+import { HomeCarousel } from '@/components/home/home-carousel'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { getClerkUsersByIds } from '@/lib/clerk'
 import { getAnswerCount, getRecentAnswersLimitPerUser } from '@/lib/db/queries'
@@ -83,43 +84,31 @@ export default async function Home() {
             </div>
           ) : (
             <div className="mx-auto max-w-[1600px] px-4 md:px-8">
-              <Carousel
-                className="w-full"
-                opts={{
-                  align: 'start',
-                  loop: true,
-                }}
-              >
-                <CarouselContent className="-ml-4 py-4">
-                  {questionsWithInfo.map((qa) => (
-                    <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4" key={qa.question._id}>
-                      <div className="h-full transform rounded-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                        <AnsweredQuestionCard
-                          anonymousAvatarSeed={qa.question.anonymousAvatarSeed}
-                          answerContent={qa.answer.content}
-                          answerCreatedAt={qa.answer._creationTime}
-                          avatarUrl={qa.recipientAvatarUrl}
-                          displayName={qa.recipientDisplayName}
-                          isAnonymous={qa.question.isAnonymous}
-                          labels={cardLabels}
-                          locale={locale}
-                          questionContent={qa.question.content}
-                          questionCreatedAt={qa.question._creationTime}
-                          questionId={qa.question._id}
-                          senderAvatarUrl={qa.senderAvatarUrl}
-                          senderName={qa.senderName || undefined}
-                          signatureColor={qa.recipientSignatureColor}
-                          username={qa.recipientUsername}
-                        />
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <div className="mt-8 flex justify-center gap-6">
-                  <CarouselPrevious className="static h-12 w-12 translate-y-0 border-border/50 bg-background transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground" />
-                  <CarouselNext className="static h-12 w-12 translate-y-0 border-border/50 bg-background transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground" />
-                </div>
-              </Carousel>
+              <HomeCarousel>
+                {questionsWithInfo.map((qa) => (
+                  <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4" key={qa.question._id}>
+                    <div className="h-full transform rounded-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                      <AnsweredQuestionCard
+                        anonymousAvatarSeed={qa.question.anonymousAvatarSeed}
+                        answerContent={qa.answer.content}
+                        answerCreatedAt={qa.answer._creationTime}
+                        avatarUrl={qa.recipientAvatarUrl}
+                        displayName={qa.recipientDisplayName}
+                        isAnonymous={qa.question.isAnonymous}
+                        labels={cardLabels}
+                        locale={locale}
+                        questionContent={qa.question.content}
+                        questionCreatedAt={qa.question._creationTime}
+                        questionId={qa.question._id}
+                        senderAvatarUrl={qa.senderAvatarUrl}
+                        senderName={qa.senderName || undefined}
+                        signatureColor={qa.recipientSignatureColor}
+                        username={qa.recipientUsername}
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+              </HomeCarousel>
             </div>
           )}
 

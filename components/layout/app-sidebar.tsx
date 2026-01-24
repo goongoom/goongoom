@@ -9,6 +9,7 @@ import {
   Login01Icon,
   SecurityCheckIcon,
   Settings01Icon,
+  UserAdd01Icon,
   UserGroupIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -22,7 +23,6 @@ import { GUEST_TAB_ROUTES, TAB_ROUTES } from '@/components/navigation/navigation
 import { Ultralink } from '@/components/navigation/ultralink'
 import { usePrefetchRoutes } from '@/components/navigation/use-prefetch-routes'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/ui/logo'
 import {
   Sidebar,
@@ -155,6 +155,30 @@ export function AppSidebar({ recentQuestions = [], onQuestionClick, ...props }: 
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+      {!user && (
+        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <PasskeySignInButton>
+                  <SidebarMenuButton tooltip={tCommon('login')}>
+                    <HugeiconsIcon icon={Login01Icon} />
+                    <span>{tCommon('login')}</span>
+                  </SidebarMenuButton>
+                </PasskeySignInButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SignUpButton mode="modal">
+                  <SidebarMenuButton tooltip={tCommon('start')}>
+                    <HugeiconsIcon icon={UserAdd01Icon} />
+                    <span>{tCommon('start')}</span>
+                  </SidebarMenuButton>
+                </SignUpButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      )}
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
@@ -204,27 +228,6 @@ export function AppSidebar({ recentQuestions = [], onQuestionClick, ...props }: 
         )}
       </SidebarContent>
       <SidebarRail />
-      {!user && (
-        <SidebarFooter className="group-data-[collapsible=icon]:hidden">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <PasskeySignInButton>
-                <SidebarMenuButton tooltip={tCommon('login')}>
-                  <HugeiconsIcon icon={Login01Icon} />
-                  <span>{tCommon('login')}</span>
-                </SidebarMenuButton>
-              </PasskeySignInButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SignUpButton mode="modal">
-                <Button className="w-full" size="sm">
-                  {tCommon('start')}
-                </Button>
-              </SignUpButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
-      )}
     </Sidebar>
   )
 }
