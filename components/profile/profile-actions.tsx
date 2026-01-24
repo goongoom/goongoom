@@ -1,10 +1,10 @@
-"use client"
+'use client'
 
-import { Share08Icon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { useTranslations } from "next-intl"
-import { useCallback } from "react"
-import { Button } from "@/components/ui/button"
+import { Share08Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { useTranslations } from 'next-intl'
+import { useCallback } from 'react'
+import { Button } from '@/components/ui/button'
 
 interface ProfileActionsProps {
   username: string
@@ -12,7 +12,7 @@ interface ProfileActionsProps {
 }
 
 export function ProfileActions({ username, editButton }: ProfileActionsProps) {
-  const t = useTranslations("profile")
+  const t = useTranslations('profile')
 
   const handleShare = useCallback(async () => {
     const fullUrl = `${window.location.origin}/${username}`
@@ -33,7 +33,7 @@ export function ProfileActions({ username, editButton }: ProfileActionsProps) {
       {editButton}
       <Button className="flex-1" onClick={handleShare} variant="outline">
         <HugeiconsIcon className="mr-2 size-4" icon={Share08Icon} />
-        {t("shareLink")}
+        {t('shareLink')}
       </Button>
     </div>
   )

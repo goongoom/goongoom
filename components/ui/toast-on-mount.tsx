@@ -1,14 +1,14 @@
-"use client"
+'use client'
 
-import { useEffect, useRef } from "react"
-import { toast } from "sonner"
+import { useEffect, useRef } from 'react'
+import { toast } from 'sonner'
 
 interface ToastOnMountProps {
   message: string
-  type?: "success" | "error" | "info" | "warning"
+  type?: 'success' | 'error' | 'info' | 'warning'
 }
 
-export function ToastOnMount({ message, type = "info" }: ToastOnMountProps) {
+export function ToastOnMount({ message, type = 'info' }: ToastOnMountProps) {
   const shownRef = useRef(false)
 
   useEffect(() => {

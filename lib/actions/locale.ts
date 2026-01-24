@@ -1,25 +1,25 @@
-"use server"
+'use server'
 
-import { auth } from "@clerk/nextjs/server"
-import { fetchMutation } from "convex/nextjs"
-import { revalidatePath } from "next/cache"
-import { cookies } from "next/headers"
-import { api } from "@/convex/_generated/api"
-import { type Locale, locales } from "@/i18n/config"
+import { auth } from '@clerk/nextjs/server'
+import { fetchMutation } from 'convex/nextjs'
+import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
+import { api } from '@/convex/_generated/api'
+import { type Locale, locales } from '@/i18n/config'
 
-const LOCALE_COOKIE = "NEXT_LOCALE"
+const LOCALE_COOKIE = 'NEXT_LOCALE'
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365
 
 export async function setUserLocale(locale: Locale) {
   if (!locales.includes(locale)) {
-    return { success: false, error: "Invalid locale" }
+    return { success: false, error: 'Invalid locale' }
   }
 
   const cookieStore = await cookies()
   cookieStore.set(LOCALE_COOKIE, locale, {
-    path: "/",
+    path: '/',
     maxAge: ONE_YEAR_IN_SECONDS,
-    sameSite: "lax",
+    sameSite: 'lax',
   })
 
   const { userId } = await auth()
@@ -30,6 +30,6 @@ export async function setUserLocale(locale: Locale) {
     })
   }
 
-  revalidatePath("/", "layout")
+  revalidatePath('/', 'layout')
   return { success: true }
 }

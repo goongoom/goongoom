@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { useLayoutEffect, useRef, useState } from "react"
+import { useLayoutEffect, useRef, useState } from 'react'
 
 interface ClampedAnswerProps {
   content: string

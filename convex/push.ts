@@ -1,5 +1,5 @@
-import { v } from "convex/values"
-import { mutation, query } from "./_generated/server"
+import { v } from 'convex/values'
+import { mutation, query } from './_generated/server'
 
 export const upsert = mutation({
   args: {
@@ -10,8 +10,8 @@ export const upsert = mutation({
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
-      .query("pushSubscriptions")
-      .withIndex("by_endpoint", (q) => q.eq("endpoint", args.endpoint))
+      .query('pushSubscriptions')
+      .withIndex('by_endpoint', (q) => q.eq('endpoint', args.endpoint))
       .first()
 
     if (existing) {
@@ -23,7 +23,7 @@ export const upsert = mutation({
       return existing._id
     }
 
-    return await ctx.db.insert("pushSubscriptions", args)
+    return await ctx.db.insert('pushSubscriptions', args)
   },
 })
 
@@ -34,8 +34,8 @@ export const remove = mutation({
   },
   handler: async (ctx, args) => {
     const subscription = await ctx.db
-      .query("pushSubscriptions")
-      .withIndex("by_endpoint", (q) => q.eq("endpoint", args.endpoint))
+      .query('pushSubscriptions')
+      .withIndex('by_endpoint', (q) => q.eq('endpoint', args.endpoint))
       .first()
 
     if (subscription && subscription.clerkId === args.clerkId) {
@@ -48,8 +48,8 @@ export const getByClerkId = query({
   args: { clerkId: v.string() },
   handler: async (ctx, args) => {
     return await ctx.db
-      .query("pushSubscriptions")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+      .query('pushSubscriptions')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.clerkId))
       .collect()
   },
 })

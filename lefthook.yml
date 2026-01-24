@@ -3,8 +3,8 @@ pre-commit:
     - name: eslint
       run: bun eslint --fix {staged_files}
       glob:
-        - "*.js"
-        - "*.jsx"
-        - "*.ts"
-        - "*.tsx"
+        - '*.js'
+        - '*.jsx'
+        - '*.ts'
+        - '*.tsx'
       stage_fixed: true

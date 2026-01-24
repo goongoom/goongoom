@@ -1,8 +1,8 @@
-import { cookies } from "next/headers"
-import { getRequestConfig } from "next-intl/server"
-import { defaultLocale, type Locale, locales } from "./config"
+import { cookies } from 'next/headers'
+import { getRequestConfig } from 'next-intl/server'
+import { defaultLocale, type Locale, locales } from './config'
 
-const LOCALE_COOKIE = "NEXT_LOCALE"
+const LOCALE_COOKIE = 'NEXT_LOCALE'
 
 export async function getUserLocale(): Promise<Locale> {
   const cookieStore = await cookies()

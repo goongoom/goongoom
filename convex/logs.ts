@@ -1,5 +1,5 @@
-import { v } from "convex/values"
-import { mutation } from "./_generated/server"
+import { v } from 'convex/values'
+import { mutation } from './_generated/server'
 
 export const create = mutation({
   args: {
@@ -24,6 +24,6 @@ export const create = mutation({
     errorMessage: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    await ctx.db.insert("logs", args)
+    await ctx.db.insert('logs', args)
   },
 })

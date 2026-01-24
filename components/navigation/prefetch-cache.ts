@@ -9,8 +9,8 @@ export function prefetchImage(src: string): void {
   seenImages.add(src)
 
   const img = new Image()
-  img.decoding = "async"
-  img.fetchPriority = "low"
+  img.decoding = 'async'
+  img.fetchPriority = 'low'
   img.src = src
 }
 

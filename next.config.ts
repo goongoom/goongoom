@@ -1,23 +1,23 @@
-import createMDX from "@next/mdx"
-import { withSentryConfig } from "@sentry/nextjs"
-import type { NextConfig } from "next"
-import createNextIntlPlugin from "next-intl/plugin"
+import createMDX from '@next/mdx'
+import { withSentryConfig } from '@sentry/nextjs'
+import type { NextConfig } from 'next'
+import createNextIntlPlugin from 'next-intl/plugin'
 
-const withNextIntl = createNextIntlPlugin("./i18n/request.ts")
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts')
 const withMDX = createMDX()
 
 const nextConfig: NextConfig = {
-  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "api.dicebear.com",
+        protocol: 'https',
+        hostname: 'api.dicebear.com',
       },
     ],
   },
   experimental: {
-    optimizePackageImports: ["@hugeicons/react", "@hugeicons/core-free-icons"],
+    optimizePackageImports: ['@hugeicons/react', '@hugeicons/core-free-icons'],
   },
 }
 
@@ -25,9 +25,9 @@ export default withSentryConfig(withMDX(withNextIntl(nextConfig)), {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
-  org: "anaclumos",
+  org: 'anaclumos',
 
-  project: "goongoom",
+  project: 'goongoom',
 
   // Auth token for source map uploads (set in CI/CD environment)
   authToken: process.env.SENTRY_AUTH_TOKEN,
@@ -44,12 +44,12 @@ export default withSentryConfig(withMDX(withNextIntl(nextConfig)), {
   // Ignore Next.js internal files that don't have source maps
   sourcemaps: {
     ignore: [
-      "node_modules/**",
-      "**/*_client-reference-manifest.js",
-      "**/interception-route-rewrite-manifest.js",
-      "**/middleware-build-manifest.js",
-      "**/next-font-manifest.js",
-      "**/server-reference-manifest.js",
+      'node_modules/**',
+      '**/*_client-reference-manifest.js',
+      '**/interception-route-rewrite-manifest.js',
+      '**/middleware-build-manifest.js',
+      '**/next-font-manifest.js',
+      '**/server-reference-manifest.js',
     ],
   },
 
@@ -57,7 +57,7 @@ export default withSentryConfig(withMDX(withNextIntl(nextConfig)), {
   // This can increase your server load as well as your hosting bill.
   // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
   // side errors will fail.
-  tunnelRoute: "/monitoring",
+  tunnelRoute: '/monitoring',
 
   webpack: {
     // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)

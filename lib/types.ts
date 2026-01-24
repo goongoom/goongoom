@@ -15,10 +15,10 @@ export type {
   SocialLinks,
   User,
   UserId,
-} from "@/convex/types"
+} from '@/convex/types'
 
-export type { ClerkUserInfo } from "@/lib/clerk"
-export type { QuestionSecurityLevel } from "@/lib/question-security"
+export type { ClerkUserInfo } from '@/lib/clerk'
+export type { QuestionSecurityLevel } from '@/lib/question-security'
 
 export interface UserProfile {
   clerkId: string
@@ -26,8 +26,8 @@ export interface UserProfile {
   displayName: string | null
   avatarUrl: string | null
   bio: string | null
-  socialLinks: import("@/convex/types").SocialLinks | null
-  questionSecurityLevel: import("@/lib/question-security").QuestionSecurityLevel
+  socialLinks: import('@/convex/types').SocialLinks | null
+  questionSecurityLevel: import('@/lib/question-security').QuestionSecurityLevel
 }
 
 export interface APIResponse<T> {

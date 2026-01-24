@@ -1,5 +1,5 @@
-import { defineSchema, defineTable } from "convex/server"
-import { v } from "convex/values"
+import { defineSchema, defineTable } from 'convex/server'
+import { v } from 'convex/values'
 
 export default defineSchema({
   users: defineTable({
@@ -9,11 +9,11 @@ export default defineSchema({
       v.array(
         v.object({
           platform: v.union(
-            v.literal("instagram"),
-            v.literal("twitter"),
-            v.literal("youtube"),
-            v.literal("github"),
-            v.literal("naverBlog")
+            v.literal('instagram'),
+            v.literal('twitter'),
+            v.literal('youtube'),
+            v.literal('github'),
+            v.literal('naverBlog')
           ),
           content: v.union(
             v.string(),
@@ -22,7 +22,7 @@ export default defineSchema({
               label: v.string(),
             })
           ),
-          labelType: v.union(v.literal("handle"), v.literal("custom")),
+          labelType: v.union(v.literal('handle'), v.literal('custom')),
         })
       )
     ),
@@ -30,7 +30,7 @@ export default defineSchema({
     locale: v.optional(v.string()),
     signatureColor: v.optional(v.string()),
     updatedAt: v.number(),
-  }).index("by_clerk_id", ["clerkId"]),
+  }).index('by_clerk_id', ['clerkId']),
 
   questions: defineTable({
     recipientClerkId: v.string(),
@@ -38,18 +38,18 @@ export default defineSchema({
     content: v.string(),
     isAnonymous: v.boolean(),
     anonymousAvatarSeed: v.optional(v.string()),
-    answerId: v.optional(v.id("answers")),
+    answerId: v.optional(v.id('answers')),
     deletedAt: v.optional(v.number()),
   })
-    .index("by_recipient", ["recipientClerkId"])
-    .index("by_sender", ["senderClerkId"])
-    .index("by_recipient_unanswered", ["recipientClerkId", "answerId"]),
+    .index('by_recipient', ['recipientClerkId'])
+    .index('by_sender', ['senderClerkId'])
+    .index('by_recipient_unanswered', ['recipientClerkId', 'answerId']),
 
   answers: defineTable({
-    questionId: v.id("questions"),
+    questionId: v.id('questions'),
     content: v.string(),
     deletedAt: v.optional(v.number()),
-  }).index("by_question", ["questionId"]),
+  }).index('by_question', ['questionId']),
 
   pushSubscriptions: defineTable({
     clerkId: v.string(),
@@ -57,8 +57,8 @@ export default defineSchema({
     p256dh: v.string(),
     auth: v.string(),
   })
-    .index("by_clerk_id", ["clerkId"])
-    .index("by_endpoint", ["endpoint"]),
+    .index('by_clerk_id', ['clerkId'])
+    .index('by_endpoint', ['endpoint']),
 
   logs: defineTable({
     ipAddress: v.optional(v.string()),
@@ -81,7 +81,7 @@ export default defineSchema({
     success: v.boolean(),
     errorMessage: v.optional(v.string()),
   })
-    .index("by_user", ["userId"])
-    .index("by_action", ["action"])
-    .index("by_entity", ["entityType", "entityId"]),
+    .index('by_user', ['userId'])
+    .index('by_action', ['action'])
+    .index('by_entity', ['entityType', 'entityId']),
 })
