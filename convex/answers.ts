@@ -8,7 +8,7 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     const question = await ctx.db.get(args.questionId)
-    if (!question) {
+    if (!question || question.deletedAt) {
       throw new Error("Question not found")
     }
     if (question.answerId) {

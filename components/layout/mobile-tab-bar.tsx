@@ -1,37 +1,103 @@
 "use client"
 
 import {
+  Agreement01Icon,
+  CustomerService01Icon,
   Home01Icon,
   InboxIcon,
+  SecurityCheckIcon,
   Settings01Icon,
   UserGroupIcon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { usePathname } from "next/navigation"
 import { useTranslations } from "next-intl"
-import { TAB_ROUTES } from "@/components/navigation/navigation-routes"
+import {
+  GUEST_TAB_ROUTES,
+  TAB_ROUTES,
+} from "@/components/navigation/navigation-routes"
 import { Ultralink } from "@/components/navigation/ultralink"
 import { usePrefetchRoutes } from "@/components/navigation/use-prefetch-routes"
 import { cn } from "@/lib/utils"
 
-const tabItems = [
-  { titleKey: "home" as const, href: "/", icon: Home01Icon },
-  { titleKey: "inbox" as const, href: "/inbox", icon: InboxIcon },
-  { titleKey: "friends" as const, href: "/friends", icon: UserGroupIcon },
-  { titleKey: "settings" as const, href: "/settings", icon: Settings01Icon },
+const loggedInTabItems = [
+  {
+    titleKey: "home" as const,
+    href: "/",
+    icon: Home01Icon,
+    namespace: "sidebar" as const,
+  },
+  {
+    titleKey: "inbox" as const,
+    href: "/inbox",
+    icon: InboxIcon,
+    namespace: "sidebar" as const,
+  },
+  {
+    titleKey: "friends" as const,
+    href: "/friends",
+    icon: UserGroupIcon,
+    namespace: "sidebar" as const,
+  },
+  {
+    titleKey: "settings" as const,
+    href: "/settings",
+    icon: Settings01Icon,
+    namespace: "sidebar" as const,
+  },
 ]
 
-export function MobileTabBar() {
-  const pathname = usePathname()
-  const t = useTranslations("sidebar")
+const guestTabItems = [
+  {
+    titleKey: "home" as const,
+    href: "/",
+    icon: Home01Icon,
+    namespace: "sidebar" as const,
+  },
+  {
+    titleKey: "terms" as const,
+    href: "/terms",
+    icon: Agreement01Icon,
+    namespace: "footer" as const,
+  },
+  {
+    titleKey: "privacy" as const,
+    href: "/privacy",
+    icon: SecurityCheckIcon,
+    namespace: "footer" as const,
+  },
+  {
+    titleKey: "contact" as const,
+    href: "/contact",
+    icon: CustomerService01Icon,
+    namespace: "footer" as const,
+  },
+]
 
-  usePrefetchRoutes(TAB_ROUTES)
+interface MobileTabBarProps {
+  isLoggedIn?: boolean
+}
+
+export function MobileTabBar({ isLoggedIn = false }: MobileTabBarProps) {
+  const pathname = usePathname()
+  const tSidebar = useTranslations("sidebar")
+  const tFooter = useTranslations("footer")
+
+  const tabItems = isLoggedIn ? loggedInTabItems : guestTabItems
+  usePrefetchRoutes(isLoggedIn ? TAB_ROUTES : GUEST_TAB_ROUTES)
 
   const isActive = (href: string) => {
     if (href === "/") {
       return pathname === "/"
     }
     return pathname.startsWith(href)
+  }
+
+  const getLabel = (item: (typeof tabItems)[number]) => {
+    if (item.namespace === "footer") {
+      return tFooter(item.titleKey)
+    }
+    return tSidebar(item.titleKey)
   }
 
   return (
@@ -58,7 +124,7 @@ export function MobileTabBar() {
                 size={22}
                 strokeWidth={active ? 2.5 : 2}
               />
-              <span className="font-medium text-xs">{t(item.titleKey)}</span>
+              <span className="font-medium text-xs">{getLabel(item)}</span>
             </Ultralink>
           )
         })}
