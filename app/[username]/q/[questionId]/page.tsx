@@ -16,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { getClerkUserById, getClerkUserByUsername } from "@/lib/clerk"
 import {
   getAnsweredQuestionNumber,
+  getOrCreateUser,
   getQuestionByIdAndRecipient,
 } from "@/lib/db/queries"
 import type { QuestionId } from "@/lib/types"
@@ -78,12 +79,14 @@ function buildShareUrl({
   name,
   askerAvatarUrl,
   answererAvatarUrl,
+  signatureColor,
 }: {
   question: string
   answer: string
   name: string
   askerAvatarUrl: string
   answererAvatarUrl: string
+  signatureColor?: string | null
 }) {
   const normalize = (value: string, max: number) =>
     value.length > max ? `${value.slice(0, max - 1)}…` : value
@@ -94,6 +97,9 @@ function buildShareUrl({
     askerAvatar: askerAvatarUrl,
     answererAvatar: answererAvatarUrl,
   })
+  if (signatureColor) {
+    params.set("color", signatureColor)
+  }
   return `/api/instagram?${params.toString()}`
 }
 
@@ -109,9 +115,10 @@ export default async function QADetailPage({ params }: QADetailPageProps) {
     notFound()
   }
 
-  const [qa, questionNumber] = await Promise.all([
+  const [qa, questionNumber, dbUser] = await Promise.all([
     getQuestionByIdAndRecipient(questionId, clerkUser.clerkId),
     getAnsweredQuestionNumber(questionId, clerkUser.clerkId),
+    getOrCreateUser(clerkUser.clerkId),
   ])
   if (!qa?.answer) {
     notFound()
@@ -156,6 +163,7 @@ export default async function QADetailPage({ params }: QADetailPageProps) {
     name: displayName,
     askerAvatarUrl: askerAvatarForShare,
     answererAvatarUrl: answererAvatarForShare,
+    signatureColor: dbUser?.signatureColor,
   })
 
   const canonicalUrl = `/${username}/q/${questionId}`
