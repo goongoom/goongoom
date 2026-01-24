@@ -1,7 +1,7 @@
 import { fetchMutation, fetchQuery } from "convex/nextjs"
 import { unstable_cache } from "next/cache"
 import { api } from "@/convex/_generated/api"
-import type { AnswerId, QuestionId, SocialLinks } from "@/convex/types"
+import type { QuestionId, SocialLinks } from "@/convex/types"
 import { CACHE_TAGS } from "@/lib/cache/tags"
 import type { QuestionSecurityLevel } from "@/lib/question-security"
 
@@ -56,16 +56,6 @@ export async function createAnswer(data: {
     content: data.content,
   })
   return result ? [result] : []
-}
-
-export async function clearQuestionAnswerId(
-  questionId: QuestionId,
-  recipientClerkId: string
-) {
-  return await fetchMutation(api.questions.clearAnswerId, {
-    id: questionId,
-    recipientClerkId,
-  })
 }
 
 export async function getQuestionById(id: QuestionId) {
