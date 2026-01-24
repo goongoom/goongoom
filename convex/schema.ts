@@ -7,10 +7,32 @@ export default defineSchema({
     bio: v.optional(v.string()),
     socialLinks: v.optional(
       v.object({
-        instagram: v.optional(v.string()),
+        instagram: v.optional(v.union(v.array(v.string()), v.string())),
         facebook: v.optional(v.string()),
-        github: v.optional(v.string()),
-        twitter: v.optional(v.string()),
+        github: v.optional(
+          v.union(
+            v.array(
+              v.object({
+                handle: v.string(),
+                label: v.optional(v.string()),
+              })
+            ),
+            v.string()
+          )
+        ),
+        naverBlog: v.optional(
+          v.union(
+            v.array(
+              v.object({
+                handle: v.string(),
+                label: v.optional(v.string()),
+              })
+            ),
+            v.string()
+          )
+        ),
+        twitter: v.optional(v.union(v.array(v.string()), v.string())),
+        youtube: v.optional(v.union(v.array(v.string()), v.string())),
       })
     ),
     questionSecurityLevel: v.string(),
@@ -26,6 +48,7 @@ export default defineSchema({
     isAnonymous: v.boolean(),
     anonymousAvatarSeed: v.optional(v.string()),
     answerId: v.optional(v.id("answers")),
+    deletedAt: v.optional(v.number()),
   })
     .index("by_recipient", ["recipientClerkId"])
     .index("by_sender", ["senderClerkId"])
@@ -34,6 +57,7 @@ export default defineSchema({
   answers: defineTable({
     questionId: v.id("questions"),
     content: v.string(),
+    deletedAt: v.optional(v.number()),
   }).index("by_question", ["questionId"]),
 
   pushSubscriptions: defineTable({

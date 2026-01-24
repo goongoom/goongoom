@@ -231,11 +231,6 @@ export function InboxList({ questions }: InboxListProps) {
                       ? `${selectedQuestion.content.slice(0, 100)}...`
                       : selectedQuestion.content}
                   </p>
-                  <div className="mt-2 flex justify-end">
-                    <span className="font-medium text-muted-foreground text-xs">
-                      {Math.min(selectedQuestion.content.length, 100)}/100
-                    </span>
-                  </div>
                 </DrawerDescription>
               )}
             </DrawerHeader>
@@ -248,6 +243,11 @@ export function InboxList({ questions }: InboxListProps) {
                 rows={4}
                 value={answer}
               />
+              <div className="flex justify-end">
+                <span className="font-medium text-muted-foreground text-xs">
+                  {answer.length}
+                </span>
+              </div>
             </div>
 
             <DrawerFooter className="pt-4">

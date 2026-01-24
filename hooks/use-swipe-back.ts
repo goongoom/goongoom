@@ -36,14 +36,7 @@ export function useSwipeBack() {
         deltaX > SWIPE_THRESHOLD && deltaY < VERTICAL_THRESHOLD
 
       if (isEdgeSwipe && isHorizontalSwipe) {
-        if (document.startViewTransition) {
-          document.documentElement.dataset.navDirection = "back"
-          document.startViewTransition(() => {
-            router.back()
-          })
-        } else {
-          router.back()
-        }
+        router.back()
       }
     }
 

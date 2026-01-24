@@ -15,7 +15,9 @@ async function fetchAnswersMap(
     .filter((id): id is Id<"answers"> => id !== undefined)
 
   const answers = await Promise.all(answerIds.map((id) => ctx.db.get(id)))
-  const validAnswers = answers.filter((a): a is Doc<"answers"> => a !== null)
+  const validAnswers = answers.filter(
+    (a): a is Doc<"answers"> => a !== null && !a.deletedAt
+  )
 
   return new Map(validAnswers.map((a) => [a._id, a]))
 }
@@ -40,10 +42,56 @@ export const create = mutation({
   },
 })
 
+export const softDelete = mutation({
+  args: {
+    id: v.id("questions"),
+    recipientClerkId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const question = await ctx.db.get(args.id)
+    if (!question) {
+      throw new Error("Question not found")
+    }
+    if (question.recipientClerkId !== args.recipientClerkId) {
+      throw new Error("Not authorized to delete this question")
+    }
+    if (question.deletedAt) {
+      return { success: true }
+    }
+    await ctx.db.patch(args.id, { deletedAt: Date.now() })
+    return { success: true }
+  },
+})
+
+export const clearAnswerId = mutation({
+  args: {
+    id: v.id("questions"),
+    recipientClerkId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const question = await ctx.db.get(args.id)
+    if (!question) {
+      throw new Error("Question not found")
+    }
+    if (question.recipientClerkId !== args.recipientClerkId) {
+      throw new Error("Not authorized to update this question")
+    }
+    if (question.deletedAt) {
+      throw new Error("Question deleted")
+    }
+    await ctx.db.patch(args.id, { answerId: undefined })
+    return { success: true }
+  },
+})
+
 export const getById = query({
   args: { id: v.id("questions") },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.id)
+    const question = await ctx.db.get(args.id)
+    if (!question || question.deletedAt) {
+      return null
+    }
+    return question
   },
 })
 
@@ -54,7 +102,11 @@ export const getByIdAndRecipient = query({
   },
   handler: async (ctx, args) => {
     const question = await ctx.db.get(args.id)
-    if (!question || question.recipientClerkId !== args.recipientClerkId) {
+    if (
+      !question ||
+      question.deletedAt ||
+      question.recipientClerkId !== args.recipientClerkId
+    ) {
       return null
     }
 
@@ -62,7 +114,10 @@ export const getByIdAndRecipient = query({
       ? await ctx.db.get(question.answerId)
       : null
 
-    return { ...question, answer }
+    return {
+      ...question,
+      answer: answer && !answer.deletedAt ? answer : null,
+    }
   },
 })
 
@@ -77,6 +132,7 @@ export const getByRecipient = query({
       .withIndex("by_recipient", (q) =>
         q.eq("recipientClerkId", args.recipientClerkId)
       )
+      .filter((q) => q.eq(q.field("deletedAt"), undefined))
       .order("desc")
       .take(args.limit ?? 100)
 
@@ -99,7 +155,12 @@ export const getUnanswered = query({
       .withIndex("by_recipient", (q) =>
         q.eq("recipientClerkId", args.recipientClerkId)
       )
-      .filter((q) => q.eq(q.field("answerId"), undefined))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("answerId"), undefined),
+          q.eq(q.field("deletedAt"), undefined)
+        )
+      )
       .order("desc")
       .collect()
   },
@@ -113,7 +174,12 @@ export const getAnsweredByRecipient = query({
       .withIndex("by_recipient", (q) =>
         q.eq("recipientClerkId", args.recipientClerkId)
       )
-      .filter((q) => q.neq(q.field("answerId"), undefined))
+      .filter((q) =>
+        q.and(
+          q.neq(q.field("answerId"), undefined),
+          q.eq(q.field("deletedAt"), undefined)
+        )
+      )
       .collect()
 
     const answerMap = await fetchAnswersMap(ctx, questions)
@@ -142,6 +208,7 @@ export const getSentByUser = query({
     const questions = await ctx.db
       .query("questions")
       .withIndex("by_sender", (q) => q.eq("senderClerkId", args.senderClerkId))
+      .filter((q) => q.eq(q.field("deletedAt"), undefined))
       .order("desc")
       .take(args.limit ?? 100)
 
@@ -163,7 +230,7 @@ export const getAnsweredNumber = query({
   },
   handler: async (ctx, args) => {
     const question = await ctx.db.get(args.questionId)
-    if (!question) {
+    if (!question || question.deletedAt) {
       return 0
     }
 
@@ -183,6 +250,9 @@ export const getAnsweredNumber = query({
       .order("asc")
 
     for await (const q of queryIter) {
+      if (q.deletedAt) {
+        continue
+      }
       // Only count questions that have been answered
       if (q.answerId !== undefined) {
         count++
@@ -217,7 +287,8 @@ export const getFriends = query({
         q.and(
           q.eq(q.field("isAnonymous"), false),
           q.neq(q.field("answerId"), undefined),
-          q.neq(q.field("senderClerkId"), undefined)
+          q.neq(q.field("senderClerkId"), undefined),
+          q.eq(q.field("deletedAt"), undefined)
         )
       )
       .collect()
@@ -251,7 +322,8 @@ export const getFriends = query({
       .filter((q) =>
         q.and(
           q.eq(q.field("isAnonymous"), false),
-          q.neq(q.field("answerId"), undefined)
+          q.neq(q.field("answerId"), undefined),
+          q.eq(q.field("deletedAt"), undefined)
         )
       )
       .collect()

@@ -15,10 +15,12 @@ export type PushSubscriptionId = Id<"pushSubscriptions">
 export type LogId = Id<"logs">
 
 export interface SocialLinks {
-  instagram?: string
+  instagram?: string[] | string
   facebook?: string
-  github?: string
-  twitter?: string
+  github?: { handle: string; label?: string }[] | string
+  naverBlog?: { handle: string; label?: string }[] | string
+  twitter?: string[] | string
+  youtube?: string[] | string
 }
 
 export interface QuestionWithAnswer extends Question {

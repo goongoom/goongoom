@@ -149,6 +149,11 @@ export function ProfileEditForm({
               rows={3}
               value={bio}
             />
+            <div className="flex justify-end">
+              <span className="font-medium text-muted-foreground text-xs">
+                {bio.length}
+              </span>
+            </div>
           </Field>
 
           <div className="border-border/30 border-t pt-4">
@@ -156,7 +161,7 @@ export function ProfileEditForm({
               {t("socialLinks")}
             </p>
             <div className="grid grid-cols-2 gap-3">
-              <div className="relative">
+              <div className="relative space-y-1">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <HugeiconsIcon
                     className="size-5 text-muted-foreground/60"
@@ -175,9 +180,14 @@ export function ProfileEditForm({
                   placeholder="Instagram"
                   value={instagram}
                 />
+                <div className="flex justify-end">
+                  <span className="font-medium text-muted-foreground text-xs">
+                    {instagram.length}
+                  </span>
+                </div>
               </div>
 
-              <div className="relative">
+              <div className="relative space-y-1">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <HugeiconsIcon
                     className="size-5 text-muted-foreground/60"
@@ -196,6 +206,11 @@ export function ProfileEditForm({
                   placeholder="Twitter"
                   value={twitter}
                 />
+                <div className="flex justify-end">
+                  <span className="font-medium text-muted-foreground text-xs">
+                    {twitter.length}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

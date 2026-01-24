@@ -21,10 +21,10 @@ export function LandingFeatures({ t, tShare }: LandingFeaturesProps) {
     <div className="border-border border-y bg-muted/40 py-24">
       <div className="mx-auto max-w-5xl px-6">
         <div className="grid gap-8 sm:grid-cols-3">
-          <Card className="hover-lift bg-emerald-50/40 transition-all duration-200 dark:bg-emerald-950/20">
-            <div className="h-1 w-full rounded-full bg-emerald-500/60" />
+          <Card className="hover-lift bg-amber-50/40 transition-all duration-200 dark:bg-amber-950/20">
+            <div className="h-1 w-full rounded-full bg-amber-500/60" />
             <CardContent className="space-y-4">
-              <div className="inline-flex size-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+              <div className="inline-flex size-12 items-center justify-center rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
                 <HugeiconsIcon icon={ShieldKeyIcon} size={24} />
               </div>
               <div className="space-y-2">

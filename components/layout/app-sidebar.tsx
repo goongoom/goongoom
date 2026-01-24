@@ -4,7 +4,6 @@ import { useUser } from "@clerk/nextjs"
 import {
   Home01Icon,
   InboxIcon,
-  Message01Icon,
   Settings01Icon,
   UserGroupIcon,
 } from "@hugeicons/core-free-icons"
@@ -17,6 +16,7 @@ import { TAB_ROUTES } from "@/components/navigation/navigation-routes"
 import { Ultralink } from "@/components/navigation/ultralink"
 import { usePrefetchRoutes } from "@/components/navigation/use-prefetch-routes"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Logo } from "@/components/ui/logo"
 import {
   Sidebar,
   SidebarContent,
@@ -118,9 +118,7 @@ export function AppSidebar({
                 </>
               ) : (
                 <>
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-emerald text-emerald-foreground">
-                    <HugeiconsIcon className="size-4" icon={Message01Icon} />
-                  </div>
+                  <Logo size="md" />
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">
                       {t("appName")}

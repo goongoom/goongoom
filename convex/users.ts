@@ -53,10 +53,32 @@ export const updateProfile = mutation({
     socialLinks: v.optional(
       v.union(
         v.object({
-          instagram: v.optional(v.string()),
+          instagram: v.optional(v.union(v.array(v.string()), v.string())),
           facebook: v.optional(v.string()),
-          github: v.optional(v.string()),
-          twitter: v.optional(v.string()),
+          github: v.optional(
+            v.union(
+              v.array(
+                v.object({
+                  handle: v.string(),
+                  label: v.optional(v.string()),
+                })
+              ),
+              v.string()
+            )
+          ),
+          naverBlog: v.optional(
+            v.union(
+              v.array(
+                v.object({
+                  handle: v.string(),
+                  label: v.optional(v.string()),
+                })
+              ),
+              v.string()
+            )
+          ),
+          twitter: v.optional(v.union(v.array(v.string()), v.string())),
+          youtube: v.optional(v.union(v.array(v.string()), v.string())),
         }),
         v.null()
       )
@@ -77,10 +99,12 @@ export const updateProfile = mutation({
     const updateData: {
       bio?: string
       socialLinks?: {
-        instagram?: string
+        instagram?: string[] | string
         facebook?: string
-        github?: string
-        twitter?: string
+        github?: { handle: string; label?: string }[] | string
+        naverBlog?: { handle: string; label?: string }[] | string
+        twitter?: string[] | string
+        youtube?: string[] | string
       }
       questionSecurityLevel?: string
       signatureColor?: string

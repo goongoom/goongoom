@@ -241,5 +241,39 @@
   "push": {
     "newQuestionTitle": "새로운 질문이 왔어요!",
     "newQuestionBody": "{content}"
+  },
+  "ui": {
+    "close": "닫기",
+    "loading": "로딩 중",
+    "more": "더보기",
+    "morePages": "더 많은 페이지",
+    "next": "다음",
+    "previous": "이전",
+    "nextSlide": "다음 슬라이드",
+    "previousSlide": "이전 슬라이드",
+    "goToNextPage": "다음 페이지로 이동",
+    "goToPreviousPage": "이전 페이지로 이동",
+    "sidebar": "사이드바",
+    "sidebarDescription": "모바일 사이드바입니다.",
+    "toggleSidebar": "사이드바 열기/닫기",
+    "breadcrumb": "경로",
+    "mobileNavigation": "모바일 메뉴",
+    "logo": "궁금닷컴 로고"
+  },
+  "og": {
+    "appName": "궁금닷컴",
+    "tagline": "무엇이든 물어보세요",
+    "logoAlt": "궁금닷컴 로고",
+    "userNotFound": "사용자를 찾을 수 없어요",
+    "defaultQuestion": "궁금한 질문이 여기에 표시돼요.",
+    "defaultAnswer": "재치있는 답변을 공유해 보세요.",
+    "defaultUser": "사용자"
+  },
+  "social": {
+    "instagramPlaceholder": "인스타그램",
+    "twitterPlaceholder": "트위터"
+  },
+  "legal": {
+    "copyright": "© 2026 궁금닷컴. 모든 권리 보유."
   }
 }

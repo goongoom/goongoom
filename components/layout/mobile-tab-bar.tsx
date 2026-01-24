@@ -38,7 +38,6 @@ export function MobileTabBar() {
     <nav
       aria-label="Mobile navigation"
       className="fixed inset-x-0 bottom-0 z-50 border-border border-t bg-background/95 pb-safe backdrop-blur-md md:hidden"
-      style={{ viewTransitionName: "mobile-tab-bar" }}
     >
       <div className="flex h-16 items-center justify-around">
         {tabItems.map((item) => {

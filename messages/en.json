@@ -241,5 +241,39 @@
   "push": {
     "newQuestionTitle": "You got a new question!",
     "newQuestionBody": "{content}"
+  },
+  "ui": {
+    "close": "Close",
+    "loading": "Loading",
+    "more": "More",
+    "morePages": "More pages",
+    "next": "Next",
+    "previous": "Previous",
+    "nextSlide": "Next slide",
+    "previousSlide": "Previous slide",
+    "goToNextPage": "Go to next page",
+    "goToPreviousPage": "Go to previous page",
+    "sidebar": "Sidebar",
+    "sidebarDescription": "Displays the mobile sidebar.",
+    "toggleSidebar": "Toggle Sidebar",
+    "breadcrumb": "breadcrumb",
+    "mobileNavigation": "Mobile navigation",
+    "logo": "Goongoom logo"
+  },
+  "og": {
+    "appName": "Goongoom",
+    "tagline": "Ask anything",
+    "logoAlt": "Goongoom logo",
+    "userNotFound": "User not found",
+    "defaultQuestion": "Your question will appear here.",
+    "defaultAnswer": "Share your witty answer.",
+    "defaultUser": "User"
+  },
+  "social": {
+    "instagramPlaceholder": "Instagram",
+    "twitterPlaceholder": "Twitter"
+  },
+  "legal": {
+    "copyright": "© 2026 Goongoom. All rights reserved."
   }
 }

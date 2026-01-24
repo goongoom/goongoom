@@ -1,6 +1,5 @@
-import { Message01Icon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
 import { Ultralink } from "@/components/navigation/ultralink"
+import { Logo } from "@/components/ui/logo"
 
 interface LandingFooterProps {
   tNav: (key: string) => string
@@ -12,9 +11,7 @@ export function LandingFooter({ tNav, tFooter }: LandingFooterProps) {
     <footer className="border-border border-t bg-background py-12">
       <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 px-6 sm:flex-row">
         <div className="flex items-center gap-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded bg-muted text-muted-foreground">
-            <HugeiconsIcon icon={Message01Icon} size={14} strokeWidth={3} />
-          </div>
+          <Logo size="sm" />
           <span className="font-semibold text-muted-foreground text-sm">
             {tNav("appName")}
           </span>

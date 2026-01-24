@@ -239,6 +239,7 @@ export function QuestionDrawer({
   const [avatarSeed, setAvatarSeed] = useState(generateAvatarSeed)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [shouldRefreshOnClose, setShouldRefreshOnClose] = useState(false)
+  const [question, setQuestion] = useState("")
 
   const handleAnonymousClick = () => {
     if (questionType === "anonymous") {
@@ -256,6 +257,7 @@ export function QuestionDrawer({
     if (!isOpen) {
       formRef.current?.reset()
       setAvatarSeed(generateAvatarSeed())
+      setQuestion("")
       if (shouldRefreshOnClose) {
         setShouldRefreshOnClose(false)
         router.refresh()
@@ -322,13 +324,20 @@ export function QuestionDrawer({
                 onSubmit={handleSubmit}
                 ref={formRef}
               >
-                <div>
+                <div className="space-y-2">
                   <Textarea
                     className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-emerald focus:bg-background focus:ring-2 focus:ring-emerald/20"
                     name="question"
+                    onChange={(event) => setQuestion(event.target.value)}
                     placeholder={t("inputPlaceholder")}
                     required
+                    value={question}
                   />
+                  <div className="flex justify-end">
+                    <span className="font-medium text-muted-foreground text-xs">
+                      {question.length}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="space-y-3">

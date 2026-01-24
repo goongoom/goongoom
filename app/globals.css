@@ -245,46 +245,6 @@
   }
 }
 
-::view-transition-old(main-content) {
-  animation: ios-slide-out-to-left var(--ios-duration) var(--ios-timing) both;
-}
-
-::view-transition-new(main-content) {
-  animation: ios-slide-in-from-right var(--ios-duration) var(--ios-timing) both;
-  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15);
-}
-
-html[data-nav-direction="back"] {
-  &::view-transition-old(main-content) {
-    animation: ios-slide-out-to-right var(--ios-duration) var(--ios-timing) both;
-    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15);
-  }
-
-  &::view-transition-new(main-content) {
-    animation: ios-slide-in-from-left var(--ios-duration) var(--ios-timing) both;
-    box-shadow: none;
-  }
-}
-
-::view-transition-group(root) {
-  animation-duration: 0s;
-}
-
-::view-transition-old(mobile-tab-bar),
-::view-transition-new(mobile-tab-bar),
-::view-transition-old(app-sidebar),
-::view-transition-new(app-sidebar) {
-  animation: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
-  }
-}
-
 @layer utilities {
   .pt-safe {
     padding-top: env(safe-area-inset-top, 0px);

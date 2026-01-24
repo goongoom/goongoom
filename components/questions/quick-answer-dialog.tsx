@@ -130,13 +130,18 @@ export function QuickAnswerDialog({
             </div>
           )}
 
-          <div className="mt-4">
+          <div className="mt-4 space-y-2">
             <Textarea
               className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-emerald focus:bg-background focus:ring-2 focus:ring-emerald/20"
               onChange={(e) => setAnswer(e.target.value)}
               placeholder={t("answerPlaceholder")}
               value={answer}
             />
+            <div className="flex justify-end">
+              <span className="font-medium text-muted-foreground text-xs">
+                {answer.length}
+              </span>
+            </div>
           </div>
 
           <div className="mt-6 flex gap-3">
