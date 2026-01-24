@@ -94,10 +94,7 @@ async function MyProfile({ clerkId, searchParams }: MyProfileProps) {
     getLocale(),
   ])
 
-  const displayName =
-    clerkUser.displayName?.split(" ")[0] ||
-    clerkUser.displayName ||
-    clerkUser.username
+  const displayName = clerkUser.displayName || clerkUser.username
 
   const error =
     typeof query?.error === "string" ? decodeURIComponent(query.error) : null
