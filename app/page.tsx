@@ -1,4 +1,4 @@
-import { auth, currentUser } from '@clerk/nextjs/server'
+import { currentUser } from '@clerk/nextjs/server'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { HomeCTAButtons } from '@/components/home/home-cta-buttons'
 import { AnsweredQuestionCard } from '@/components/questions/answered-question-card'
