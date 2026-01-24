@@ -12,6 +12,7 @@ import { PasskeySetupModal } from "@/components/auth/passkey-setup-modal"
 import { AppShellWrapper } from "@/components/layout/app-shell-wrapper"
 import { NavigationProvider } from "@/components/navigation/navigation-provider"
 import { PushNotificationProvider } from "@/components/notifications/push-provider"
+import { ConvexClientProvider } from "@/components/providers/convex-provider"
 import { AddToHomeScreenNudge } from "@/components/pwa/add-to-homescreen-nudge"
 import { SignatureColorProvider } from "@/components/theme/signature-color-provider"
 import { ThemeCookieSync } from "@/components/theme/theme-cookie-sync"
@@ -57,33 +58,35 @@ export default async function RootLayout({
 
   return (
     <ClerkProvider localization={clerkLocalization}>
-      <html className={inter.variable} lang={locale} suppressHydrationWarning>
-        <body className="bg-background font-sans antialiased">
-          <NextIntlClientProvider messages={messages}>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              disableTransitionOnChange
-              enableSystem
-            >
-              <ThemeCookieSync />
-              <SignatureColorProvider signatureColor={dbUser?.signatureColor}>
-                <NavigationProvider />
-                <EscapeInAppBrowser />
-                <AppShellWrapper>
-                  <main className="flex-1">{children}</main>
-                </AppShellWrapper>
-                <PasskeySetupModal />
-                <AddToHomeScreenNudge />
-                <PushNotificationProvider />
-                <Toaster />
-              </SignatureColorProvider>
-            </ThemeProvider>
-          </NextIntlClientProvider>
-          <Analytics />
-          <SpeedInsights />
-        </body>
-      </html>
+      <ConvexClientProvider>
+        <html className={inter.variable} lang={locale} suppressHydrationWarning>
+          <body className="bg-background font-sans antialiased">
+            <NextIntlClientProvider messages={messages}>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                disableTransitionOnChange
+                enableSystem
+              >
+                <ThemeCookieSync />
+                <SignatureColorProvider signatureColor={dbUser?.signatureColor}>
+                  <NavigationProvider />
+                  <EscapeInAppBrowser />
+                  <AppShellWrapper>
+                    <main className="flex-1">{children}</main>
+                  </AppShellWrapper>
+                  <PasskeySetupModal />
+                  <AddToHomeScreenNudge />
+                  <PushNotificationProvider />
+                  <Toaster />
+                </SignatureColorProvider>
+              </ThemeProvider>
+            </NextIntlClientProvider>
+            <Analytics />
+            <SpeedInsights />
+          </body>
+        </html>
+      </ConvexClientProvider>
     </ClerkProvider>
   )
 }

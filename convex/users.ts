@@ -81,7 +81,13 @@ export const updateProfile = mutation({
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity()
-    const userId = identity?.subject
+    if (!identity) {
+      throw new Error("Unauthorized: Not authenticated")
+    }
+    if (identity.subject !== args.clerkId) {
+      throw new Error("Forbidden: Cannot modify another user's profile")
+    }
+    const userId = identity.subject
 
     try {
       const user = await ctx.db
@@ -151,6 +157,14 @@ export const updateProfile = mutation({
 export const deleteByClerkId = mutation({
   args: { clerkId: v.string() },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new Error("Unauthorized: Not authenticated")
+    }
+    if (identity.subject !== args.clerkId) {
+      throw new Error("Forbidden: Cannot delete another user's account")
+    }
+
     const user = await ctx.db
       .query("users")
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
@@ -168,6 +182,14 @@ export const updateLocale = mutation({
     locale: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new Error("Unauthorized: Not authenticated")
+    }
+    if (identity.subject !== args.clerkId) {
+      throw new Error("Forbidden: Cannot modify another user's locale")
+    }
+
     const user = await ctx.db
       .query("users")
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
