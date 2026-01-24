@@ -1,3 +1,4 @@
+import { auth, currentUser } from '@clerk/nextjs/server'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { HomeCTAButtons } from '@/components/home/home-cta-buttons'
 import { AnsweredQuestionCard } from '@/components/questions/answered-question-card'
@@ -9,13 +10,15 @@ import { getClerkUsersByIds } from '@/lib/clerk'
 import { getAnswerCount, getRecentAnswersLimitPerUser } from '@/lib/db/queries'
 
 export default async function Home() {
-  const [recentAnswers, answerCount, t, tCommon, tAnswers, locale] = await Promise.all([
+  const [recentAnswers, answerCount, t, tCommon, tAnswers, tProfile, locale, user] = await Promise.all([
     getRecentAnswersLimitPerUser(30, 2),
     getAnswerCount(),
     getTranslations('home'),
     getTranslations('common'),
     getTranslations('answers'),
+    getTranslations('profile'),
     getLocale(),
+    currentUser(),
   ])
 
   const recipientIds = [...new Set(recentAnswers.map((qa) => qa.recipientClerkId))]
@@ -113,7 +116,13 @@ export default async function Home() {
           <div className="mt-16 flex flex-col items-center gap-6">
             <p className="text-center text-lg text-muted-foreground">{t('trustIndicator', { count: answerCount })}</p>
 
-            <HomeCTAButtons startLabel={tCommon('start')} loginLabel={tCommon('login')} />
+            <HomeCTAButtons
+              startLabel={tCommon('start')}
+              loginLabel={tCommon('login')}
+              isLoggedIn={!!user}
+              profileLabel={tProfile('myProfile')}
+              profileUrl={user?.username ? `/${user.username}` : undefined}
+            />
           </div>
         </div>
       </section>
