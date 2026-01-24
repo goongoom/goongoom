@@ -25,8 +25,6 @@ interface AnsweredQuestionCardProps {
   labels: {
     anonymous: string
     identified: string
-    question: string
-    answer: string
   }
   signatureColor?: string | null
 }
@@ -95,8 +93,7 @@ export function AnsweredQuestionCard({
                 {formatDistanceToNow(questionCreatedAt, {
                   addSuffix: true,
                   locale: localeMap[locale as keyof typeof localeMap] ?? enUS,
-                })}{' '}
-                {labels.question}
+                })}
               </p>
             </div>
           </div>
@@ -117,8 +114,7 @@ export function AnsweredQuestionCard({
                 {formatDistanceToNow(answerCreatedAt, {
                   addSuffix: true,
                   locale: localeMap[locale as keyof typeof localeMap] ?? enUS,
-                })}{' '}
-                {labels.answer}
+                })}
               </p>
             </div>
             <Avatar className="size-10 flex-shrink-0">

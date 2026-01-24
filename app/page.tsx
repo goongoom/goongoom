@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import { getLocale, getTranslations } from 'next-intl/server'
+import { HomeCTAButtons } from '@/components/home/home-cta-buttons'
 import { AnsweredQuestionCard } from '@/components/questions/answered-question-card'
 
 import { CarouselItem } from '@/components/ui/carousel'
@@ -115,21 +115,7 @@ export default async function Home() {
           <div className="mt-16 flex flex-col items-center gap-6">
             <p className="text-center text-lg text-muted-foreground">{t('trustIndicator', { count: answerCount })}</p>
 
-            <Link
-              className="group relative inline-flex h-14 items-center justify-center overflow-hidden rounded-full bg-primary px-10 text-lg font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 hover:scale-105 hover:shadow-primary/40 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              href="/login"
-            >
-              <span className="mr-2">{tCommon('start')}</span>
-              <svg
-                className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </Link>
+            <HomeCTAButtons startLabel={tCommon('start')} loginLabel={tCommon('login')} />
           </div>
         </div>
       </section>
