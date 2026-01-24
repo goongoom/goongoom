@@ -58,26 +58,6 @@ export async function createAnswer(data: {
   return result ? [result] : []
 }
 
-export async function softDeleteQuestion(
-  questionId: QuestionId,
-  recipientClerkId: string
-) {
-  return await fetchMutation(api.questions.softDelete, {
-    id: questionId,
-    recipientClerkId,
-  })
-}
-
-export async function softDeleteAnswer(
-  answerId: AnswerId,
-  recipientClerkId: string
-) {
-  return await fetchMutation(api.answers.softDelete, {
-    id: answerId,
-    recipientClerkId,
-  })
-}
-
 export async function clearQuestionAnswerId(
   questionId: QuestionId,
   recipientClerkId: string
