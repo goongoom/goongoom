@@ -2,8 +2,11 @@
 
 import { useUser } from "@clerk/nextjs"
 import {
+  Agreement01Icon,
+  CustomerService01Icon,
   Home01Icon,
   InboxIcon,
+  SecurityCheckIcon,
   Settings01Icon,
   UserGroupIcon,
 } from "@hugeicons/core-free-icons"
@@ -12,7 +15,10 @@ import { formatDistanceToNow } from "date-fns"
 import { usePathname } from "next/navigation"
 import { useTranslations } from "next-intl"
 import type * as React from "react"
-import { TAB_ROUTES } from "@/components/navigation/navigation-routes"
+import {
+  GUEST_TAB_ROUTES,
+  TAB_ROUTES,
+} from "@/components/navigation/navigation-routes"
 import { Ultralink } from "@/components/navigation/ultralink"
 import { usePrefetchRoutes } from "@/components/navigation/use-prefetch-routes"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -48,12 +54,13 @@ export function AppSidebar({
 }: AppSidebarProps) {
   const t = useTranslations("nav")
   const tSidebar = useTranslations("sidebar")
+  const tFooter = useTranslations("footer")
   const pathname = usePathname()
   const { user } = useUser()
 
-  usePrefetchRoutes(TAB_ROUTES)
+  usePrefetchRoutes(user ? TAB_ROUTES : GUEST_TAB_ROUTES)
 
-  const navItems = [
+  const loggedInNavItems = [
     {
       title: tSidebar("home"),
       url: user?.username ? `/${user.username}` : "/",
@@ -76,6 +83,31 @@ export function AppSidebar({
     },
   ]
 
+  const guestNavItems = [
+    {
+      title: tSidebar("home"),
+      url: "/",
+      icon: Home01Icon,
+    },
+    {
+      title: tFooter("terms"),
+      url: "/terms",
+      icon: Agreement01Icon,
+    },
+    {
+      title: tFooter("privacy"),
+      url: "/privacy",
+      icon: SecurityCheckIcon,
+    },
+    {
+      title: tFooter("contact"),
+      url: "/contact",
+      icon: CustomerService01Icon,
+    },
+  ]
+
+  const navItems = user ? loggedInNavItems : guestNavItems
+
   const isActive = (url: string) => {
     if (url === "/") {
       return pathname === "/"
@@ -93,7 +125,9 @@ export function AppSidebar({
               render={
                 user?.username ? (
                   <Ultralink href={`/${user.username}`} />
-                ) : undefined
+                ) : (
+                  <Ultralink href="/" />
+                )
               }
               size="lg"
             >
@@ -150,7 +184,7 @@ export function AppSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {recentQuestions.length > 0 && (
+        {user && recentQuestions.length > 0 && (
           <SidebarGroup className="group-data-[collapsible=icon]:hidden">
             <SidebarGroupLabel>{tSidebar("recentQuestions")}</SidebarGroupLabel>
             <SidebarGroupContent>

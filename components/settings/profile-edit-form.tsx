@@ -52,6 +52,7 @@ export function ProfileEditForm({
 }: ProfileEditFormProps) {
   const t = useTranslations("settings")
   const tErrors = useTranslations("errors")
+  const tSocial = useTranslations("social")
 
   const [bio, setBio] = useState(initialBio || "")
   const [instagram, setInstagram] = useState(initialInstagramHandle)
@@ -177,7 +178,7 @@ export function ProfileEditForm({
                   name="instagram"
                   onBlur={handleSocialLinksBlur}
                   onChange={(e) => setInstagram(e.target.value)}
-                  placeholder="Instagram"
+                  placeholder={tSocial("instagramPlaceholder")}
                   value={instagram}
                 />
                 <div className="flex justify-end">
@@ -203,7 +204,7 @@ export function ProfileEditForm({
                   name="twitter"
                   onBlur={handleSocialLinksBlur}
                   onChange={(e) => setTwitter(e.target.value)}
-                  placeholder="Twitter"
+                  placeholder={tSocial("twitterPlaceholder")}
                   value={twitter}
                 />
                 <div className="flex justify-end">

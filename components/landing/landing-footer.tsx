@@ -4,9 +4,10 @@ import { Logo } from "@/components/ui/logo"
 interface LandingFooterProps {
   tNav: (key: string) => string
   tFooter: (key: string) => string
+  tLegal: (key: string) => string
 }
 
-export function LandingFooter({ tNav, tFooter }: LandingFooterProps) {
+export function LandingFooter({ tNav, tFooter, tLegal }: LandingFooterProps) {
   return (
     <footer className="border-border border-t bg-background py-12">
       <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 px-6 sm:flex-row">
@@ -37,7 +38,7 @@ export function LandingFooter({ tNav, tFooter }: LandingFooterProps) {
           </Ultralink>
         </div>
         <div className="text-muted-foreground text-sm">
-          © 2026 궁금닷컴. 모든 권리 보유.
+          {tLegal("copyright")}
         </div>
       </div>
     </footer>

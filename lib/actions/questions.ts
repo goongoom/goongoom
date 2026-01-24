@@ -2,18 +2,22 @@
 
 import { auth } from "@clerk/nextjs/server"
 import { waitUntil } from "@vercel/functions"
+import { revalidatePath } from "next/cache"
 import { getTranslations } from "next-intl/server"
 import { defaultLocale, type Locale, locales } from "@/i18n/config"
 import { withAudit } from "@/lib/audit/with-audit"
+import { invalidateOgImage, invalidateQuestions } from "@/lib/cache/invalidate"
 import { getClerkUserById } from "@/lib/clerk"
 import {
   createQuestion as createQuestionDB,
   getOrCreateUser,
+  getQuestionById,
   getUserLocale,
+  softDeleteQuestion,
 } from "@/lib/db/queries"
 import { sendPushToMany } from "@/lib/push"
 import { DEFAULT_QUESTION_SECURITY_LEVEL } from "@/lib/question-security"
-import type { Question } from "@/lib/types"
+import type { Question, QuestionId } from "@/lib/types"
 import { getPushSubscriptions } from "./push"
 
 async function getMessagesForLocale(locale: Locale) {
@@ -141,6 +145,53 @@ export async function createQuestion(data: {
       } catch (error) {
         console.error("Question creation error:", error)
         return { success: false, error: t("questionCreateError") }
+      }
+    }
+  )
+}
+
+export async function declineQuestion(data: {
+  questionId: string
+}): Promise<QuestionActionResult<{ questionId: string }>> {
+  return await withAudit(
+    {
+      action: "declineQuestion",
+      payload: data,
+      entityType: "question",
+    },
+    async () => {
+      const t = await getTranslations("errors")
+      try {
+        const { userId: clerkId } = await auth()
+        if (!clerkId) {
+          return { success: false, error: t("loginRequired") }
+        }
+
+        const { questionId: questionIdParam } = data
+        if (!questionIdParam) {
+          return { success: false, error: t("questionIdRequired") }
+        }
+
+        const questionId = questionIdParam as QuestionId
+        const question = await getQuestionById(questionId)
+        if (!question) {
+          return { success: false, error: t("questionNotFound") }
+        }
+        if (question.recipientClerkId !== clerkId) {
+          return { success: false, error: t("onlyRecipientCanDeleteQuestion") }
+        }
+
+        await softDeleteQuestion(questionId, clerkId)
+        await Promise.all([
+          invalidateQuestions(),
+          invalidateOgImage(questionId),
+        ])
+        revalidatePath("/inbox")
+
+        return { success: true, data: { id: questionId, questionId } }
+      } catch (error) {
+        console.error("Question decline error:", error)
+        return { success: false, error: t("questionDeleteError") }
       }
     }
   )

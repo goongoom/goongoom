@@ -82,6 +82,7 @@ export function MobileTabBar({ isLoggedIn = false }: MobileTabBarProps) {
   const pathname = usePathname()
   const tSidebar = useTranslations("sidebar")
   const tFooter = useTranslations("footer")
+  const tUi = useTranslations("ui")
 
   const tabItems = isLoggedIn ? loggedInTabItems : guestTabItems
   usePrefetchRoutes(isLoggedIn ? TAB_ROUTES : GUEST_TAB_ROUTES)
@@ -102,7 +103,7 @@ export function MobileTabBar({ isLoggedIn = false }: MobileTabBarProps) {
 
   return (
     <nav
-      aria-label="Mobile navigation"
+      aria-label={tUi("mobileNavigation")}
       className="fixed inset-x-0 bottom-0 z-50 border-border border-t bg-background/95 pb-safe backdrop-blur-md md:hidden"
     >
       <div className="flex h-16 items-center justify-around">

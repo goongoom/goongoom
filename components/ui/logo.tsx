@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { cva, type VariantProps } from "class-variance-authority"
+import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import logoImage from "@/assets/logo.png"
@@ -25,6 +26,7 @@ interface LogoProps extends VariantProps<typeof logoVariants> {
 }
 
 export function Logo({ size = "md", className }: LogoProps) {
+  const t = useTranslations("ui")
   const sizeMap = {
     xs: 16,
     sm: 24,
@@ -38,7 +40,7 @@ export function Logo({ size = "md", className }: LogoProps) {
     <div className={cn(logoVariants({ size, className }))}>
       <Image
         src={logoImage}
-        alt="Logo"
+        alt={t("logo")}
         width={pixelSize}
         height={pixelSize}
         priority

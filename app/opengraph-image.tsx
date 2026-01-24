@@ -2,13 +2,14 @@ import { readFile } from "node:fs/promises"
 import { join } from "node:path"
 import { cookies } from "next/headers"
 import { ImageResponse } from "next/og"
+import { getTranslations } from "next-intl/server"
 import {
   DEFAULT_SIGNATURE_COLOR,
   SIGNATURE_COLORS,
 } from "@/lib/colors/signature-colors"
 
 export const runtime = "nodejs"
-export const alt = "궁금닷컴 - 무엇이든 물어보세요"
+export const alt = "Goongoom"
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
@@ -28,10 +29,11 @@ export default async function Image() {
   const colors = SIGNATURE_COLORS[DEFAULT_SIGNATURE_COLOR]
   const theme = isDark ? colors.dark : colors.light
 
-  const [fontRegular, fontBold, logoData] = await Promise.all([
+  const [fontRegular, fontBold, logoData, t] = await Promise.all([
     fontRegularPromise,
     fontBoldPromise,
     logoPromise,
+    getTranslations("og"),
   ])
   const logoBase64 = `data:image/png;base64,${logoData.toString("base64")}`
 
@@ -52,7 +54,7 @@ export default async function Image() {
     >
       {/* biome-ignore lint/performance/noImgElement: OG images require native img */}
       <img
-        alt="궁금닷컴 로고"
+        alt={t("logoAlt")}
         height={260}
         src={logoBase64}
         style={{ borderRadius: "52px" }}
@@ -67,11 +69,11 @@ export default async function Image() {
           gap: "20px",
         }}
       >
-        <div style={{ fontSize: "92px", fontWeight: 700 }}>궁금닷컴</div>
+        <div style={{ fontSize: "92px", fontWeight: 700 }}>{t("appName")}</div>
         <div
           style={{ fontSize: "42px", color: isDark ? "#9CA3AF" : "#6B7280" }}
         >
-          무엇이든 물어보세요
+          {t("tagline")}
         </div>
       </div>
 

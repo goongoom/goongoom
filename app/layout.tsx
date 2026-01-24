@@ -6,7 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { EscapeInAppBrowser } from "eiab/react"
 import type { Metadata, Viewport } from "next"
 import { NextIntlClientProvider } from "next-intl"
-import { getLocale, getMessages } from "next-intl/server"
+import { getLocale, getMessages, getTranslations } from "next-intl/server"
 import { ThemeProvider } from "next-themes"
 import { PasskeySetupModal } from "@/components/auth/passkey-setup-modal"
 import { AppShellWrapper } from "@/components/layout/app-shell-wrapper"
@@ -27,9 +27,12 @@ const clerkLocalizations = {
   en: enUS,
 } as const
 
-export const metadata: Metadata = {
-  title: "궁금닷컴",
-  description: "궁금한 것을 물어보고 답변을 받아보세요",
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata")
+  return {
+    title: t("title"),
+    description: t("description"),
+  }
 }
 
 export const viewport: Viewport = {

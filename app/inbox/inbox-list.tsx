@@ -11,6 +11,17 @@ import { formatDistanceToNow } from "date-fns"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,6 +35,7 @@ import {
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
 import { createAnswer } from "@/lib/actions/answers"
+import { declineQuestion } from "@/lib/actions/questions"
 
 function getDicebearUrl(seed: string) {
   return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
@@ -53,6 +65,7 @@ interface InboxListProps {
 export function InboxList({ questions }: InboxListProps) {
   const t = useTranslations("answers")
   const tCommon = useTranslations("common")
+  const tInbox = useTranslations("inbox")
 
   const router = useRouter()
   const [dismissedQuestionIds, setDismissedQuestionIds] = useState<Set<string>>(
@@ -64,6 +77,8 @@ export function InboxList({ questions }: InboxListProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [answer, setAnswer] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isDeclining, setIsDeclining] = useState(false)
+  const [isDeclineDialogOpen, setIsDeclineDialogOpen] = useState(false)
   const [shouldRefreshOnClose, setShouldRefreshOnClose] = useState(false)
 
   const visibleQuestions = questions.filter(
@@ -110,6 +125,32 @@ export function InboxList({ questions }: InboxListProps) {
       }
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  async function handleDecline() {
+    if (!selectedQuestion || isDeclining) {
+      return
+    }
+
+    setIsDeclining(true)
+    try {
+      const result = await declineQuestion({
+        questionId: selectedQuestion.id,
+      })
+
+      if (result.success) {
+        setDismissedQuestionIds((prev) => {
+          const next = new Set(prev)
+          next.add(selectedQuestion.id)
+          return next
+        })
+        setShouldRefreshOnClose(true)
+        setIsDrawerOpen(false)
+      }
+    } finally {
+      setIsDeclining(false)
+      setIsDeclineDialogOpen(false)
     }
   }
 
@@ -250,7 +291,7 @@ export function InboxList({ questions }: InboxListProps) {
               </div>
             </div>
 
-            <DrawerFooter className="pt-4">
+            <DrawerFooter className="gap-2 pt-4">
               <Button
                 className="h-14 w-full rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold text-base transition-all disabled:opacity-70"
                 disabled={!answer.trim() || isSubmitting}
@@ -273,6 +314,46 @@ export function InboxList({ questions }: InboxListProps) {
                   </span>
                 )}
               </Button>
+              <AlertDialog
+                onOpenChange={setIsDeclineDialogOpen}
+                open={isDeclineDialogOpen}
+              >
+                <AlertDialogTrigger
+                  render={
+                    <Button
+                      className="h-14 w-full rounded-2xl text-destructive"
+                      type="button"
+                      variant="outline"
+                    />
+                  }
+                >
+                  {tInbox("declineButton")}
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      {tInbox("declineTitle")}
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {tInbox("declineDescription")}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      disabled={isDeclining}
+                      onClick={handleDecline}
+                      type="button"
+                    >
+                      {isDeclining ? (
+                        <Spinner className="mr-2 size-4 text-destructive-foreground" />
+                      ) : null}
+                      {tCommon("decline")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </DrawerFooter>
           </div>
         </DrawerContent>

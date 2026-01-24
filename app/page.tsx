@@ -43,10 +43,11 @@ export default async function Home({ searchParams }: HomePageProps) {
 }
 
 async function LandingPage() {
-  const [t, tNav, tFooter, tShare, userCount] = await Promise.all([
+  const [t, tNav, tFooter, tLegal, tShare, userCount] = await Promise.all([
     getTranslations("home"),
     getTranslations("nav"),
     getTranslations("footer"),
+    getTranslations("legal"),
     getTranslations("share"),
     getUserCount(),
   ])
@@ -56,7 +57,7 @@ async function LandingPage() {
       <LandingHero t={t} />
       <LandingFeatures t={t} tShare={tShare} />
       <LandingCTA t={t} userCount={userCount} />
-      <LandingFooter tFooter={tFooter} tNav={tNav} />
+      <LandingFooter tFooter={tFooter} tLegal={tLegal} tNav={tNav} />
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises"
 import { join } from "node:path"
 import { getCache } from "@vercel/functions"
 import { ImageResponse } from "next/og"
+import { getTranslations } from "next-intl/server"
 import { getSignatureColor } from "@/lib/colors/signature-colors"
 
 const clamp = (value: string, max: number) =>
@@ -69,17 +70,14 @@ export async function GET(request: Request) {
     })
   }
 
+  const t = await getTranslations("og")
   const question = pickText(
     searchParams.get("question"),
-    "궁금한 질문이 여기에 표시돼요.",
+    t("defaultQuestion"),
     180
   )
-  const answer = pickText(
-    searchParams.get("answer"),
-    "재치있는 답변을 공유해 보세요.",
-    260
-  )
-  const name = pickText(searchParams.get("name"), "사용자", 40)
+  const answer = pickText(searchParams.get("answer"), t("defaultAnswer"), 260)
+  const name = pickText(searchParams.get("name"), t("defaultUser"), 40)
   const colorKey = searchParams.get("color")
   const isDark = searchParams.get("dark") === "1"
   const colors = getSignatureColor(colorKey)

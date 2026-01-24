@@ -5,13 +5,20 @@ import { waitUntil } from "@vercel/functions"
 import { revalidatePath } from "next/cache"
 import { getTranslations } from "next-intl/server"
 import { withAudit } from "@/lib/audit/with-audit"
+import {
+  invalidateAnswers,
+  invalidateOgImage,
+  invalidateQuestions,
+} from "@/lib/cache/invalidate"
 import { getClerkUserById } from "@/lib/clerk"
 import {
+  clearQuestionAnswerId,
   createAnswer as createAnswerDB,
   getQuestionById,
+  softDeleteAnswer,
 } from "@/lib/db/queries"
 import { sendPushToMany } from "@/lib/push"
-import type { Answer, Question, QuestionId } from "@/lib/types"
+import type { Answer, AnswerId, Question, QuestionId } from "@/lib/types"
 import { getPushSubscriptions } from "./push"
 
 export type AnswerActionResult<T = unknown> =
@@ -96,6 +103,49 @@ export async function createAnswer(data: {
       } catch (error) {
         console.error("Answer creation error:", error)
         return { success: false, error: t("answerCreateError") }
+      }
+    }
+  )
+}
+
+export async function deleteAnswer(data: {
+  answerId: string
+}): Promise<AnswerActionResult<{ id: string; questionId: string }>> {
+  return await withAudit(
+    { action: "deleteAnswer", payload: data, entityType: "answer" },
+    async () => {
+      const t = await getTranslations("errors")
+      try {
+        const { userId: clerkId } = await auth()
+
+        if (!clerkId) {
+          return { success: false, error: t("loginRequired") }
+        }
+
+        const { answerId: answerIdParam } = data
+        if (!answerIdParam) {
+          return { success: false, error: t("answerIdRequired") }
+        }
+
+        const answerId = answerIdParam as AnswerId
+        const result = await softDeleteAnswer(answerId, clerkId)
+        const questionId = result?.questionId
+        if (!questionId) {
+          return { success: false, error: t("questionNotFound") }
+        }
+
+        await clearQuestionAnswerId(questionId, clerkId)
+        await Promise.all([
+          invalidateAnswers(),
+          invalidateQuestions(),
+          invalidateOgImage(questionId),
+        ])
+        revalidatePath("/inbox")
+
+        return { success: true, data: { id: answerId, questionId } }
+      } catch (error) {
+        console.error("Answer delete error:", error)
+        return { success: false, error: t("answerDeleteError") }
       }
     }
   )

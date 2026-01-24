@@ -6,34 +6,25 @@ export default defineSchema({
     clerkId: v.string(),
     bio: v.optional(v.string()),
     socialLinks: v.optional(
-      v.object({
-        instagram: v.optional(v.union(v.array(v.string()), v.string())),
-        facebook: v.optional(v.string()),
-        github: v.optional(
-          v.union(
-            v.array(
-              v.object({
-                handle: v.string(),
-                label: v.optional(v.string()),
-              })
-            ),
-            v.string()
-          )
-        ),
-        naverBlog: v.optional(
-          v.union(
-            v.array(
-              v.object({
-                handle: v.string(),
-                label: v.optional(v.string()),
-              })
-            ),
-            v.string()
-          )
-        ),
-        twitter: v.optional(v.union(v.array(v.string()), v.string())),
-        youtube: v.optional(v.union(v.array(v.string()), v.string())),
-      })
+      v.array(
+        v.object({
+          platform: v.union(
+            v.literal("instagram"),
+            v.literal("twitter"),
+            v.literal("youtube"),
+            v.literal("github"),
+            v.literal("naverBlog")
+          ),
+          content: v.union(
+            v.string(),
+            v.object({
+              handle: v.string(),
+              label: v.string(),
+            })
+          ),
+          labelType: v.union(v.literal("handle"), v.literal("custom")),
+        })
+      )
     ),
     questionSecurityLevel: v.string(),
     locale: v.optional(v.string()),

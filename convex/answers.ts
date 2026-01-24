@@ -26,18 +26,43 @@ export const create = mutation({
   },
 })
 
+export const softDelete = mutation({
+  args: {
+    id: v.id("answers"),
+    recipientClerkId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const answer = await ctx.db.get(args.id)
+    if (!answer) {
+      throw new Error("Answer not found")
+    }
+    if (answer.deletedAt) {
+      return { success: true, questionId: answer.questionId }
+    }
+
+    const question = await ctx.db.get(answer.questionId)
+    if (!question || question.recipientClerkId !== args.recipientClerkId) {
+      throw new Error("Not authorized to delete this answer")
+    }
+
+    await ctx.db.patch(args.id, { deletedAt: Date.now() })
+    return { success: true, questionId: answer.questionId }
+  },
+})
+
 export const getRecent = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
     const answers = await ctx.db
       .query("answers")
+      .filter((q) => q.eq(q.field("deletedAt"), undefined))
       .order("desc")
       .take(args.limit ?? 20)
 
     const questionIds = [...new Set(answers.map((a) => a.questionId))]
     const questions = await Promise.all(questionIds.map((id) => ctx.db.get(id)))
     const validQuestions = questions.filter(
-      (q): q is NonNullable<typeof q> => q !== null
+      (q): q is NonNullable<typeof q> => q !== null && !q.deletedAt
     )
     const questionMap = new Map(validQuestions.map((q) => [q._id, q]))
 
@@ -72,7 +97,8 @@ export const getFriendsAnswers = query({
         q.and(
           q.eq(q.field("isAnonymous"), false),
           q.neq(q.field("answerId"), undefined),
-          q.neq(q.field("senderClerkId"), undefined)
+          q.neq(q.field("senderClerkId"), undefined),
+          q.eq(q.field("deletedAt"), undefined)
         )
       )
       .collect()
@@ -89,7 +115,8 @@ export const getFriendsAnswers = query({
       .filter((q) =>
         q.and(
           q.eq(q.field("isAnonymous"), false),
-          q.neq(q.field("answerId"), undefined)
+          q.neq(q.field("answerId"), undefined),
+          q.eq(q.field("deletedAt"), undefined)
         )
       )
       .collect()
@@ -106,13 +133,14 @@ export const getFriendsAnswers = query({
 
     const answers = await ctx.db
       .query("answers")
+      .filter((q) => q.eq(q.field("deletedAt"), undefined))
       .order("desc")
       .take((args.limit ?? 20) * 3)
 
     const questionIds = [...new Set(answers.map((a) => a.questionId))]
     const questions = await Promise.all(questionIds.map((id) => ctx.db.get(id)))
     const validQuestions = questions.filter(
-      (q): q is NonNullable<typeof q> => q !== null
+      (q): q is NonNullable<typeof q> => q !== null && !q.deletedAt
     )
     const questionMap = new Map(validQuestions.map((q) => [q._id, q]))
 

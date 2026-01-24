@@ -246,6 +246,10 @@ export default async function QADetailPage({ params }: QADetailPageProps) {
               url={canonicalUrl}
               variant="secondary"
             />
+            <DeleteResponseButton
+              answerId={answer._id}
+              profileUrl={`/${username}`}
+            />
           </>
         ) : (
           <Button

@@ -11,6 +11,7 @@ export type {
   Question,
   QuestionId,
   QuestionWithAnswer,
+  SocialLinkEntry,
   SocialLinks,
   User,
   UserId,

@@ -14,14 +14,24 @@ export type AnswerId = Id<"answers">
 export type PushSubscriptionId = Id<"pushSubscriptions">
 export type LogId = Id<"logs">
 
-export interface SocialLinks {
-  instagram?: string[] | string
-  facebook?: string
-  github?: { handle: string; label?: string }[] | string
-  naverBlog?: { handle: string; label?: string }[] | string
-  twitter?: string[] | string
-  youtube?: string[] | string
+export type SocialLinkPlatform =
+  | "instagram"
+  | "twitter"
+  | "youtube"
+  | "github"
+  | "naverBlog"
+
+export type SocialLinkLabelType = "handle" | "custom"
+
+export type SocialLinkContent = string | { handle: string; label: string }
+
+export interface SocialLinkEntry {
+  platform: SocialLinkPlatform
+  content: SocialLinkContent
+  labelType: SocialLinkLabelType
 }
+
+export type SocialLinks = SocialLinkEntry[]
 
 export interface QuestionWithAnswer extends Question {
   answer: Answer | null | undefined

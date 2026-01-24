@@ -51,22 +51,6 @@ export function AppShell({
     createdAt: q.createdAt,
   }))
 
-  if (!isLoggedIn) {
-    return (
-      <>
-        <div className="flex h-full flex-1 flex-col pb-24 md:pb-0">
-          {children}
-        </div>
-        <MobileTabBar />
-        <QuickAnswerDialog
-          onOpenChange={handleDialogChange}
-          open={dialogOpen}
-          question={selectedQuestion}
-        />
-      </>
-    )
-  }
-
   return (
     <SidebarProvider defaultOpen>
       <AppSidebar
@@ -74,7 +58,7 @@ export function AppShell({
         recentQuestions={sidebarQuestions}
       />
       <SidebarInset className="pb-24 md:pb-0">{children}</SidebarInset>
-      <MobileTabBar />
+      <MobileTabBar isLoggedIn={isLoggedIn} />
       <QuickAnswerDialog
         onOpenChange={handleDialogChange}
         open={dialogOpen}

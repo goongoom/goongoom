@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises"
 import { join } from "node:path"
 import { cookies } from "next/headers"
 import { ImageResponse } from "next/og"
+import { getTranslations } from "next-intl/server"
 import { getClerkUserByUsername } from "@/lib/clerk"
 import { getSignatureColor } from "@/lib/colors/signature-colors"
 import { getOrCreateUser } from "@/lib/db/queries"
@@ -32,10 +33,11 @@ export default async function Image({ params }: PageProps) {
   const themeCookie = cookieStore.get("theme")?.value
   const isDark = themeCookie === "dark"
 
-  const [fontRegular, fontBold, logoData] = await Promise.all([
+  const [fontRegular, fontBold, logoData, t] = await Promise.all([
     fontRegularPromise,
     fontBoldPromise,
     logoPromise,
+    getTranslations("og"),
   ])
   const logoBase64 = `data:image/png;base64,${logoData.toString("base64")}`
 
@@ -56,7 +58,7 @@ export default async function Image({ params }: PageProps) {
           color: "#6B7280",
         }}
       >
-        User not found
+        {t("userNotFound")}
       </div>,
       {
         ...size,
@@ -93,14 +95,14 @@ export default async function Image({ params }: PageProps) {
       >
         {/* biome-ignore lint/performance/noImgElement: OG images require native img */}
         <img
-          alt="궁금닷컴"
+          alt={t("logoAlt")}
           height={72}
           src={logoBase64}
           style={{ borderRadius: "20px" }}
           width={72}
         />
         <div style={{ display: "flex", fontSize: "40px", fontWeight: 700 }}>
-          궁금닷컴
+          {t("appName")}
         </div>
       </div>
 
@@ -184,7 +186,7 @@ export default async function Image({ params }: PageProps) {
           color: isDark ? "#6B7280" : "#9CA3AF",
         }}
       >
-        <div>무엇이든 물어보세요</div>
+        <div>{t("tagline")}</div>
         <div>goongoom.com/{clamp(clerkUser.username || username, 16)}</div>
       </div>
     </div>,

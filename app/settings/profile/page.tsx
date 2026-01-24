@@ -48,8 +48,7 @@ export default async function ProfileSettingsPage() {
     )
   }
 
-  const instagramHandle = dbUser?.socialLinks?.instagram || ""
-  const twitterHandle = dbUser?.socialLinks?.twitter || ""
+  const initialSocialLinks = dbUser?.socialLinks || null
   const securityLevel = dbUser?.questionSecurityLevel || "public"
   const signatureColor =
     dbUser?.signatureColor && isValidSignatureColor(dbUser.signatureColor)
@@ -69,10 +68,9 @@ export default async function ProfileSettingsPage() {
 
       <ProfileEditForm
         initialBio={dbUser?.bio || null}
-        initialInstagramHandle={instagramHandle}
         initialQuestionSecurityLevel={securityLevel}
         initialSignatureColor={signatureColor}
-        initialTwitterHandle={twitterHandle}
+        initialSocialLinks={initialSocialLinks}
         securityOptions={securityOptions}
       />
     </MainContent>

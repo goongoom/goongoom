@@ -1,4 +1,7 @@
+"use client"
+
 import * as React from "react"
+import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -6,10 +9,11 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { ArrowLeft01Icon, ArrowRight01Icon, MoreHorizontalCircle01Icon } from "@hugeicons/core-free-icons"
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
+  const t = useTranslations("ui")
   return (
     <nav
       role="navigation"
-      aria-label="pagination"
+      aria-label={t("goToNextPage").replace("next page", "pagination")}
       data-slot="pagination"
       className={cn(
         "mx-auto flex w-full justify-center",
@@ -70,16 +74,17 @@ function PaginationPrevious({
   className,
   ...props
 }: React.ComponentProps<typeof PaginationLink>) {
+  const t = useTranslations("ui")
   return (
     <PaginationLink
-      aria-label="Go to previous page"
+      aria-label={t("goToPreviousPage")}
       size="default"
       className={cn("pl-1.5!", className)}
       {...props}
     >
       <HugeiconsIcon icon={ArrowLeft01Icon} strokeWidth={2} data-icon="inline-start" />
       <span className="hidden sm:block">
-        Previous
+        {t("previous")}
       </span>
     </PaginationLink>
   )
@@ -89,14 +94,15 @@ function PaginationNext({
   className,
   ...props
 }: React.ComponentProps<typeof PaginationLink>) {
+  const t = useTranslations("ui")
   return (
     <PaginationLink
-      aria-label="Go to next page"
+      aria-label={t("goToNextPage")}
       size="default"
       className={cn("pr-1.5!", className)}
       {...props}
     >
-      <span className="hidden sm:block">Next</span>
+      <span className="hidden sm:block">{t("next")}</span>
       <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} data-icon="inline-end" />
     </PaginationLink>
   )
@@ -106,6 +112,7 @@ function PaginationEllipsis({
   className,
   ...props
 }: React.ComponentProps<"span">) {
+  const t = useTranslations("ui")
   return (
     <span
       aria-hidden
@@ -117,7 +124,7 @@ function PaginationEllipsis({
       {...props}
     >
       <HugeiconsIcon icon={MoreHorizontalCircle01Icon} strokeWidth={2} />
-      <span className="sr-only">More pages</span>
+      <span className="sr-only">{t("morePages")}</span>
     </span>
   )
 }
