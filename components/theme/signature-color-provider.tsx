@@ -47,10 +47,20 @@ export function SignatureColorProvider({ children, signatureColor: initialColor 
     :root {
       --emerald: ${colors.light.primary};
       --success: ${colors.light.primary};
+      --primary: ${colors.light.primary};
+      --primary-foreground: #ffffff;
+      --ring: ${colors.light.primary};
+      --sidebar-primary: ${colors.light.primary};
+      --sidebar-primary-foreground: #ffffff;
     }
     .dark {
       --emerald: ${colors.dark.primary};
       --success: ${colors.dark.primary};
+      --primary: ${colors.dark.primary};
+      --primary-foreground: #ffffff;
+      --ring: ${colors.dark.primary};
+      --sidebar-primary: ${colors.dark.primary};
+      --sidebar-primary-foreground: #ffffff;
     }
   `
 

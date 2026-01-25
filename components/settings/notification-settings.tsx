@@ -59,6 +59,7 @@ export function NotificationSettings({ clerkId }: { clerkId: string }) {
   const subscriptions = useQuery(api.push.getByClerkId, { clerkId })
   const upsertPush = useMutation(api.push.upsert)
   const removePush = useMutation(api.push.remove)
+  const removeAllPush = useMutation(api.push.removeAll)
   const sendTestNotification = useAction(api.pushActions.sendTestNotification)
 
   const isLoading = subscriptions === undefined
@@ -157,12 +158,13 @@ export function NotificationSettings({ clerkId }: { clerkId: string }) {
             return
           }
         }
+        await removeAllPush({ clerkId })
         toast.success(t('notificationSettings.unsubscribeSuccess'))
       } catch {
         toast.error(t('notificationSettings.unsubscribeError'))
       }
     })
-  }, [t, tCommon, clerkId, removePush, upsertPush])
+  }, [t, tCommon, clerkId, removePush, removeAllPush, upsertPush])
 
   const handleToggle = useCallback(
     (checked: boolean) => {

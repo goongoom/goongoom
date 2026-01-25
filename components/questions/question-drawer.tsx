@@ -1,7 +1,7 @@
 'use client'
 
 import { SignUpButton, useUser } from '@clerk/nextjs'
-import { LockIcon } from '@hugeicons/core-free-icons'
+import { LockIcon, SentIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -11,7 +11,6 @@ import { toast } from 'sonner'
 import { PasskeySignInButton } from '@/components/auth/passkey-sign-in-button'
 import { CHAR_LIMITS } from '@/lib/charLimits'
 import { cn } from '@/lib/utils'
-import { QuestionInputTrigger } from '@/components/questions/question-input-trigger'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
@@ -244,7 +243,19 @@ export function QuestionDrawer({
 
   return (
     <Drawer onAnimationEnd={handleAnimationEnd} onOpenChange={setOpen} open={open} repositionInputs={false}>
-      <QuestionInputTrigger onClick={() => setOpen(true)} />
+      <div className="pointer-events-none fixed inset-x-0 bottom-tab-bar z-40 bg-gradient-to-t from-background via-background/80 to-transparent p-4 md:left-(--sidebar-width)">
+        <button
+          aria-label={t('writeQuestion')}
+          className="pointer-events-auto flex min-h-12 w-full items-center justify-between gap-4 rounded-full border border-border/50 bg-background/80 px-5 py-3.5 ring-1 ring-foreground/5 backdrop-blur-md transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          onClick={() => setOpen(true)}
+          type="button"
+        >
+          <span className="font-medium text-muted-foreground/80 text-sm sm:text-base">{t('inputPlaceholder')}</span>
+          <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform duration-300 group-active:scale-95">
+            <HugeiconsIcon className="size-5" icon={SentIcon} strokeWidth={2.5} />
+          </div>
+        </button>
+      </div>
       <DrawerContent className="pb-safe">
         <div className="mx-auto w-full max-w-lg">
           <DrawerHeader className="pb-2 text-left">

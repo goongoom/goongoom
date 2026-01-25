@@ -38,6 +38,7 @@ export function DeleteResponseButton({ answerId, profileUrl }: DeleteResponseBut
         recipientClerkId: userId,
       })
 
+      router.prefetch(profileUrl)
       router.push(profileUrl)
       router.refresh()
 

@@ -4,3 +4,4 @@
 - Never use setStates inside useEffects.
 - Never use any `vh`, `h-screen`, etc. Use `h-full` with `flex-1`. Never use `vw`.
 - Never use arbitrary tailwind values (the ones with brackets). Always use Tailwind default defined values.
+- For Test DB, use `anaclumos` username. Find password in .env.

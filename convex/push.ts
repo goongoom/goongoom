@@ -60,6 +60,28 @@ export const remove = mutation({
   },
 })
 
+export const removeAll = mutation({
+  args: {
+    clerkId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.clerkId) {
+      throw new ConvexError('Not authorized')
+    }
+
+    const subscriptions = await ctx.db
+      .query('pushSubscriptions')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.clerkId))
+      .collect()
+
+    await Promise.all(subscriptions.map((sub) => ctx.db.delete(sub._id)))
+  },
+})
+
 export const getByClerkId = query({
   args: { clerkId: v.string() },
   handler: async (ctx, args) => {
