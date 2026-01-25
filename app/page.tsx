@@ -13,7 +13,6 @@ import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/u
 import { Skeleton } from '@/components/ui/skeleton'
 import { api } from '@/convex/_generated/api'
 import type { FunctionReturnType } from 'convex/server'
-import { hasRedirectedToProfileThisSession, markRedirectedToProfile } from '@/lib/utils/session-cookie'
 
 type RecentAnswer = NonNullable<FunctionReturnType<typeof api.answers.getRecentLimitPerUser>>[number]
 
@@ -39,24 +38,15 @@ export default function Home() {
     [tCommon]
   )
 
-  // Compute redirect check result synchronously to avoid setState in useEffect
-  const redirectChecked = useMemo(() => {
-    if (!isUserLoaded) return false
-    // If user will be redirected, don't mark as checked yet
-    if (user?.username && !hasRedirectedToProfileThisSession()) return false
-    return true
-  }, [isUserLoaded, user?.username])
-
   useEffect(() => {
-    if (!isUserLoaded) return
-
-    if (user?.username && !hasRedirectedToProfileThisSession()) {
-      markRedirectedToProfile()
+    if (isUserLoaded && user?.username) {
       router.replace(`/${user.username}`)
     }
   }, [isUserLoaded, user, router])
 
-  const isLoading = recentAnswers === undefined || answerCount === undefined || !redirectChecked
+  const isRedirecting = isUserLoaded && !!user?.username
+
+  const isLoading = recentAnswers === undefined || answerCount === undefined || isRedirecting
 
   if (isLoading) {
     return (
