@@ -312,8 +312,19 @@ export const getFriendsAnswers = query({
           .filter((id): id is string => id !== undefined && friendIds.has(id))
       ),
     ]
+    const senderClerkIds = [
+      ...new Set(
+        answers
+          .map((a) => {
+            const question = questionMap.get(a.questionId)
+            return question && !question.isAnonymous ? question.senderClerkId : undefined
+          })
+          .filter((id): id is string => id !== undefined)
+      ),
+    ]
+    const allClerkIds = [...new Set([...recipientClerkIds, ...senderClerkIds])]
     const users = await Promise.all(
-      recipientClerkIds.map((clerkId) =>
+      allClerkIds.map((clerkId) =>
         ctx.db
           .query('users')
           .withIndex('by_clerk_id', (q) => q.eq('clerkId', clerkId))
@@ -331,15 +342,18 @@ export const getFriendsAnswers = query({
         if (!friendIds.has(question.recipientClerkId)) {
           return null
         }
-        const user = userMap.get(question.recipientClerkId)
+        const recipientUser = userMap.get(question.recipientClerkId)
+        const senderUser = question.senderClerkId ? userMap.get(question.senderClerkId) : undefined
         return {
           question,
           answer,
           recipientClerkId: question.recipientClerkId,
-          recipientUsername: user?.username,
-          recipientFirstName: user?.firstName,
-          recipientAvatarUrl: user?.avatarUrl,
-          recipientSignatureColor: user?.signatureColor,
+          recipientUsername: recipientUser?.username,
+          recipientFirstName: recipientUser?.firstName,
+          recipientAvatarUrl: recipientUser?.avatarUrl,
+          recipientSignatureColor: recipientUser?.signatureColor,
+          senderFirstName: senderUser?.firstName,
+          senderAvatarUrl: senderUser?.avatarUrl,
         }
       })
       .filter((item): item is NonNullable<typeof item> => item !== null)

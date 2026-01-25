@@ -80,8 +80,8 @@ export default function FriendsPage() {
               questionContent={qa.question.content}
               questionCreatedAt={qa.question._creationTime}
               questionId={qa.question._id}
-              senderAvatarUrl={undefined}
-              senderName={qa.question.isAnonymous ? undefined : tCommon('identified')}
+              senderAvatarUrl={qa.senderAvatarUrl}
+              senderName={qa.question.isAnonymous ? undefined : qa.senderFirstName}
               signatureColor={qa.recipientSignatureColor}
               username={qa.recipientUsername || qa.recipientClerkId}
             />
