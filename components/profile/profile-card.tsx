@@ -1,5 +1,4 @@
-import type { IconSvgElement } from '@hugeicons/react'
-import { HugeiconsIcon } from '@hugeicons/react'
+import type { ComponentType, SVGProps } from 'react'
 import Link from 'next/link'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -9,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 interface SocialLink {
   key: string
   href: string
-  icon: IconSvgElement
+  icon: ComponentType<SVGProps<SVGSVGElement> & { size?: number | string }>
   label: string
   text: string
 }
@@ -76,7 +75,7 @@ export function ProfileCard(props: ProfileCardProps) {
               size="sm"
               variant="outline"
             >
-              <HugeiconsIcon className="size-4" icon={link.icon} />
+              <link.icon className="size-4" />
               <span className="text-sm">{link.text}</span>
             </Button>
           ))}

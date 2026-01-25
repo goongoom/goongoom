@@ -9,6 +9,9 @@ import { MainContent } from '@/components/layout/main-content'
 import { AnsweredQuestionCard } from '@/components/questions/answered-question-card'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { api } from '@/convex/_generated/api'
+import type { FunctionReturnType } from 'convex/server'
+
+type FriendsAnswer = NonNullable<FunctionReturnType<typeof api.answers.getFriendsAnswers>>[number]
 
 export default function FriendsPage() {
   const { userId: clerkId } = useAuth()
@@ -63,7 +66,7 @@ export default function FriendsPage() {
         </Empty>
       ) : (
         <div className="space-y-6 pb-24">
-          {friendsAnswers.map((qa) => (
+          {friendsAnswers.map((qa: FriendsAnswer) => (
             <AnsweredQuestionCard
               anonymousAvatarSeed={qa.question.anonymousAvatarSeed}
               answerContent={qa.answer.content}

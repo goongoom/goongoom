@@ -1,7 +1,8 @@
 'use client'
 
-import { InstagramIcon, Loading03Icon, MoreVerticalIcon } from '@hugeicons/core-free-icons'
+import { Loading03Icon, MoreVerticalIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { SiInstagram } from '@icons-pack/react-simple-icons'
 import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -134,10 +135,11 @@ export function ShareInstagramButton({ shareUrl, mode = 'icon', className }: Sha
   if (mode === 'button') {
     return (
       <Button className={className} disabled={isLoading} onClick={handleShare} size="lg" variant="default">
-        <HugeiconsIcon
-          className={`mr-2 size-5 ${isLoading ? 'animate-spin' : ''}`}
-          icon={isLoading ? Loading03Icon : InstagramIcon}
-        />
+        {isLoading ? (
+          <HugeiconsIcon className="mr-2 size-5 animate-spin" icon={Loading03Icon} />
+        ) : (
+          <SiInstagram className="mr-2 size-5" />
+        )}
         {isLoading ? t('instagramImageShareLoading') : t('instagramImageShare')}
       </Button>
     )

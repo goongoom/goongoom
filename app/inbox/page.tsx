@@ -9,7 +9,10 @@ import { MainContent } from '@/components/layout/main-content'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { ToastOnMount } from '@/components/ui/toast-on-mount'
 import { api } from '@/convex/_generated/api'
+import type { FunctionReturnType } from 'convex/server'
 import { useAuth } from '@clerk/nextjs'
+
+type UnansweredQuestion = NonNullable<FunctionReturnType<typeof api.questions.getUnanswered>>[number]
 import { InboxList } from './inbox-list'
 
 function ErrorToast() {
@@ -37,14 +40,14 @@ function InboxContent() {
   const questionsWithSenders = useMemo(() => {
     if (!unansweredQuestions) return []
 
-    return unansweredQuestions.map((question) => ({
+    return unansweredQuestions.map((question: UnansweredQuestion) => ({
       id: question._id,
       content: question.content,
       isAnonymous: question.isAnonymous,
       createdAt: question._creationTime,
       senderName: question.isAnonymous
         ? tCommon('anonymous')
-        : question.senderDisplayName || question.senderUsername || tCommon('identified'),
+        : question.senderFirstName || question.senderUsername || tCommon('identified'),
       senderAvatarUrl: question.isAnonymous ? undefined : question.senderAvatarUrl,
       anonymousAvatarSeed: question.isAnonymous ? question.anonymousAvatarSeed : undefined,
     }))

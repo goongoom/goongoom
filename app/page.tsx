@@ -12,7 +12,10 @@ import { HomeCarousel } from '@/components/home/home-carousel'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { Skeleton } from '@/components/ui/skeleton'
 import { api } from '@/convex/_generated/api'
+import type { FunctionReturnType } from 'convex/server'
 import { hasRedirectedToProfileThisSession, markRedirectedToProfile } from '@/lib/utils/session-cookie'
+
+type RecentAnswer = NonNullable<FunctionReturnType<typeof api.answers.getRecentLimitPerUser>>[number]
 
 export default function Home() {
   const t = useTranslations('home')
@@ -122,7 +125,7 @@ export default function Home() {
           ) : (
             <div className="mx-auto max-w-[1600px] px-4 md:px-8">
               <HomeCarousel>
-                {recentAnswers.map((qa) => (
+                {recentAnswers.map((qa: RecentAnswer) => (
                   <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4" key={qa.question._id}>
                     <div className="h-full transform rounded-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                       <AnsweredQuestionCard

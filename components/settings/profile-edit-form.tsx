@@ -1,20 +1,9 @@
 'use client'
 
 import { useAuth } from '@clerk/nextjs'
-import {
-  AnonymousIcon,
-  BloggerIcon,
-  Cancel01Icon,
-  GithubIcon,
-  InstagramIcon,
-  LockIcon,
-  NewTwitterIcon,
-  PaintBrushIcon,
-  UserIcon,
-  UserMultipleIcon,
-  YoutubeIcon,
-} from '@hugeicons/core-free-icons'
+import { AnonymousIcon, Cancel01Icon, LockIcon, PaintBrushIcon, UserIcon, UserMultipleIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { SiGithub, SiInstagram, SiNaver, SiX, SiYoutube } from '@icons-pack/react-simple-icons'
 import { useAction, useMutation } from 'convex/react'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useRef, useState } from 'react'
@@ -346,11 +335,7 @@ export function ProfileEditForm({
                     <div className="flex items-center gap-2" key={row.id}>
                       <div className="relative flex-1">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                          <HugeiconsIcon
-                            className="size-5 text-muted-foreground/60"
-                            icon={InstagramIcon}
-                            strokeWidth={2}
-                          />
+                          <SiInstagram className="size-5 text-muted-foreground/60" />
                         </div>
                         <Input
                           autoCapitalize="none"
@@ -389,11 +374,7 @@ export function ProfileEditForm({
                     <div className="flex items-center gap-2" key={row.id}>
                       <div className="relative flex-1">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                          <HugeiconsIcon
-                            className="size-5 text-muted-foreground/60"
-                            icon={NewTwitterIcon}
-                            strokeWidth={2}
-                          />
+                          <SiX className="size-5 text-muted-foreground/60" />
                         </div>
                         <Input
                           autoCapitalize="none"
@@ -432,11 +413,7 @@ export function ProfileEditForm({
                     <div className="flex items-center gap-2" key={row.id}>
                       <div className="relative flex-1">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                          <HugeiconsIcon
-                            className="size-5 text-muted-foreground/60"
-                            icon={YoutubeIcon}
-                            strokeWidth={2}
-                          />
+                          <SiYoutube className="size-5 text-muted-foreground/60" />
                         </div>
                         <Input
                           autoCapitalize="none"
@@ -475,11 +452,7 @@ export function ProfileEditForm({
                     <div className="flex items-center gap-2" key={row.id}>
                       <div className="relative flex-1">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                          <HugeiconsIcon
-                            className="size-5 text-muted-foreground/60"
-                            icon={GithubIcon}
-                            strokeWidth={2}
-                          />
+                          <SiGithub className="size-5 text-muted-foreground/60" />
                         </div>
                         <Input
                           autoCapitalize="none"
@@ -518,11 +491,7 @@ export function ProfileEditForm({
                     <div className="flex items-center gap-2" key={row.id}>
                       <div className="relative flex-1">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                          <HugeiconsIcon
-                            className="size-5 text-muted-foreground/60"
-                            icon={BloggerIcon}
-                            strokeWidth={2}
-                          />
+                          <SiNaver className="size-5 text-muted-foreground/60" />
                         </div>
                         <Input
                           autoCapitalize="none"

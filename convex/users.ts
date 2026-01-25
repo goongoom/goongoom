@@ -339,7 +339,12 @@ export const listAllInternal = internalQuery({
 
 export const syncFromClerk = action({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx): Promise<{
+    totalUsers: number
+    syncedCount: number
+    errorCount: number
+    errors: { clerkId: string; error: string }[]
+  }> => {
     const clerkSecretKey = process.env.CLERK_SECRET_KEY
     if (!clerkSecretKey) {
       throw new ConvexError('CLERK_SECRET_KEY not configured')

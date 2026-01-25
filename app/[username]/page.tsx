@@ -14,7 +14,12 @@ import { QuestionDrawer } from '@/components/questions/question-drawer'
 import { Empty, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { ToastOnMount } from '@/components/ui/toast-on-mount'
 import { api } from '@/convex/_generated/api'
+import type { FunctionReturnType } from 'convex/server'
 import { DEFAULT_QUESTION_SECURITY_LEVEL } from '@/lib/question-security'
+
+type AnsweredQuestion = NonNullable<FunctionReturnType<typeof api.questions.getAnsweredByRecipient>>[number]
+type AnsweredQuestionWithAnswer = AnsweredQuestion & { answer: NonNullable<AnsweredQuestion['answer']> }
+type QuestionWithFirstAnswer = AnsweredQuestionWithAnswer & { firstAnswer: NonNullable<AnsweredQuestion['answer']> }
 import { buildSocialLinks, canAskAnonymousQuestion } from '@/lib/utils/social-links'
 
 export default function UserProfilePage() {
@@ -77,13 +82,13 @@ export default function UserProfilePage() {
     [tCommon]
   )
 
-  const questionsWithAnswers = useMemo(() => {
+  const questionsWithAnswers = useMemo((): QuestionWithFirstAnswer[] => {
     if (!answeredQuestions) return []
     return answeredQuestions
-      .filter((qa) => qa.answer !== null)
-      .map((qa) => ({
+      .filter((qa: AnsweredQuestion): qa is AnsweredQuestionWithAnswer => qa.answer !== null)
+      .map((qa: AnsweredQuestionWithAnswer) => ({
         ...qa,
-        firstAnswer: qa.answer!,
+        firstAnswer: qa.answer,
       }))
   }, [answeredQuestions])
 

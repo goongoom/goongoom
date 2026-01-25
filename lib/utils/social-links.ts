@@ -1,4 +1,4 @@
-import { BloggerIcon, GithubIcon, InstagramIcon, NewTwitterIcon, YoutubeIcon } from '@hugeicons/core-free-icons'
+import { SiGithub, SiInstagram, SiNaver, SiX, SiYoutube } from '@icons-pack/react-simple-icons'
 import type { SocialLinkEntry, SocialLinks } from '@/lib/types'
 
 export const HTTPS_PROTOCOL_REGEX = /^https?:\/\//i
@@ -175,7 +175,7 @@ export function normalizeSocialLinks(socialLinks: SocialLinks | null | undefined
 interface SocialLinkItem {
   key: string
   label: string
-  icon: typeof InstagramIcon
+  icon: typeof SiInstagram
   href: string
   text: string
 }
@@ -238,7 +238,7 @@ export function buildSocialLinks(
         return {
           key: `instagram-${entry.content}-${index}`,
           label: resolvedLabels.instagram,
-          icon: InstagramIcon,
+          icon: SiInstagram,
           href: toProfileUrl(entry.content, 'instagram.com'),
           text: formatHandleLabel(entry.content),
         }
@@ -247,7 +247,7 @@ export function buildSocialLinks(
         return {
           key: `twitter-${entry.content}-${index}`,
           label: resolvedLabels.twitter,
-          icon: NewTwitterIcon,
+          icon: SiX,
           href: toProfileUrl(entry.content, 'x.com'),
           text: formatHandleLabel(entry.content),
         }
@@ -256,7 +256,7 @@ export function buildSocialLinks(
         return {
           key: `youtube-${entry.content}-${index}`,
           label: resolvedLabels.youtube,
-          icon: YoutubeIcon,
+          icon: SiYoutube,
           href: toYoutubeUrl(entry.content),
           text: formatHandleLabel(entry.content),
         }
@@ -265,7 +265,7 @@ export function buildSocialLinks(
         return {
           key: `github-${entry.content.handle}-${index}`,
           label: resolvedLabels.github,
-          icon: GithubIcon,
+          icon: SiGithub,
           href: toProfileUrl(entry.content.handle, 'github.com'),
           text: entry.content.handle,
         }
@@ -274,7 +274,7 @@ export function buildSocialLinks(
         return {
           key: `naver-${entry.content.handle}-${index}`,
           label: resolvedLabels.naverBlog,
-          icon: BloggerIcon,
+          icon: SiNaver,
           href: toProfileUrl(entry.content.handle, 'blog.naver.com'),
           text: entry.content.label || entry.content.handle,
         }
