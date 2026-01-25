@@ -151,7 +151,7 @@ export default async function Image({ params }: PageProps) {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: '14px' }}>
-          <img alt="Asker" height={60} src={askerAvatarUrl} style={{ borderRadius: '30px' }} width={60} />
+          <img alt="Asker" height={60} src={askerAvatarUrl} style={{ borderRadius: '30px', objectFit: 'cover' }} width={60} />
           <div
             style={{
               display: 'flex',
@@ -191,7 +191,7 @@ export default async function Image({ params }: PageProps) {
           >
             {answerContent}
           </div>
-          <img alt={fullName} height={60} src={answererAvatarUrl} style={{ borderRadius: '30px' }} width={60} />
+          <img alt={fullName} height={60} src={answererAvatarUrl} style={{ borderRadius: '30px', objectFit: 'cover' }} width={60} />
         </div>
       </div>
     </div>,

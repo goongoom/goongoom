@@ -111,7 +111,7 @@ export async function GET(request: Request) {
             alt="Asker"
             height={80}
             src={askerAvatarUrl}
-            style={{ borderRadius: '40px', flexShrink: 0 }}
+            style={{ borderRadius: '40px', flexShrink: 0, objectFit: 'cover' }}
             width={80}
           />
           <div
@@ -158,7 +158,7 @@ export async function GET(request: Request) {
             alt={name}
             height={80}
             src={answererAvatarUrl}
-            style={{ borderRadius: '40px', flexShrink: 0 }}
+            style={{ borderRadius: '40px', flexShrink: 0, objectFit: 'cover' }}
             width={80}
           />
         </div>

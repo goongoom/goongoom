@@ -108,6 +108,7 @@ export default async function Image({ params }: PageProps) {
             style={{
               borderRadius: '110px',
               border: `6px solid ${theme.border}`,
+              objectFit: 'cover',
             }}
             width={220}
           />
