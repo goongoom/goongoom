@@ -1,8 +1,8 @@
 'use client'
 
-import { createContext, useContext, useEffect, useMemo, type ReactNode } from 'react'
+import { createContext, useContext, useMemo, type ReactNode } from 'react'
 import { useAuth } from '@clerk/nextjs'
-import { useConvexAuth, useMutation, useQuery } from 'convex/react'
+import { useConvexAuth, useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { SignatureColorProvider } from '@/components/theme/signature-color-provider'
 
@@ -41,17 +41,9 @@ export function UserProvider({ children }: UserProviderProps) {
   const { userId } = useAuth()
   const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth()
 
-  const getOrCreate = useMutation(api.users.getOrCreate)
-
   const dbUser = useQuery(api.users.getByClerkId, userId ? { clerkId: userId } : 'skip')
 
-  useEffect(() => {
-    if (isAuthenticated && userId && dbUser === null) {
-      getOrCreate({ clerkId: userId }).catch(console.error)
-    }
-  }, [isAuthenticated, userId, dbUser, getOrCreate])
-
-  const isLoading = isAuthLoading || (isAuthenticated && dbUser === undefined)
+  const isLoading = isAuthLoading || (isAuthenticated && (dbUser === undefined || dbUser === null))
 
   const user = useMemo<CurrentUser | null>(() => {
     if (!dbUser) return null

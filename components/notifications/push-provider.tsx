@@ -1,7 +1,7 @@
 'use client'
 
 import { useUser } from '@clerk/nextjs'
-import { useMutation } from 'convex/react'
+import { useConvexAuth, useMutation } from 'convex/react'
 import { useEffect, useRef } from 'react'
 import { api } from '@/convex/_generated/api'
 
@@ -51,11 +51,12 @@ async function subscribeToPushNotifications(registration: ServiceWorkerRegistrat
 
 export function PushNotificationProvider() {
   const { user, isLoaded } = useUser()
+  const { isAuthenticated } = useConvexAuth()
   const hasSubscribed = useRef(false)
   const upsertPush = useMutation(api.push.upsert)
 
   useEffect(() => {
-    if (!(isLoaded && user) || hasSubscribed.current) {
+    if (!(isLoaded && user && isAuthenticated) || hasSubscribed.current) {
       return
     }
 
@@ -98,7 +99,7 @@ export function PushNotificationProvider() {
     }
 
     setupPush()
-  }, [isLoaded, user, upsertPush])
+  }, [isLoaded, user, isAuthenticated, upsertPush])
 
   return null
 }

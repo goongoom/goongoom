@@ -1,4 +1,4 @@
-import { test, expect } from '../fixtures/test'
+import { test, expect } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
 
 test.describe('Home Scenarios', () => {
@@ -12,7 +12,7 @@ test.describe('Home Scenarios', () => {
 test.describe('Profile Scenarios', () => {
   test('Profile page loads correctly', async ({ page }) => {
     await setupClerkTestingToken({ page })
-    await page.goto('/testuser_e2e')
+    await page.goto('/anaclumos')
     await expect(page.locator('body')).toBeVisible()
   })
 })
@@ -20,7 +20,7 @@ test.describe('Profile Scenarios', () => {
 test.describe('Question Scenarios', () => {
   test('User can open question drawer on profile', async ({ page }) => {
     await setupClerkTestingToken({ page })
-    await page.goto('/testuser_e2e')
+    await page.goto('/anaclumos')
     const askButton = page.getByRole('button', { name: /ask|question|궁금/i })
     if (await askButton.isVisible().catch(() => false)) {
       await askButton.click()
