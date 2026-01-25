@@ -244,12 +244,19 @@ export const upsertFromWebhook = internalMutation({
       .first()
 
     if (existing) {
-      await ctx.db.patch(existing._id, {
-        username: args.username,
-        displayName: args.displayName,
-        avatarUrl: args.avatarUrl,
-        updatedAt: Date.now(),
-      })
+      const updates: {
+        username?: string
+        displayName?: string
+        avatarUrl?: string
+        updatedAt: number
+      } = { updatedAt: Date.now() }
+
+      // Only update fields that have defined values to avoid clearing existing data
+      if (args.username !== undefined) updates.username = args.username
+      if (args.displayName !== undefined) updates.displayName = args.displayName
+      if (args.avatarUrl !== undefined) updates.avatarUrl = args.avatarUrl
+
+      await ctx.db.patch(existing._id, updates)
       return existing._id
     }
 
