@@ -1,5 +1,41 @@
-import { v } from 'convex/values'
-import { internalMutation, mutation, query } from './_generated/server'
+import { ConvexError, v } from 'convex/values'
+import { action, internalMutation, mutation, query } from './_generated/server'
+
+const HTML_TITLE_REGEX = /<title[^>]*>([^<]+)<\/title>/i
+const NAVER_BLOG_TITLE_SUFFIX = ': 네이버 블로그'
+
+export const fetchNaverBlogTitle = action({
+  args: { handle: v.string() },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+
+    if (!args.handle) {
+      return args.handle
+    }
+    try {
+      const url = `https://blog.naver.com/${args.handle}`
+      const response = await fetch(url)
+      if (!response.ok) {
+        return args.handle
+      }
+      const html = await response.text()
+      const titleMatch = HTML_TITLE_REGEX.exec(html)
+      if (!titleMatch?.[1]) {
+        return args.handle
+      }
+      let title = titleMatch[1]
+      if (title.endsWith(NAVER_BLOG_TITLE_SUFFIX)) {
+        title = title.slice(0, -NAVER_BLOG_TITLE_SUFFIX.length)
+      }
+      return title.trim() || args.handle
+    } catch {
+      return args.handle
+    }
+  },
+})
 
 // NOTE: Convex doesn't provide a native count() operation, so this implementation
 // fetches all user documents to count them. This is the recommended Convex pattern
@@ -27,6 +63,14 @@ export const getByClerkId = query({
 export const getOrCreate = mutation({
   args: { clerkId: v.string() },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.clerkId) {
+      throw new ConvexError('Not authorized')
+    }
+
     const existing = await ctx.db
       .query('users')
       .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.clerkId))
@@ -78,13 +122,21 @@ export const updateProfile = mutation({
     signatureColor: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.clerkId) {
+      throw new ConvexError('Not authorized')
+    }
+
     const user = await ctx.db
       .query('users')
       .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.clerkId))
       .first()
 
     if (!user) {
-      throw new Error('User not found')
+      throw new ConvexError('User not found')
     }
 
     const updateData: {
@@ -123,6 +175,14 @@ export const updateProfile = mutation({
 export const deleteByClerkId = mutation({
   args: { clerkId: v.string() },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.clerkId) {
+      throw new ConvexError('Not authorized')
+    }
+
     const user = await ctx.db
       .query('users')
       .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.clerkId))
@@ -140,6 +200,14 @@ export const updateLocale = mutation({
     locale: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.clerkId) {
+      throw new ConvexError('Not authorized')
+    }
+
     const user = await ctx.db
       .query('users')
       .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.clerkId))
@@ -162,8 +230,13 @@ export const updateLocale = mutation({
   },
 })
 
-export const createFromWebhook = internalMutation({
-  args: { clerkId: v.string() },
+export const upsertFromWebhook = internalMutation({
+  args: {
+    clerkId: v.string(),
+    username: v.optional(v.string()),
+    displayName: v.optional(v.string()),
+    avatarUrl: v.optional(v.string()),
+  },
   handler: async (ctx, args) => {
     const existing = await ctx.db
       .query('users')
@@ -171,11 +244,20 @@ export const createFromWebhook = internalMutation({
       .first()
 
     if (existing) {
+      await ctx.db.patch(existing._id, {
+        username: args.username,
+        displayName: args.displayName,
+        avatarUrl: args.avatarUrl,
+        updatedAt: Date.now(),
+      })
       return existing._id
     }
 
     return await ctx.db.insert('users', {
       clerkId: args.clerkId,
+      username: args.username,
+      displayName: args.displayName,
+      avatarUrl: args.avatarUrl,
       questionSecurityLevel: 'anyone',
       updatedAt: Date.now(),
     })
@@ -193,6 +275,16 @@ export const deleteFromWebhook = internalMutation({
     if (user) {
       await ctx.db.delete(user._id)
     }
+  },
+})
+
+export const getByUsername = query({
+  args: { username: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query('users')
+      .withIndex('by_username', (q) => q.eq('username', args.username))
+      .first()
   },
 })
 

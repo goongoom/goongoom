@@ -1,6 +1,10 @@
-import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+'use client'
+
+import { useAuth, useUser } from '@clerk/nextjs'
+import { useConvexAuth } from 'convex/react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
+import { useEffect } from 'react'
 import { PasskeyNudge } from '@/components/auth/passkey-nudge'
 import { MainContent } from '@/components/layout/main-content'
 import { AboutSection } from '@/components/settings/about-section'
@@ -11,28 +15,37 @@ import { NotificationSettings } from '@/components/settings/notification-setting
 import { ThemeSelector } from '@/components/settings/theme-selector'
 import { Card, CardContent } from '@/components/ui/card'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
+import { Spinner } from '@/components/ui/spinner'
 import { ToastOnMount } from '@/components/ui/toast-on-mount'
-import { getClerkUserById } from '@/lib/clerk'
 
-interface SettingsPageProps {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>
-}
+export default function SettingsPage() {
+  const { userId: clerkId } = useAuth()
+  const { user, isLoaded: isUserLoaded } = useUser()
+  const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth()
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
-export default async function SettingsPage({ searchParams }: SettingsPageProps) {
-  const { userId: clerkId } = await auth()
-  if (!clerkId) {
-    redirect('/')
+  const t = useTranslations('settings')
+
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      router.replace('/')
+    }
+  }, [isAuthLoading, isAuthenticated, router])
+
+  const error = searchParams.get('error') ? decodeURIComponent(searchParams.get('error')!) : null
+
+  if (isAuthLoading || !isAuthenticated || !isUserLoaded) {
+    return (
+      <MainContent>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Spinner className="size-8" />
+        </div>
+      </MainContent>
+    )
   }
 
-  const [clerkUser, query, t] = await Promise.all([
-    getClerkUserById(clerkId),
-    searchParams,
-    getTranslations('settings'),
-  ])
-
-  const error = typeof query?.error === 'string' ? decodeURIComponent(query.error) : null
-
-  if (!clerkUser) {
+  if (!user) {
     return (
       <MainContent>
         <h1 className="mb-2 font-bold text-3xl text-foreground">{t('title')}</h1>
@@ -75,7 +88,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
 
         <Card>
           <CardContent>
-            <NotificationSettings clerkId={clerkId} />
+            {clerkId && <NotificationSettings clerkId={clerkId} />}
           </CardContent>
         </Card>
 

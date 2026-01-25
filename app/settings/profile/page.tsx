@@ -1,28 +1,67 @@
-import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+'use client'
+
+import { useAuth, useUser } from '@clerk/nextjs'
+import { useConvexAuth, useQuery } from 'convex/react'
+import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
+import { useEffect, useMemo } from 'react'
 import { MainContent } from '@/components/layout/main-content'
 import { ProfileEditForm } from '@/components/settings/profile-edit-form'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
-import { getClerkUserById } from '@/lib/clerk'
+import { Spinner } from '@/components/ui/spinner'
+import { api } from '@/convex/_generated/api'
 import { DEFAULT_SIGNATURE_COLOR, isValidSignatureColor } from '@/lib/colors/signature-colors'
-import { getOrCreateUser } from '@/lib/db/queries'
-import { getQuestionSecurityOptions } from '@/lib/question-security'
+import type { QuestionSecurityLevel } from '@/lib/question-security'
 
-export default async function ProfileSettingsPage() {
-  const { userId: clerkId } = await auth()
-  if (!clerkId) {
-    redirect('/')
+export default function ProfileSettingsPage() {
+  const { userId: clerkId } = useAuth()
+  const { user, isLoaded: isUserLoaded } = useUser()
+  const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth()
+  const router = useRouter()
+
+  const t = useTranslations('settings')
+  const tSecurity = useTranslations('questionSecurity')
+
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      router.replace('/')
+    }
+  }, [isAuthLoading, isAuthenticated, router])
+
+  const dbUser = useQuery(
+    api.users.getByClerkId,
+    clerkId ? { clerkId } : 'skip'
+  )
+
+  const securityOptions = useMemo(
+    (): Record<QuestionSecurityLevel, { label: string; description: string }> => ({
+      anyone: {
+        label: tSecurity('anyoneLabel'),
+        description: tSecurity('anyoneDescription'),
+      },
+      verified_anonymous: {
+        label: tSecurity('verifiedLabel'),
+        description: tSecurity('verifiedDescription'),
+      },
+      public_only: {
+        label: tSecurity('identifiedOnlyLabel'),
+        description: tSecurity('identifiedOnlyDescription'),
+      },
+    }),
+    [tSecurity]
+  )
+
+  if (isAuthLoading || !isAuthenticated || !isUserLoaded) {
+    return (
+      <MainContent>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Spinner className="size-8" />
+        </div>
+      </MainContent>
+    )
   }
 
-  const [clerkUser, dbUser, t, securityOptions] = await Promise.all([
-    getClerkUserById(clerkId),
-    getOrCreateUser(clerkId),
-    getTranslations('settings'),
-    getQuestionSecurityOptions(),
-  ])
-
-  if (!clerkUser) {
+  if (!user) {
     return (
       <MainContent>
         <h1 className="mb-2 font-bold text-3xl text-foreground">{t('profileSettings')}</h1>
@@ -32,6 +71,18 @@ export default async function ProfileSettingsPage() {
             <EmptyDescription>{t('profileRequiredDescription')}</EmptyDescription>
           </EmptyHeader>
         </Empty>
+      </MainContent>
+    )
+  }
+
+  const isLoading = dbUser === undefined
+
+  if (isLoading) {
+    return (
+      <MainContent>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Spinner className="size-8" />
+        </div>
       </MainContent>
     )
   }

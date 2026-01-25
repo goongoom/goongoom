@@ -1,7 +1,7 @@
 'use client'
 
 import Autoplay from 'embla-carousel-autoplay'
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
+import { Carousel, CarouselContent } from '@/components/ui/carousel'
 
 interface HomeCarouselProps {
   children: React.ReactNode

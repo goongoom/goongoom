@@ -1,4 +1,5 @@
-import { v } from 'convex/values'
+import { ConvexError, v } from 'convex/values'
+import { internal } from './_generated/api'
 import { mutation, query } from './_generated/server'
 
 export const create = mutation({
@@ -7,12 +8,20 @@ export const create = mutation({
     content: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+
     const question = await ctx.db.get(args.questionId)
     if (!question || question.deletedAt) {
-      throw new Error('Question not found')
+      throw new ConvexError('Question not found')
+    }
+    if (question.recipientClerkId !== identity.subject) {
+      throw new ConvexError('Not authorized to answer this question')
     }
     if (question.answerId) {
-      throw new Error('Question already answered')
+      throw new ConvexError('Question already answered')
     }
 
     const answerId = await ctx.db.insert('answers', {
@@ -21,6 +30,24 @@ export const create = mutation({
     })
 
     await ctx.db.patch(args.questionId, { answerId })
+
+    if (question.senderClerkId) {
+      const recipientUser = await ctx.db
+        .query('users')
+        .withIndex('by_clerk_id', (q) => q.eq('clerkId', question.recipientClerkId))
+        .first()
+
+      const recipientName = recipientUser?.username ?? '누군가'
+      const truncatedContent = args.content.length > 50 ? `${args.content.slice(0, 50)}...` : args.content
+
+      await ctx.scheduler.runAfter(0, internal.pushActions.sendNotification, {
+        recipientClerkId: question.senderClerkId,
+        title: `${recipientName}님이 답변했어요!`,
+        body: truncatedContent,
+        url: '/sent',
+        tag: `answer-${answerId}`,
+      })
+    }
 
     return await ctx.db.get(answerId)
   },
@@ -32,9 +59,17 @@ export const softDelete = mutation({
     recipientClerkId: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.recipientClerkId) {
+      throw new ConvexError('Not authorized')
+    }
+
     const answer = await ctx.db.get(args.id)
     if (!answer) {
-      throw new Error('Answer not found')
+      throw new ConvexError('Answer not found')
     }
     if (answer.deletedAt) {
       return { success: true, questionId: answer.questionId }
@@ -42,7 +77,7 @@ export const softDelete = mutation({
 
     const question = await ctx.db.get(answer.questionId)
     if (!question || question.recipientClerkId !== args.recipientClerkId) {
-      throw new Error('Not authorized to delete this answer')
+      throw new ConvexError('Not authorized to delete this answer')
     }
 
     await ctx.db.patch(args.id, { deletedAt: Date.now() })
@@ -126,6 +161,9 @@ export const getRecentLimitPerUser = query({
           question,
           answer,
           recipientClerkId: question.recipientClerkId,
+          recipientUsername: user?.username,
+          recipientDisplayName: user?.displayName,
+          recipientAvatarUrl: user?.avatarUrl,
           recipientSignatureColor: user?.signatureColor,
         }
       })
@@ -164,6 +202,14 @@ export const getFriendsAnswers = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.clerkId) {
+      throw new ConvexError('Not authorized to view this friends feed')
+    }
+
     const friendIds = new Set<string>()
 
     const receivedQuestions = await ctx.db
@@ -249,6 +295,9 @@ export const getFriendsAnswers = query({
           question,
           answer,
           recipientClerkId: question.recipientClerkId,
+          recipientUsername: user?.username,
+          recipientDisplayName: user?.displayName,
+          recipientAvatarUrl: user?.avatarUrl,
           recipientSignatureColor: user?.signatureColor,
         }
       })

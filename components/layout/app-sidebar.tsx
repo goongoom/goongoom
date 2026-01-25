@@ -27,7 +27,6 @@ import { Logo } from '@/components/ui/logo'
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,

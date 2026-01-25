@@ -1,39 +1,12 @@
 'use server'
 
 import { auth } from '@clerk/nextjs/server'
-import { waitUntil } from '@vercel/functions'
-import { revalidatePath } from 'next/cache'
 import { getTranslations } from 'next-intl/server'
 import { withAudit } from '@/lib/audit/with-audit'
-import { getClerkUserById } from '@/lib/clerk'
 import { createAnswer as createAnswerDB, getQuestionById } from '@/lib/db/queries'
-import { sendPushToMany } from '@/lib/push'
-import type { Answer, Question, QuestionId } from '@/lib/types'
-import { getPushSubscriptions } from './push'
+import type { Answer, QuestionId } from '@/lib/types'
 
 export type AnswerActionResult<T = unknown> = { success: true; data: T } | { success: false; error: string }
-
-async function notifyQuestionSender(question: Question, answer: Answer, answererClerkId: string) {
-  if (!question.senderClerkId) {
-    return
-  }
-
-  const subscriptions = await getPushSubscriptions(question.senderClerkId)
-  if (subscriptions.length === 0) {
-    return
-  }
-
-  const recipientUser = await getClerkUserById(answererClerkId)
-  const recipientName = recipientUser?.username ?? '누군가'
-  const truncatedContent = answer.content.length > 50 ? `${answer.content.slice(0, 50)}...` : answer.content
-
-  sendPushToMany(subscriptions, {
-    title: `${recipientName}님이 답변했어요!`,
-    body: truncatedContent,
-    url: '/sent',
-    tag: `answer-${answer._id}`,
-  })
-}
 
 export async function createAnswer(data: { questionId: string; content: string }): Promise<AnswerActionResult<Answer>> {
   return await withAudit({ action: 'createAnswer', payload: data, entityType: 'answer' }, async () => {
@@ -66,12 +39,6 @@ export async function createAnswer(data: { questionId: string; content: string }
       if (!answer) {
         return { success: false, error: t('answerCreateFailed') }
       }
-
-      revalidatePath('/inbox')
-
-      waitUntil(
-        notifyQuestionSender(question, answer, clerkId).catch((err) => console.error('Push notification failed:', err))
-      )
 
       return { success: true, data: answer }
     } catch (error) {

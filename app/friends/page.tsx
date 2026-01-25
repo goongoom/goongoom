@@ -1,64 +1,65 @@
-import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
-import { getLocale, getTranslations } from 'next-intl/server'
+'use client'
+
+import { useAuth } from '@clerk/nextjs'
+import { useConvexAuth, useQuery } from 'convex/react'
+import { useRouter } from 'next/navigation'
+import { useLocale, useTranslations } from 'next-intl'
+import { useEffect, useMemo } from 'react'
 import { MainContent } from '@/components/layout/main-content'
 import { AnsweredQuestionCard } from '@/components/questions/answered-question-card'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
-import { getClerkUsersByIds } from '@/lib/clerk'
-import { getFriendsAnswers } from '@/lib/db/queries'
+import { Spinner } from '@/components/ui/spinner'
+import { api } from '@/convex/_generated/api'
 
-export default async function FriendsPage() {
-  const { userId: clerkId } = await auth()
-  if (!clerkId) {
-    redirect('/')
+export default function FriendsPage() {
+  const { userId: clerkId } = useAuth()
+  const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth()
+  const router = useRouter()
+  const locale = useLocale()
+
+  const t = useTranslations('friends')
+  const tCommon = useTranslations('common')
+
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      router.replace('/')
+    }
+  }, [isAuthLoading, isAuthenticated, router])
+
+  const friendsAnswers = useQuery(
+    api.answers.getFriendsAnswers,
+    clerkId ? { clerkId, limit: 30 } : 'skip'
+  )
+
+  const cardLabels = useMemo(
+    () => ({
+      anonymous: tCommon('anonymous'),
+      identified: tCommon('identified'),
+    }),
+    [tCommon]
+  )
+
+  if (isAuthLoading || !isAuthenticated) {
+    return (
+      <MainContent>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Spinner className="size-8" />
+        </div>
+      </MainContent>
+    )
   }
 
-  const [friendsAnswers, t, tCommon, tAnswers, locale] = await Promise.all([
-    getFriendsAnswers(clerkId, 30),
-    getTranslations('friends'),
-    getTranslations('common'),
-    getTranslations('answers'),
-    getLocale(),
-  ])
+  const isLoading = friendsAnswers === undefined
 
-  const recipientIds = [...new Set(friendsAnswers.map((qa) => qa.recipientClerkId))]
-  const senderIds = [
-    ...new Set(
-      friendsAnswers
-        .filter((qa) => !qa.question.isAnonymous && qa.question.senderClerkId)
-        .map((qa) => qa.question.senderClerkId)
-        .filter((id): id is string => Boolean(id))
-    ),
-  ]
-
-  const [recipientMap, senderMap] = await Promise.all([getClerkUsersByIds(recipientIds), getClerkUsersByIds(senderIds)])
-
-  const cardLabels = {
-    anonymous: tCommon('anonymous'),
-    identified: tCommon('identified'),
+  if (isLoading) {
+    return (
+      <MainContent>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Spinner className="size-8" />
+        </div>
+      </MainContent>
+    )
   }
-
-  const questionsWithInfo = friendsAnswers
-    .map((qa) => {
-      const recipient = recipientMap.get(qa.recipientClerkId)
-      if (!recipient?.username) {
-        return null
-      }
-
-      const sender =
-        !qa.question.isAnonymous && qa.question.senderClerkId ? senderMap.get(qa.question.senderClerkId) : null
-
-      return {
-        ...qa,
-        recipientUsername: recipient.username,
-        recipientDisplayName: recipient.displayName || recipient.username || 'User',
-        recipientAvatarUrl: recipient.avatarUrl,
-        recipientSignatureColor: qa.recipientSignatureColor,
-        senderName: sender?.displayName || sender?.username || null,
-        senderAvatarUrl: sender?.avatarUrl || null,
-      }
-    })
-    .filter((qa) => qa !== null)
 
   return (
     <MainContent>
@@ -67,7 +68,7 @@ export default async function FriendsPage() {
         <p className="text-muted-foreground text-sm">{t('description')}</p>
       </div>
 
-      {questionsWithInfo.length === 0 ? (
+      {friendsAnswers.length === 0 ? (
         <Empty>
           <EmptyHeader>
             <EmptyTitle>{t('emptyTitle')}</EmptyTitle>
@@ -76,13 +77,13 @@ export default async function FriendsPage() {
         </Empty>
       ) : (
         <div className="space-y-6 pb-24">
-          {questionsWithInfo.map((qa) => (
+          {friendsAnswers.map((qa) => (
             <AnsweredQuestionCard
               anonymousAvatarSeed={qa.question.anonymousAvatarSeed}
               answerContent={qa.answer.content}
               answerCreatedAt={qa.answer._creationTime}
-              avatarUrl={qa.recipientAvatarUrl}
-              displayName={qa.recipientDisplayName}
+              avatarUrl={qa.recipientAvatarUrl ?? null}
+              displayName={qa.recipientDisplayName || qa.recipientUsername || tCommon('user')}
               isAnonymous={qa.question.isAnonymous}
               key={qa.question._id}
               labels={cardLabels}
@@ -90,10 +91,10 @@ export default async function FriendsPage() {
               questionContent={qa.question.content}
               questionCreatedAt={qa.question._creationTime}
               questionId={qa.question._id}
-              senderAvatarUrl={qa.senderAvatarUrl}
-              senderName={qa.senderName || undefined}
+              senderAvatarUrl={undefined}
+              senderName={qa.question.isAnonymous ? undefined : tCommon('identified')}
               signatureColor={qa.recipientSignatureColor}
-              username={qa.recipientUsername}
+              username={qa.recipientUsername || qa.recipientClerkId}
             />
           ))}
         </div>

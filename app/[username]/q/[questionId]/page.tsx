@@ -1,10 +1,14 @@
-import { auth } from '@clerk/nextjs/server'
+'use client'
+
+import { useAuth } from '@clerk/nextjs'
 import { ArrowLeft01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { useQuery } from 'convex/react'
 import { formatDistanceToNow } from 'date-fns'
 import { enUS, ko } from 'date-fns/locale'
-import { notFound } from 'next/navigation'
-import { getLocale, getTranslations } from 'next-intl/server'
+import { useParams } from 'next/navigation'
+import { useLocale, useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 import { MainContent } from '@/components/layout/main-content'
 import { Ultralink } from '@/components/navigation/ultralink'
 import { CopyLinkButton } from '@/components/questions/copy-link-button'
@@ -14,9 +18,10 @@ import { ShareInstagramButton } from '@/components/questions/share-instagram-but
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { getClerkUserById, getClerkUserByUsername } from '@/lib/clerk'
-import { getAnsweredQuestionNumber, getOrCreateUser, getQuestionByIdAndRecipient } from '@/lib/db/queries'
-import type { QuestionId } from '@/lib/types'
+import { Empty, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
+import { Spinner } from '@/components/ui/spinner'
+import { api } from '@/convex/_generated/api'
+import type { Id } from '@/convex/_generated/dataModel'
 
 const localeMap = { ko, en: enUS } as const
 
@@ -40,11 +45,8 @@ interface QuestionerInfo {
 function getQuestionerInfo(
   isAnonymous: boolean,
   anonymousSeed: string,
-  senderClerk: {
-    avatarUrl?: string | null
-    displayName?: string | null
-    username?: string | null
-  } | null,
+  senderDisplayName: string | undefined,
+  senderAvatarUrl: string | undefined,
   anonymousLabel: string,
   identifiedLabel: string
 ): QuestionerInfo {
@@ -56,14 +58,10 @@ function getQuestionerInfo(
     }
   }
   return {
-    avatarUrl: senderClerk?.avatarUrl || null,
-    name: senderClerk?.displayName || senderClerk?.username || identifiedLabel,
-    fallback: senderClerk?.displayName?.[0] || senderClerk?.username?.[0] || '?',
+    avatarUrl: senderAvatarUrl || null,
+    name: senderDisplayName || identifiedLabel,
+    fallback: senderDisplayName?.[0] || '?',
   }
-}
-
-interface QADetailPageProps {
-  params: Promise<{ username: string; questionId: string }>
 }
 
 function buildShareUrl({
@@ -95,61 +93,87 @@ function buildShareUrl({
   return `/api/instagram?${params.toString()}`
 }
 
-export default async function QADetailPage({ params }: QADetailPageProps) {
-  const { username, questionId: questionIdParam } = await params
-  const questionId = questionIdParam as QuestionId
+export default function QADetailPage() {
+  const params = useParams<{ username: string; questionId: string }>()
+  const { username, questionId: questionIdParam } = params
+  const questionId = questionIdParam as Id<'questions'>
+  const { userId: viewerId } = useAuth()
+  const locale = useLocale()
 
-  const [clerkUser, { userId: viewerId }] = await Promise.all([getClerkUserByUsername(username), auth()])
-  if (!clerkUser) {
-    notFound()
-  }
+  const tCommon = useTranslations('common')
+  const tProfile = useTranslations('profile')
+  const tQuestions = useTranslations('questions')
 
-  const [qa, questionNumber, dbUser] = await Promise.all([
-    getQuestionByIdAndRecipient(questionId, clerkUser.clerkId),
-    getAnsweredQuestionNumber(questionId, clerkUser.clerkId),
-    getOrCreateUser(clerkUser.clerkId),
-  ])
-  if (!qa?.answer) {
-    notFound()
-  }
-
-  const senderClerk = !qa.isAnonymous && qa.senderClerkId ? await getClerkUserById(qa.senderClerkId) : null
-
-  const [tCommon, tProfile, tQuestions, locale] = await Promise.all([
-    getTranslations('common'),
-    getTranslations('profile'),
-    getTranslations('questions'),
-    getLocale(),
-  ])
-
-  const isOwner = viewerId === clerkUser.clerkId
-
-  const displayName = clerkUser.displayName || clerkUser.username || username
-  const { answer } = qa
-
-  const questioner = getQuestionerInfo(
-    qa.isAnonymous,
-    qa.anonymousAvatarSeed || `anon_${qa._id}`,
-    senderClerk,
-    tCommon('anonymous'),
-    tCommon('identified')
+  const dbUser = useQuery(api.users.getByUsername, { username })
+  const qa = useQuery(
+    api.questions.getByIdAndRecipient,
+    dbUser?.clerkId ? { id: questionId, recipientClerkId: dbUser.clerkId } : 'skip'
+  )
+  const questionNumber = useQuery(
+    api.questions.getAnsweredNumber,
+    dbUser?.clerkId ? { questionId, recipientClerkId: dbUser.clerkId } : 'skip'
   )
 
-  const askerAvatarForShare = qa.isAnonymous
-    ? getShareAvatarUrl(null, qa.anonymousAvatarSeed || `anon_${qa._id}`)
-    : getShareAvatarUrl(senderClerk?.avatarUrl, qa.senderClerkId || qa._id)
-  const answererAvatarForShare = getShareAvatarUrl(clerkUser.avatarUrl, clerkUser.clerkId)
+  const isLoading = dbUser === undefined || qa === undefined || questionNumber === undefined
 
-  const instagramShareUrl = buildShareUrl({
-    question: qa.content,
-    answer: answer.content,
-    name: displayName,
-    askerAvatarUrl: askerAvatarForShare,
-    answererAvatarUrl: answererAvatarForShare,
-    signatureColor: dbUser?.signatureColor,
-  })
+  const isOwner = viewerId === dbUser?.clerkId
+  const displayName = dbUser?.displayName || dbUser?.username || username
+
+  const questioner = useMemo(() => {
+    if (!qa) return null
+    return getQuestionerInfo(
+      qa.isAnonymous,
+      qa.anonymousAvatarSeed || `anon_${qa._id}`,
+      qa.senderDisplayName,
+      qa.senderAvatarUrl,
+      tCommon('anonymous'),
+      tCommon('identified')
+    )
+  }, [qa, tCommon])
+
+  const instagramShareUrl = useMemo(() => {
+    if (!qa?.answer || !dbUser) return null
+
+    const askerAvatarForShare = qa.isAnonymous
+      ? getShareAvatarUrl(null, qa.anonymousAvatarSeed || `anon_${qa._id}`)
+      : getShareAvatarUrl(qa.senderAvatarUrl, qa.senderClerkId || qa._id)
+    const answererAvatarForShare = getShareAvatarUrl(dbUser.avatarUrl, dbUser.clerkId)
+
+    return buildShareUrl({
+      question: qa.content,
+      answer: qa.answer.content,
+      name: displayName,
+      askerAvatarUrl: askerAvatarForShare,
+      answererAvatarUrl: answererAvatarForShare,
+      signatureColor: dbUser.signatureColor,
+    })
+  }, [qa, dbUser, displayName])
 
   const canonicalUrl = `/${username}/q/${questionId}`
+
+  if (isLoading) {
+    return (
+      <MainContent>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Spinner className="size-8" />
+        </div>
+      </MainContent>
+    )
+  }
+
+  if (!dbUser || !qa?.answer || !questioner) {
+    return (
+      <MainContent>
+        <Empty className="pb-24">
+          <EmptyHeader>
+            <EmptyTitle className="text-muted-foreground">{tQuestions('questionNotFound')}</EmptyTitle>
+          </EmptyHeader>
+        </Empty>
+      </MainContent>
+    )
+  }
+
+  const { answer } = qa
 
   return (
     <MainContent>
@@ -203,8 +227,8 @@ export default async function QADetailPage({ params }: QADetailPageProps) {
                 })}
               </p>
             </div>
-            <Avatar className="size-10 flex-shrink-0" key={clerkUser.avatarUrl}>
-              {clerkUser.avatarUrl ? <AvatarImage alt={displayName} src={clerkUser.avatarUrl} /> : null}
+            <Avatar className="size-10 flex-shrink-0">
+              {dbUser.avatarUrl && <AvatarImage alt={displayName} src={dbUser.avatarUrl} />}
               <AvatarFallback>{displayName[0] || '?'}</AvatarFallback>
             </Avatar>
           </div>
@@ -212,7 +236,7 @@ export default async function QADetailPage({ params }: QADetailPageProps) {
       </Card>
 
       <div className="mt-6 flex flex-col gap-3">
-        {isOwner ? (
+        {isOwner && instagramShareUrl ? (
           <>
             <ShareInstagramButton
               className="h-14 w-full rounded-xl font-semibold"
@@ -234,7 +258,7 @@ export default async function QADetailPage({ params }: QADetailPageProps) {
         )}
       </div>
 
-      {isOwner && <InstagramSharePrefetch imageUrl={instagramShareUrl} />}
+      {isOwner && instagramShareUrl && <InstagramSharePrefetch imageUrl={instagramShareUrl} />}
     </MainContent>
   )
 }

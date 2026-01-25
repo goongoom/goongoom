@@ -3,12 +3,15 @@
 import { Dialog } from '@base-ui/react/dialog'
 import { AnonymousIcon, Cancel01Icon, UserIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { useMutation } from 'convex/react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { createAnswer } from '@/lib/actions/answers'
+import { api } from '@/convex/_generated/api'
+import type { Id } from '@/convex/_generated/dataModel'
 import { cn } from '@/lib/utils'
 
 interface QuickAnswerDialogProps {
@@ -26,9 +29,11 @@ interface QuickAnswerDialogProps {
 export function QuickAnswerDialog({ question, open, onOpenChange }: QuickAnswerDialogProps) {
   const t = useTranslations('answers')
   const tCommon = useTranslations('common')
+  const tErrors = useTranslations('errors')
   const router = useRouter()
   const [answer, setAnswer] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const createAnswer = useMutation(api.answers.create)
 
   async function handleSubmit() {
     if (!(question && answer.trim()) || isSubmitting) {
@@ -37,16 +42,15 @@ export function QuickAnswerDialog({ question, open, onOpenChange }: QuickAnswerD
 
     setIsSubmitting(true)
     try {
-      const result = await createAnswer({
-        questionId: question.id,
+      await createAnswer({
+        questionId: question.id as Id<'questions'>,
         content: answer.trim(),
       })
-
-      if (result.success) {
-        setAnswer('')
-        onOpenChange(false)
-        router.refresh()
-      }
+      setAnswer('')
+      onOpenChange(false)
+      router.refresh()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : tErrors('genericError'))
     } finally {
       setIsSubmitting(false)
     }

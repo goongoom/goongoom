@@ -1,6 +1,12 @@
-import { v } from 'convex/values'
+import { ConvexError, v } from 'convex/values'
 import type { Doc, Id } from './_generated/dataModel'
+import { internal } from './_generated/api'
 import { mutation, type QueryCtx, query } from './_generated/server'
+
+const PUSH_MESSAGES = {
+  ko: { newQuestionTitle: '새 질문이 왔어요!' },
+  en: { newQuestionTitle: 'You got a new question!' },
+} as const
 
 /**
  * Fetches answers for a list of questions and returns a map for efficient lookup.
@@ -18,6 +24,23 @@ async function fetchAnswersMap(
   return new Map(validAnswers.map((a) => [a._id, a]))
 }
 
+/**
+ * Fetches users for a list of clerkIds and returns a map for efficient lookup.
+ */
+async function fetchUsersMap(ctx: QueryCtx, clerkIds: string[]): Promise<Map<string, Doc<'users'>>> {
+  const uniqueIds = [...new Set(clerkIds.filter(Boolean))]
+  const users = await Promise.all(
+    uniqueIds.map((clerkId) =>
+      ctx.db
+        .query('users')
+        .withIndex('by_clerk_id', (q) => q.eq('clerkId', clerkId))
+        .first()
+    )
+  )
+  const validUsers = users.filter((u): u is Doc<'users'> => u !== null)
+  return new Map(validUsers.map((u) => [u.clerkId, u]))
+}
+
 export const create = mutation({
   args: {
     recipientClerkId: v.string(),
@@ -27,6 +50,40 @@ export const create = mutation({
     anonymousAvatarSeed: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+
+    // Fetch recipient user to check security level
+    const recipientUser = await ctx.db
+      .query('users')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.recipientClerkId))
+      .first()
+
+    if (!recipientUser) {
+      throw new ConvexError('Recipient user not found')
+    }
+
+    const securityLevel = recipientUser.questionSecurityLevel ?? 'anyone'
+
+    // Enforce security level
+    if (securityLevel === 'nobody') {
+      throw new ConvexError('This user is not accepting questions')
+    }
+
+    if (securityLevel === 'loggedIn' && !identity) {
+      throw new ConvexError('You must be logged in to send questions to this user')
+    }
+
+    // If senderClerkId is provided, verify it matches the authenticated user
+    if (args.senderClerkId) {
+      if (!identity) {
+        throw new ConvexError('Authentication required when providing senderClerkId')
+      }
+      // Clerk subject is the clerkId
+      if (identity.subject !== args.senderClerkId) {
+        throw new ConvexError('senderClerkId must match authenticated user')
+      }
+    }
+
     const id = await ctx.db.insert('questions', {
       recipientClerkId: args.recipientClerkId,
       senderClerkId: args.senderClerkId,
@@ -34,6 +91,20 @@ export const create = mutation({
       isAnonymous: args.isAnonymous,
       anonymousAvatarSeed: args.anonymousAvatarSeed,
     })
+
+    // Schedule push notification
+    const recipientLocale = recipientUser.locale ?? 'ko'
+    const messages = PUSH_MESSAGES[recipientLocale as keyof typeof PUSH_MESSAGES] ?? PUSH_MESSAGES.ko
+    const truncatedContent = args.content.length > 50 ? `${args.content.slice(0, 50)}...` : args.content
+
+    await ctx.scheduler.runAfter(0, internal.pushActions.sendNotification, {
+      recipientClerkId: args.recipientClerkId,
+      title: messages.newQuestionTitle,
+      body: truncatedContent,
+      url: '/inbox',
+      tag: `question-${id}`,
+    })
+
     return await ctx.db.get(id)
   },
 })
@@ -44,12 +115,20 @@ export const softDelete = mutation({
     recipientClerkId: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.recipientClerkId) {
+      throw new ConvexError('Not authorized')
+    }
+
     const question = await ctx.db.get(args.id)
     if (!question) {
-      throw new Error('Question not found')
+      throw new ConvexError('Question not found')
     }
     if (question.recipientClerkId !== args.recipientClerkId) {
-      throw new Error('Not authorized to delete this question')
+      throw new ConvexError('Not authorized to delete this question')
     }
     if (question.deletedAt) {
       return { success: true }
@@ -65,15 +144,23 @@ export const clearAnswerId = mutation({
     recipientClerkId: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.recipientClerkId) {
+      throw new ConvexError('Not authorized')
+    }
+
     const question = await ctx.db.get(args.id)
     if (!question) {
-      throw new Error('Question not found')
+      throw new ConvexError('Question not found')
     }
     if (question.recipientClerkId !== args.recipientClerkId) {
-      throw new Error('Not authorized to update this question')
+      throw new ConvexError('Not authorized to update this question')
     }
     if (question.deletedAt) {
-      throw new Error('Question deleted')
+      throw new ConvexError('Question deleted')
     }
     await ctx.db.patch(args.id, { answerId: undefined })
     return { success: true }
@@ -104,9 +191,19 @@ export const getByIdAndRecipient = query({
 
     const answer = question.answerId ? await ctx.db.get(question.answerId) : null
 
+    const sender = question.senderClerkId
+      ? await ctx.db
+          .query('users')
+          .withIndex('by_clerk_id', (q) => q.eq('clerkId', question.senderClerkId!))
+          .first()
+      : null
+
     return {
       ...question,
       answer: answer && !answer.deletedAt ? answer : null,
+      senderUsername: sender?.username,
+      senderDisplayName: sender?.displayName,
+      senderAvatarUrl: sender?.avatarUrl,
     }
   },
 })
@@ -136,12 +233,33 @@ export const getByRecipient = query({
 export const getUnanswered = query({
   args: { recipientClerkId: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.recipientClerkId) {
+      throw new ConvexError('Not authorized to view this inbox')
+    }
+
+    const questions = await ctx.db
       .query('questions')
       .withIndex('by_recipient', (q) => q.eq('recipientClerkId', args.recipientClerkId))
       .filter((q) => q.and(q.eq(q.field('answerId'), undefined), q.eq(q.field('deletedAt'), undefined)))
       .order('desc')
       .collect()
+
+    const senderClerkIds = questions.map((q) => q.senderClerkId).filter((id): id is string => id !== undefined)
+    const userMap = await fetchUsersMap(ctx, senderClerkIds)
+
+    return questions.map((question) => {
+      const sender = question.senderClerkId ? userMap.get(question.senderClerkId) : undefined
+      return {
+        ...question,
+        senderUsername: sender?.username,
+        senderDisplayName: sender?.displayName,
+        senderAvatarUrl: sender?.avatarUrl,
+      }
+    })
   },
 })
 
@@ -156,10 +274,19 @@ export const getAnsweredByRecipient = query({
 
     const answerMap = await fetchAnswersMap(ctx, questions)
 
-    const questionsWithAnswers = questions.map((question) => ({
-      ...question,
-      answer: question.answerId ? (answerMap.get(question.answerId) ?? null) : null,
-    }))
+    const senderClerkIds = questions.map((q) => q.senderClerkId).filter((id): id is string => id !== undefined)
+    const userMap = await fetchUsersMap(ctx, senderClerkIds)
+
+    const questionsWithAnswers = questions.map((question) => {
+      const sender = question.senderClerkId ? userMap.get(question.senderClerkId) : undefined
+      return {
+        ...question,
+        answer: question.answerId ? (answerMap.get(question.answerId) ?? null) : null,
+        senderUsername: sender?.username,
+        senderDisplayName: sender?.displayName,
+        senderAvatarUrl: sender?.avatarUrl,
+      }
+    })
 
     return questionsWithAnswers.sort((a, b) => {
       const aTime = a.answer?._creationTime ?? 0
@@ -236,6 +363,14 @@ export const getAnsweredNumber = query({
 export const getFriends = query({
   args: { clerkId: v.string() },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.clerkId) {
+      throw new ConvexError('Not authorized to view this friends list')
+    }
+
     const friendsMap = new Map<
       string,
       {

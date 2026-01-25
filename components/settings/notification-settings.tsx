@@ -2,16 +2,12 @@
 
 import { Alert01Icon, Notification03Icon, NotificationOff01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { useAction, useMutation, useQuery } from 'convex/react'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useRef, useState, useTransition } from 'react'
+import { useCallback, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { useIsClient } from 'usehooks-ts'
-import {
-  getPushSubscriptions,
-  sendTestPushNotification,
-  subscribeToPush,
-  unsubscribeFromPush,
-} from '@/lib/actions/push'
+import { api } from '@/convex/_generated/api'
 import { Button } from '../ui/button'
 import { Switch } from '../ui/switch'
 
@@ -46,57 +42,27 @@ function NotificationHeader({ title, description }: { title: string; description
   )
 }
 
+function getInitialPermission(): PermissionState {
+  if (typeof window === 'undefined' || !checkPushSupport()) {
+    return 'default'
+  }
+  return Notification.permission as PermissionState
+}
+
 export function NotificationSettings({ clerkId }: { clerkId: string }) {
   const t = useTranslations('settings')
   const isClient = useIsClient()
-  const [permission, setPermission] = useState<PermissionState>('default')
-  const [isSubscribed, setIsSubscribed] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const [permission, setPermission] = useState<PermissionState>(getInitialPermission)
   const [isPending, startTransition] = useTransition()
-  const hasInitialized = useRef(false)
 
+  const subscriptions = useQuery(api.push.getByClerkId, { clerkId })
+  const upsertPush = useMutation(api.push.upsert)
+  const removePush = useMutation(api.push.remove)
+  const sendTestNotification = useAction(api.pushActions.sendTestNotification)
+
+  const isLoading = subscriptions === undefined
+  const isSubscribed = (subscriptions?.length ?? 0) > 0
   const isSupported = isClient && checkPushSupport()
-
-  useEffect(() => {
-    if (!isClient || hasInitialized.current) {
-      return
-    }
-
-    hasInitialized.current = true
-    let cancelled = false
-
-    async function initialize() {
-      if (!checkPushSupport()) {
-        if (!cancelled) {
-          setIsLoading(false)
-        }
-        return
-      }
-
-      if (!cancelled) {
-        setPermission(Notification.permission as PermissionState)
-      }
-
-      try {
-        const subscriptions = await getPushSubscriptions(clerkId)
-        if (!cancelled) {
-          setIsSubscribed(subscriptions.length > 0)
-          setIsLoading(false)
-        }
-      } catch {
-        if (!cancelled) {
-          setIsSubscribed(false)
-          setIsLoading(false)
-        }
-      }
-    }
-
-    initialize()
-
-    return () => {
-      cancelled = true
-    }
-  }, [isClient, clerkId])
 
   const handleSubscribe = useCallback(async () => {
     if (Notification.permission === 'default') {
@@ -128,21 +94,19 @@ export function NotificationSettings({ clerkId }: { clerkId: string }) {
 
         const subscriptionJson = subscription.toJSON()
         if (subscriptionJson.endpoint && subscriptionJson.keys) {
-          await subscribeToPush({
+          await upsertPush({
+            clerkId,
             endpoint: subscriptionJson.endpoint,
-            keys: {
-              p256dh: subscriptionJson.keys.p256dh ?? '',
-              auth: subscriptionJson.keys.auth ?? '',
-            },
+            p256dh: subscriptionJson.keys.p256dh ?? '',
+            auth: subscriptionJson.keys.auth ?? '',
           })
-          setIsSubscribed(true)
           toast.success(t('notificationSettings.subscribeSuccess'))
         }
       } catch {
         toast.error(t('notificationSettings.subscribeError'))
       }
     })
-  }, [t])
+  }, [t, clerkId, upsertPush])
 
   const handleUnsubscribe = useCallback(() => {
     startTransition(async () => {
@@ -152,16 +116,15 @@ export function NotificationSettings({ clerkId }: { clerkId: string }) {
           const subscription = await registration.pushManager.getSubscription()
           if (subscription) {
             await subscription.unsubscribe()
-            await unsubscribeFromPush(subscription.endpoint)
+            await removePush({ clerkId, endpoint: subscription.endpoint })
           }
         }
-        setIsSubscribed(false)
         toast.success(t('notificationSettings.unsubscribeSuccess'))
       } catch {
         toast.error(t('notificationSettings.unsubscribeError'))
       }
     })
-  }, [t])
+  }, [t, clerkId, removePush])
 
   const handleToggle = useCallback(
     (checked: boolean) => {
@@ -176,14 +139,14 @@ export function NotificationSettings({ clerkId }: { clerkId: string }) {
 
   const handleTestNotification = useCallback(() => {
     startTransition(async () => {
-      const result = await sendTestPushNotification()
+      const result = await sendTestNotification({ clerkId })
       if (result.success) {
         toast.success(t('notificationSettings.testSuccess'))
       } else {
         toast.error(result.error ?? t('notificationSettings.testError'))
       }
     })
-  }, [t])
+  }, [t, clerkId, sendTestNotification])
 
   const headerTitle = t('notificationSettings.title')
   const headerDescription = t('notificationSettings.description')

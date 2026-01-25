@@ -1,5 +1,5 @@
-import { v } from 'convex/values'
-import { mutation, query } from './_generated/server'
+import { ConvexError, v } from 'convex/values'
+import { internalQuery, mutation, query } from './_generated/server'
 
 export const upsert = mutation({
   args: {
@@ -9,6 +9,14 @@ export const upsert = mutation({
     auth: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.clerkId) {
+      throw new ConvexError('Not authorized')
+    }
+
     const existing = await ctx.db
       .query('pushSubscriptions')
       .withIndex('by_endpoint', (q) => q.eq('endpoint', args.endpoint))
@@ -33,6 +41,14 @@ export const remove = mutation({
     endpoint: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.clerkId) {
+      throw new ConvexError('Not authorized')
+    }
+
     const subscription = await ctx.db
       .query('pushSubscriptions')
       .withIndex('by_endpoint', (q) => q.eq('endpoint', args.endpoint))
@@ -45,6 +61,24 @@ export const remove = mutation({
 })
 
 export const getByClerkId = query({
+  args: { clerkId: v.string() },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.clerkId) {
+      throw new ConvexError('Not authorized')
+    }
+
+    return await ctx.db
+      .query('pushSubscriptions')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.clerkId))
+      .collect()
+  },
+})
+
+export const getByClerkIdInternal = internalQuery({
   args: { clerkId: v.string() },
   handler: async (ctx, args) => {
     return await ctx.db

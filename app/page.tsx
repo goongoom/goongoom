@@ -1,64 +1,47 @@
-import { currentUser } from '@clerk/nextjs/server'
-import { getLocale, getTranslations } from 'next-intl/server'
+'use client'
+
+import { useUser } from '@clerk/nextjs'
+import { useQuery } from 'convex/react'
+import { useLocale, useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 import { HomeCTAButtons } from '@/components/home/home-cta-buttons'
 import { AnsweredQuestionCard } from '@/components/questions/answered-question-card'
-
 import { CarouselItem } from '@/components/ui/carousel'
 import { HomeCarousel } from '@/components/home/home-carousel'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
-import { getClerkUsersByIds } from '@/lib/clerk'
-import { getAnswerCount, getRecentAnswersLimitPerUser } from '@/lib/db/queries'
+import { Spinner } from '@/components/ui/spinner'
+import { api } from '@/convex/_generated/api'
 
-export default async function Home() {
-  const [recentAnswers, answerCount, t, tCommon, tAnswers, tProfile, locale, user] = await Promise.all([
-    getRecentAnswersLimitPerUser(30, 2),
-    getAnswerCount(),
-    getTranslations('home'),
-    getTranslations('common'),
-    getTranslations('answers'),
-    getTranslations('profile'),
-    getLocale(),
-    currentUser(),
-  ])
+export default function Home() {
+  const t = useTranslations('home')
+  const tCommon = useTranslations('common')
+  const tProfile = useTranslations('profile')
+  const locale = useLocale()
+  const { user, isLoaded: isUserLoaded } = useUser()
 
-  const recipientIds = [...new Set(recentAnswers.map((qa) => qa.recipientClerkId))]
-  const senderIds = [
-    ...new Set(
-      recentAnswers
-        .filter((qa) => !qa.question.isAnonymous && qa.question.senderClerkId)
-        .map((qa) => qa.question.senderClerkId)
-        .filter((id): id is string => Boolean(id))
-    ),
-  ]
+  const recentAnswers = useQuery(api.answers.getRecentLimitPerUser, {
+    totalLimit: 30,
+    perUserLimit: 2,
+  })
+  const answerCount = useQuery(api.answers.count, {})
 
-  const [recipientMap, senderMap] = await Promise.all([getClerkUsersByIds(recipientIds), getClerkUsersByIds(senderIds)])
+  const cardLabels = useMemo(
+    () => ({
+      anonymous: tCommon('anonymous'),
+      identified: tCommon('identified'),
+    }),
+    [tCommon]
+  )
 
-  const cardLabels = {
-    anonymous: tCommon('anonymous'),
-    identified: tCommon('identified'),
+  const isLoading = recentAnswers === undefined || answerCount === undefined
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-background">
+        <Spinner className="size-8" />
+      </div>
+    )
   }
-
-  const questionsWithInfo = recentAnswers
-    .map((qa) => {
-      const recipient = recipientMap.get(qa.recipientClerkId)
-      if (!recipient?.username) {
-        return null
-      }
-
-      const sender =
-        !qa.question.isAnonymous && qa.question.senderClerkId ? senderMap.get(qa.question.senderClerkId) : null
-
-      return {
-        ...qa,
-        recipientUsername: recipient.username,
-        recipientDisplayName: recipient.displayName || recipient.username || 'User',
-        recipientAvatarUrl: recipient.avatarUrl,
-        recipientSignatureColor: qa.recipientSignatureColor,
-        senderName: sender?.displayName || sender?.username || null,
-        senderAvatarUrl: sender?.avatarUrl || null,
-      }
-    })
-    .filter((qa) => qa !== null)
 
   return (
     <div className="flex min-h-screen flex-col bg-background selection:bg-primary/10">
@@ -74,7 +57,7 @@ export default async function Home() {
             </h1>
           </div>
 
-          {questionsWithInfo.length === 0 ? (
+          {recentAnswers.length === 0 ? (
             <div className="mx-auto max-w-md rounded-3xl border border-border/50 bg-background/50 p-12 text-center backdrop-blur-sm">
               <Empty>
                 <EmptyHeader>
@@ -86,25 +69,25 @@ export default async function Home() {
           ) : (
             <div className="mx-auto max-w-[1600px] px-4 md:px-8">
               <HomeCarousel>
-                {questionsWithInfo.map((qa) => (
+                {recentAnswers.map((qa) => (
                   <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4" key={qa.question._id}>
                     <div className="h-full transform rounded-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                       <AnsweredQuestionCard
                         anonymousAvatarSeed={qa.question.anonymousAvatarSeed}
                         answerContent={qa.answer.content}
                         answerCreatedAt={qa.answer._creationTime}
-                        avatarUrl={qa.recipientAvatarUrl}
-                        displayName={qa.recipientDisplayName}
+                        avatarUrl={qa.recipientAvatarUrl ?? null}
+                        displayName={qa.recipientDisplayName || qa.recipientUsername || tCommon('user')}
                         isAnonymous={qa.question.isAnonymous}
                         labels={cardLabels}
                         locale={locale}
                         questionContent={qa.question.content}
                         questionCreatedAt={qa.question._creationTime}
                         questionId={qa.question._id}
-                        senderAvatarUrl={qa.senderAvatarUrl}
-                        senderName={qa.senderName || undefined}
+                        senderAvatarUrl={null}
+                        senderName={undefined}
                         signatureColor={qa.recipientSignatureColor}
-                        username={qa.recipientUsername}
+                        username={qa.recipientUsername || qa.recipientClerkId}
                       />
                     </div>
                   </CarouselItem>
@@ -119,7 +102,7 @@ export default async function Home() {
             <HomeCTAButtons
               startLabel={tCommon('start')}
               loginLabel={tCommon('login')}
-              isLoggedIn={!!user}
+              isLoggedIn={isUserLoaded && !!user}
               profileLabel={tProfile('myProfile')}
               profileUrl={user?.username ? `/${user.username}` : undefined}
             />

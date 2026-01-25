@@ -28,7 +28,13 @@ http.route({
     const wh = new Webhook(webhookSecret)
     let evt: {
       type: string
-      data: { id: string }
+      data: {
+        id: string
+        username?: string | null
+        first_name?: string | null
+        last_name?: string | null
+        image_url?: string | null
+      }
     }
 
     try {
@@ -44,9 +50,13 @@ http.route({
 
     const { type, data } = evt
 
-    if (type === 'user.created') {
-      await ctx.runMutation(internal.users.createFromWebhook, {
+    if (type === 'user.created' || type === 'user.updated') {
+      const displayName = [data.first_name, data.last_name].filter(Boolean).join(' ') || undefined
+      await ctx.runMutation(internal.users.upsertFromWebhook, {
         clerkId: data.id,
+        username: data.username ?? undefined,
+        displayName,
+        avatarUrl: data.image_url ?? undefined,
       })
     } else if (type === 'user.deleted') {
       await ctx.runMutation(internal.users.deleteFromWebhook, {

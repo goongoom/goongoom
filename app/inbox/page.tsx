@@ -1,61 +1,77 @@
-import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+'use client'
+
+import { useConvexAuth } from 'convex/react'
+import { useQuery } from 'convex/react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
+import { useEffect, useMemo } from 'react'
 import { MainContent } from '@/components/layout/main-content'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
+import { Spinner } from '@/components/ui/spinner'
 import { ToastOnMount } from '@/components/ui/toast-on-mount'
-import { getClerkUsersByIds } from '@/lib/clerk'
-import { getOrCreateUser, getUnansweredQuestions } from '@/lib/db/queries'
+import { api } from '@/convex/_generated/api'
+import { useAuth } from '@clerk/nextjs'
 import { InboxList } from './inbox-list'
 
-interface InboxPageProps {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>
-}
+export default function InboxPage() {
+  const { userId: clerkId } = useAuth()
+  const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth()
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
-export default async function InboxPage({ searchParams }: InboxPageProps) {
-  const { userId: clerkId } = await auth()
-  if (!clerkId) {
-    redirect('/')
-  }
+  const t = useTranslations('inbox')
+  const tCommon = useTranslations('common')
 
-  const [, unansweredQuestions, query, t, tCommon] = await Promise.all([
-    getOrCreateUser(clerkId),
-    getUnansweredQuestions(clerkId),
-    searchParams,
-    getTranslations('inbox'),
-    getTranslations('common'),
-  ])
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      router.replace('/')
+    }
+  }, [isAuthLoading, isAuthenticated, router])
 
-  const error = typeof query?.error === 'string' ? decodeURIComponent(query.error) : null
-
-  const senderIds = Array.from(
-    new Set(
-      (unansweredQuestions ?? [])
-        .filter((question) => question && !question.isAnonymous)
-        .map((question) => question?.senderClerkId)
-        .filter((id): id is string => Boolean(id))
-    )
+  const unansweredQuestions = useQuery(
+    api.questions.getUnanswered,
+    clerkId ? { recipientClerkId: clerkId } : 'skip'
   )
 
-  const senderMap = await getClerkUsersByIds(senderIds)
+  const error = searchParams.get('error') ? decodeURIComponent(searchParams.get('error')!) : null
 
-  const questionsWithSenders = (unansweredQuestions ?? [])
-    .filter((question): question is NonNullable<typeof question> => question !== null)
-    .map((question) => {
-      const sender =
-        !question.isAnonymous && question.senderClerkId ? senderMap.get(question.senderClerkId) || null : null
-      const isAnonymous = question.isAnonymous || !sender
+  const questionsWithSenders = useMemo(() => {
+    if (!unansweredQuestions) return []
 
-      return {
-        id: question._id,
-        content: question.content,
-        isAnonymous,
-        createdAt: question._creationTime,
-        senderName: isAnonymous ? tCommon('anonymous') : sender?.displayName || sender?.username || tCommon('user'),
-        senderAvatarUrl: isAnonymous ? undefined : sender?.avatarUrl,
-        anonymousAvatarSeed: isAnonymous ? question.anonymousAvatarSeed : undefined,
-      }
-    })
+    return unansweredQuestions.map((question) => ({
+      id: question._id,
+      content: question.content,
+      isAnonymous: question.isAnonymous,
+      createdAt: question._creationTime,
+      senderName: question.isAnonymous
+        ? tCommon('anonymous')
+        : question.senderDisplayName || question.senderUsername || tCommon('identified'),
+      senderAvatarUrl: question.isAnonymous ? undefined : question.senderAvatarUrl,
+      anonymousAvatarSeed: question.isAnonymous ? question.anonymousAvatarSeed : undefined,
+    }))
+  }, [unansweredQuestions, tCommon])
+
+  if (isAuthLoading || !isAuthenticated) {
+    return (
+      <MainContent>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Spinner className="size-8" />
+        </div>
+      </MainContent>
+    )
+  }
+
+  const isLoading = unansweredQuestions === undefined
+
+  if (isLoading) {
+    return (
+      <MainContent>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <Spinner className="size-8" />
+        </div>
+      </MainContent>
+    )
+  }
 
   return (
     <MainContent>

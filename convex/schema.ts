@@ -4,6 +4,9 @@ import { v } from 'convex/values'
 export default defineSchema({
   users: defineTable({
     clerkId: v.string(),
+    username: v.optional(v.string()),
+    displayName: v.optional(v.string()),
+    avatarUrl: v.optional(v.string()),
     bio: v.optional(v.string()),
     socialLinks: v.optional(
       v.array(
@@ -30,7 +33,9 @@ export default defineSchema({
     locale: v.optional(v.string()),
     signatureColor: v.optional(v.string()),
     updatedAt: v.number(),
-  }).index('by_clerk_id', ['clerkId']),
+  })
+    .index('by_clerk_id', ['clerkId'])
+    .index('by_username', ['username']),
 
   questions: defineTable({
     recipientClerkId: v.string(),

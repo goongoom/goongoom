@@ -1,5 +1,6 @@
 'use client'
 
+import { useAuth } from '@clerk/nextjs'
 import {
   AnonymousIcon,
   BloggerIcon,
@@ -14,6 +15,7 @@ import {
   YoutubeIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { useAction, useMutation } from 'convex/react'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -24,7 +26,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
-import { fetchNaverBlogTitleAction, updateProfile } from '@/lib/actions/profile'
+import { api } from '@/convex/_generated/api'
 import type { SignatureColor } from '@/lib/colors/signature-colors'
 import { QUESTION_SECURITY_LEVELS } from '@/lib/question-security'
 import type { SocialLinkEntry, SocialLinks } from '@/lib/types'
@@ -188,6 +190,9 @@ export function ProfileEditForm({
   const t = useTranslations('settings')
   const tErrors = useTranslations('errors')
   const tSocial = useTranslations('social')
+  const { userId } = useAuth()
+  const updateProfile = useMutation(api.users.updateProfile)
+  const fetchNaverBlogTitleAction = useAction(api.users.fetchNaverBlogTitle)
 
   const initialLinks = useMemo(() => parseInitialSocialLinks(initialSocialLinks), [initialSocialLinks])
 
@@ -204,13 +209,14 @@ export function ProfileEditForm({
 
   const saveProfile = useCallback(
     (data: { bio?: string | null; socialLinks?: SocialLinks | null; questionSecurityLevel?: string }) => {
-      toast.promise(updateProfile(data), {
+      if (!userId) return
+      toast.promise(updateProfile({ clerkId: userId, ...data }), {
         loading: t('saving'),
         success: t('profileUpdated'),
         error: (err) => err?.message || tErrors('genericError'),
       })
     },
-    [t, tErrors]
+    [t, tErrors, userId, updateProfile]
   )
 
   const handleBioBlur = useCallback(() => {
@@ -287,13 +293,15 @@ export function ProfileEditForm({
         handleSocialLinksBlur()
         return
       }
-      const result = await fetchNaverBlogTitleAction(normalizedHandle)
-      if (result.success && result.data) {
-        setNaverBlogRows((prev) => prev.map((row) => (row.id === rowId ? { ...row, label: result.data } : row)))
-      }
+      try {
+        const title = await fetchNaverBlogTitleAction({ handle: normalizedHandle })
+        if (title && title !== normalizedHandle) {
+          setNaverBlogRows((prev) => prev.map((row) => (row.id === rowId ? { ...row, label: title } : row)))
+        }
+      } catch {}
       handleSocialLinksBlur()
     },
-    [handleSocialLinksBlur]
+    [handleSocialLinksBlur, fetchNaverBlogTitleAction]
   )
 
   return (
