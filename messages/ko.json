@@ -1,24 +1,18 @@
 {
   "common": {
     "appName": "궁금닷컴",
-    "login": "로그인하기",
-    "logout": "로그아웃하기",
-    "start": "시작하기",
+    "login": "로그인",
+    "logout": "로그아웃",
+    "start": "시작",
     "cancel": "취소",
-    "decline": "거절하기",
-    "delete": "삭제하기",
-    "save": "저장하기",
+    "decline": "거절",
+    "delete": "삭제",
     "submitting": "보내는 중…",
     "anonymous": "익명",
     "identified": "실명",
     "user": "사용자",
-    "menu": "메뉴",
     "you": "나",
-    "asker": "질문자"
-  },
-  "metadata": {
-    "title": "궁금닷컴",
-    "description": "궁금한 건 뭐든 물어보고 솔직한 답을 받아요"
+    "undo": "되돌리기"
   },
   "nav": {
     "appName": "궁금닷컴",
@@ -32,14 +26,9 @@
     "recentQuestions": "최근 질문"
   },
   "auth": {
-    "login": "로그인하기",
-    "createProfile": "내 프로필 만들기",
-    "viewProfile": "내 프로필 보기",
+    "login": "로그인",
     "loginRequired": "전화번호 인증을 먼저 해 주세요. 질문을 보낼 수 있어요.",
-    "welcome": "궁금닷컴에 오신 걸 환영해요!",
-    "welcomeDescription": "로그인하고 익명 질문을 주고받아 보세요.",
-    "openProfileMenu": "프로필 메뉴 열기",
-    "start": "시작하기"
+    "start": "시작"
   },
   "passkey": {
     "setupError": "다시 시도해 주세요. 패스키 설정에 문제가 생겼어요.",
@@ -48,30 +37,26 @@
     "nudgeTitle": "누가 마음대로 답변하면 어쩌지?",
     "nudgeDescription": "Face ID나 Touch ID로 더 빠르고 안전하게 로그인해 보세요.",
     "settingUp": "설정하는 중…",
-    "setupNow": "지금 설정하기",
+    "setupNow": "지금 설정",
     "later": "나중에 할게요",
     "fasterTitle": "패스키로 더 빠르게!",
     "fasterDescription": "Face ID, 지문, 기기 잠금으로\n한 번 터치하면 로그인 끝!"
   },
   "share": {
-    "title": "공유하기",
-    "shareToInstagram": "궁금닷컴에서 공유하기",
+    "title": "공유",
+    "shareToInstagram": "궁금닷컴에서 공유",
     "more": "더보기",
     "instagramDescription": "이 답변을 인스타그램에 공유해 보세요.",
     "instagramImageShare": "인스타그램 이미지 공유",
     "instagramImageShareLoading": "인스타그램 공유를 준비하고 있어요…",
     "copyLink": "링크 복사",
-    "linkCopied": "링크가 복사됐어요!",
-    "easyShare": "쉽게 공유해요",
-    "easyShareDescription": "인스타그램, 트위터 어디든 링크를 공유해 보세요. 클릭 한 번이면 질문을 받을 수 있어요.",
-    "instagramShare": "인스타그램 공유",
-    "instagramShareDescription": "재치 있는 답변을 이미지로 저장해서 인스타그램 스토리와 피드에 바로 공유해 보세요."
+    "linkCopied": "링크가 복사됐어요!"
   },
   "questions": {
     "sendQuestion": "질문 보내기",
     "sending": "보내는 중…",
     "inputPlaceholder": "어떤 걸 물어보고 싶나요?",
-    "writeQuestion": "질문 작성하기",
+    "writeQuestion": "질문 작성",
     "toRecipient": "{recipientName}에게",
     "newQuestion": "새 질문을 남겨 보세요",
     "whoToAsk": "어떤 방식으로 질문할까요?",
@@ -79,34 +64,33 @@
     "anonymousDescription": "익명으로 질문해요",
     "identifiedOption": "실명",
     "identifiedDescription": "내 이름으로 질문해요",
-    "shuffleAvatar": "바꾸기",
     "termsAgreement": "질문을 보내면 <link>이용약관</link>에 동의하게 돼요",
     "questionSent": "질문을 보냈어요!",
-    "questionLabel": "질문",
-    "defaultQuestion": "어떤 질문이 올까요?",
-    "defaultAnswer": "재치 있는 답변을 공유해 보세요.",
-    "askAnotherQuestion": "{firstName}에게 또 질문하기",
+    "askAnotherQuestion": "{firstName}에게 또 질문",
     "questionNumber": "{firstName}에게 온 질문 #{number}"
   },
   "answers": {
-    "answer": "답변",
-    "answerButton": "답변하기",
-    "answerDrawerTitle": "질문에 답변하기",
+    "answerButton": "답변",
+    "answerDrawerTitle": "질문에 답변",
     "answerPlaceholder": "답변을 입력해 주세요…",
-    "deleteResponse": "답변 삭제하기",
+    "deleteResponse": "답변 삭제",
     "deleteResponseTitle": "이 답변을 삭제할까요?",
     "deleteResponseDescription": "삭제하면 질문이 받은 질문함에 다시 보여요.",
     "noAnswersYet": "아직 답변한 질문이 없어요.",
-    "answerCreated": "답변을 보냈어요!"
+    "answerCreated": "답변을 보냈어요!",
+    "answerDeleted": "답변이 삭제됐어요",
+    "answerRestored": "답변이 복원됐어요"
   },
   "inbox": {
     "title": "받은 질문",
     "description": "답변을 기다리는 질문들이에요",
     "emptyTitle": "아직 새 질문이 없어요",
     "emptyDescription": "질문이 오면 여기에 보여요.",
-    "declineButton": "질문 거절하기",
+    "declineButton": "질문 거절",
     "declineTitle": "이 질문을 거절할까요?",
-    "declineDescription": "거절하면 받은 질문함에서 사라져요. 나중에 다시 볼 수 없어요."
+    "declineDescription": "거절하면 받은 질문함에서 사라져요. 나중에 다시 볼 수 없어요.",
+    "declineSuccess": "질문이 거절됐어요",
+    "questionRestored": "질문이 복원됐어요"
   },
   "profile": {
     "myProfile": "내 프로필",
@@ -144,7 +128,6 @@
     "accountSettings": "계정 설정",
     "accountSettingsDescription": "아이디, 전화번호, 보안을 관리해요",
     "saving": "저장하는 중…",
-    "about": "서비스 정보",
     "madeBy": "만든 사람",
     "reportBug": "버그 신고",
     "suggestFeature": "기능 제안",
@@ -162,26 +145,25 @@
       "configError": "나중에 다시 시도해 주세요. 알림 설정에 문제가 있어요.",
       "subscribeSuccess": "푸시 알림이 켜졌어요!",
       "subscribeError": "다시 시도해 주세요. 알림을 켜지 못했어요.",
-      "unsubscribeSuccess": "푸시 알림이 꺼졌어요.",
+      "unsubscribeSuccess": "푸시 알림이 꺼졌어요",
       "unsubscribeError": "다시 시도해 주세요. 알림을 끄지 못했어요.",
+      "subscriptionRestored": "푸시 알림이 다시 켜졌어요",
       "testButton": "테스트 알림 보내기",
       "testSending": "보내는 중…",
       "testSuccess": "테스트 알림을 보냈어요!",
       "testError": "다시 시도해 주세요. 테스트 알림을 보내지 못했어요."
     }
   },
-
   "home": {
     "feedTitle": "궁금닷컴에서 오간 이야기",
     "feedEmptyTitle": "아직 이야기가 없어요",
     "feedEmptyDescription": "첫 번째 질문을 남겨 보세요!",
-    "questionLabel": "질문",
     "trustIndicator": "{count}개의 솔직한 대화가 오갔어요"
   },
   "footer": {
     "terms": "이용약관",
     "privacy": "개인정보처리방침",
-    "contact": "문의하기"
+    "contact": "문의"
   },
   "questionSecurity": {
     "anyoneLabel": "누구나 질문할 수 있어요",
@@ -189,8 +171,7 @@
     "verifiedLabel": "번호 인증한 사람만 익명 허용",
     "verifiedDescription": "전화번호를 인증한 사람만 익명 질문을 보낼 수 있어요.",
     "identifiedOnlyLabel": "실명 질문만 받기",
-    "identifiedOnlyDescription": "실명 질문만 받을 수 있어요.",
-    "invalidSetting": "설정을 다시 확인해 주세요"
+    "identifiedOnlyDescription": "실명 질문만 받을 수 있어요."
   },
   "restrictions": {
     "anonymousLoginRequired": "걱정 마세요! 여전히 익명으로 질문할 수 있어요.",
@@ -222,17 +203,17 @@
     "answerCreateFailed": "다시 시도해 주세요. 답변을 저장하지 못했어요.",
     "answerDeleteError": "다시 시도해 주세요. 답변을 삭제하지 못했어요.",
     "answerCreateError": "다시 시도해 주세요. 답변을 저장하는 중 문제가 생겼어요.",
-    "pleaseEnterQuestion": "질문을 입력해 주세요"
+    "pleaseEnterQuestion": "질문을 입력해 주세요",
+    "restoreError": "복원하지 못했어요. 다시 시도해 주세요."
   },
   "friends": {
     "title": "친구",
     "description": "친구들의 질문과 답변을 확인해 보세요",
     "emptyTitle": "아직 친구 활동이 없어요",
-    "emptyDescription": "친구가 질문에 답변하면 여기에 보여요.",
-    "questionLabel": "질문"
+    "emptyDescription": "친구가 질문에 답변하면 여기에 보여요."
   },
   "a2hs": {
-    "title": "홈 화면에 추가하기",
+    "title": "홈 화면에 추가",
     "description": "앱처럼 빠르게 접속하고\n알림도 받아 보세요.",
     "howTo": "추가 방법",
     "iosStep1": "아래 공유 버튼을 눌러 주세요",
@@ -240,10 +221,6 @@
     "androidStep1": "메뉴 버튼을 눌러 주세요",
     "androidStep2": "'홈 화면에 추가'를 선택해 주세요",
     "dismiss": "나중에 할게요"
-  },
-  "push": {
-    "newQuestionTitle": "새 질문이 왔어요!",
-    "newQuestionBody": "{content}"
   },
   "ui": {
     "close": "닫기",
@@ -278,7 +255,6 @@
     "youtubePlaceholder": "유튜브",
     "githubPlaceholder": "깃허브",
     "naverBlogPlaceholder": "네이버 블로그",
-    "labelPlaceholder": "이름",
     "instagram": "인스타그램",
     "twitter": "X (트위터)",
     "youtube": "유튜브",
@@ -290,15 +266,5 @@
     "addGithub": "깃허브 추가",
     "addNaverBlog": "네이버 블로그 추가",
     "remove": "삭제"
-  },
-  "globalError": {
-    "title": "문제가 발생했어요",
-    "description": "예상치 못한 오류가 생겼어요. 페이지를 새로고침하거나 아래 옵션을 사용해 보세요.",
-    "tryAgain": "다시 시도하기",
-    "signOut": "로그아웃하기",
-    "clearData": "캐시 및 데이터 지우기",
-    "clearDataDescription": "로컬 데이터를 지우면 문제가 해결될 수 있어요.",
-    "dataCleared": "데이터가 지워졌어요. 새로고침 중...",
-    "or": "또는"
   }
 }

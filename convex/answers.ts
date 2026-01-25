@@ -91,6 +91,39 @@ export const softDelete = mutation({
   },
 })
 
+export const restore = mutation({
+  args: {
+    id: v.id('answers'),
+    recipientClerkId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Authentication required')
+    }
+    if (identity.subject !== args.recipientClerkId) {
+      throw new ConvexError('Not authorized')
+    }
+
+    const answer = await ctx.db.get(args.id)
+    if (!answer) {
+      throw new ConvexError('Answer not found')
+    }
+    if (!answer.deletedAt) {
+      return { success: true }
+    }
+
+    const question = await ctx.db.get(answer.questionId)
+    if (!question || question.recipientClerkId !== args.recipientClerkId) {
+      throw new ConvexError('Not authorized to restore this answer')
+    }
+
+    await ctx.db.patch(args.id, { deletedAt: undefined })
+    await ctx.db.patch(answer.questionId, { answerId: args.id })
+    return { success: true }
+  },
+})
+
 export const getRecent = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {

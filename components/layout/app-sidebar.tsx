@@ -13,12 +13,11 @@ import {
   UserGroupIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { formatDistanceToNow } from 'date-fns'
-import { enUS, ko } from 'date-fns/locale'
 import { usePathname } from 'next/navigation'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import type * as React from 'react'
 import { PasskeySignInButton } from '@/components/auth/passkey-sign-in-button'
+import { SidebarQuestionItem } from '@/components/layout/sidebar-question-item'
 import { GUEST_TAB_ROUTES, TAB_ROUTES } from '@/components/navigation/navigation-routes'
 import { Ultralink } from '@/components/navigation/ultralink'
 import { usePrefetchRoutes } from '@/components/navigation/use-prefetch-routes'
@@ -41,22 +40,21 @@ interface RecentQuestion {
   id: string
   content: string
   createdAt: number
+  senderName?: string
+  senderAvatarUrl?: string | null
+  isAnonymous?: boolean
 }
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   recentQuestions?: RecentQuestion[]
-  onQuestionClick?: (id: string) => void
 }
 
-const localeMap = { ko, en: enUS } as const
-
-export function AppSidebar({ recentQuestions = [], onQuestionClick, ...props }: AppSidebarProps) {
+export function AppSidebar({ recentQuestions = [], ...props }: AppSidebarProps) {
   const t = useTranslations('nav')
   const tCommon = useTranslations('common')
   const tSidebar = useTranslations('sidebar')
   const tFooter = useTranslations('footer')
   const pathname = usePathname()
-  const locale = useLocale()
   const { user } = useUser()
 
   usePrefetchRoutes(user ? TAB_ROUTES : GUEST_TAB_ROUTES)
@@ -205,20 +203,7 @@ export function AppSidebar({ recentQuestions = [], onQuestionClick, ...props }: 
               <SidebarMenu>
                 {recentQuestions.map((question) => (
                   <SidebarMenuItem key={question.id}>
-                    <SidebarMenuButton
-                      className="h-auto items-start py-3"
-                      onClick={() => onQuestionClick?.(question.id)}
-                    >
-                      <div className="flex flex-col gap-1 overflow-hidden">
-                        <span className="line-clamp-2 font-medium text-xs">{question.content}</span>
-                        <span className="text-[10px] text-muted-foreground">
-                          {formatDistanceToNow(question.createdAt, {
-                            addSuffix: true,
-                            locale: localeMap[locale as keyof typeof localeMap] ?? enUS,
-                          })}
-                        </span>
-                      </div>
-                    </SidebarMenuButton>
+                    <SidebarQuestionItem question={question} />
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>

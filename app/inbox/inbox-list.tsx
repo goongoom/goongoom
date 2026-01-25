@@ -10,16 +10,6 @@ import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -74,6 +64,7 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
   const { user } = useUser()
   const createAnswerMutation = useMutation(api.answers.create)
   const declineQuestionMutation = useMutation(api.questions.softDelete)
+  const restoreQuestionMutation = useMutation(api.questions.restore)
 
   const [dismissedQuestionIds, setDismissedQuestionIds] = useState<Set<string>>(new Set())
   const [selectedQuestion, setSelectedQuestion] = useState<QuestionItem | null>(null)
@@ -81,7 +72,6 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
   const [answer, setAnswer] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isDeclining, setIsDeclining] = useState(false)
-  const [isDeclineDialogOpen, setIsDeclineDialogOpen] = useState(false)
   const [shouldRefreshOnClose, setShouldRefreshOnClose] = useState(false)
 
   const visibleQuestions = questions.filter((question) => !dismissedQuestionIds.has(question.id))
@@ -139,27 +129,51 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
       return
     }
 
+    const questionToDecline = selectedQuestion
+
     setIsDeclining(true)
     try {
       await declineQuestionMutation({
-        id: selectedQuestion.id,
+        id: questionToDecline.id,
         recipientClerkId: user.id,
       })
 
       setDismissedQuestionIds((prev) => {
         const next = new Set(prev)
-        next.add(selectedQuestion.id)
+        next.add(questionToDecline.id)
         return next
       })
       setShouldRefreshOnClose(true)
       setIsDrawerOpen(false)
-      toast.success(tInbox('declineSuccess'))
+
+      toast.success(tInbox('declineSuccess'), {
+        duration: 5000,
+        action: {
+          label: tCommon('undo'),
+          onClick: async () => {
+            try {
+              await restoreQuestionMutation({
+                id: questionToDecline.id,
+                recipientClerkId: user.id,
+              })
+              setDismissedQuestionIds((prev) => {
+                const next = new Set(prev)
+                next.delete(questionToDecline.id)
+                return next
+              })
+              toast.success(tInbox('questionRestored'))
+              router.refresh()
+            } catch {
+              toast.error(tErrors('restoreError'))
+            }
+          },
+        },
+      })
     } catch (error) {
       console.error('Failed to decline question:', error)
       toast.error(tErrors('questionDeleteError'))
     } finally {
       setIsDeclining(false)
-      setIsDeclineDialogOpen(false)
     }
   }
 
@@ -314,26 +328,13 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
               </Button>
               <Button
                 className="h-14 w-full rounded-2xl text-destructive"
-                onClick={() => setIsDeclineDialogOpen(true)}
+                disabled={isDeclining}
+                onClick={handleDecline}
                 type="button"
                 variant="outline"
               >
-                {tInbox('declineButton')}
+                {isDeclining ? tCommon('submitting') : tInbox('declineButton')}
               </Button>
-              <AlertDialog onOpenChange={setIsDeclineDialogOpen} open={isDeclineDialogOpen}>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>{tInbox('declineTitle')}</AlertDialogTitle>
-                    <AlertDialogDescription>{tInbox('declineDescription')}</AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>{tCommon('cancel')}</AlertDialogCancel>
-                    <AlertDialogAction disabled={isDeclining} onClick={handleDecline} type="button">
-                      {tCommon('decline')}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
             </DrawerFooter>
           </div>
         </DrawerContent>

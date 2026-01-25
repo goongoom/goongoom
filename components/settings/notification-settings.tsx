@@ -51,6 +51,7 @@ function getInitialPermission(): PermissionState {
 
 export function NotificationSettings({ clerkId }: { clerkId: string }) {
   const t = useTranslations('settings')
+  const tCommon = useTranslations('common')
   const isClient = useIsClient()
   const [permission, setPermission] = useState<PermissionState>(getInitialPermission)
   const [isPending, startTransition] = useTransition()
@@ -117,6 +118,43 @@ export function NotificationSettings({ clerkId }: { clerkId: string }) {
           if (subscription) {
             await subscription.unsubscribe()
             await removePush({ clerkId, endpoint: subscription.endpoint })
+
+            toast.success(t('notificationSettings.unsubscribeSuccess'), {
+              duration: 5000,
+              action: {
+                label: tCommon('undo'),
+                onClick: async () => {
+                  try {
+                    if (!VAPID_PUBLIC_KEY) {
+                      toast.error(t('notificationSettings.configError'))
+                      return
+                    }
+                    const reg = await navigator.serviceWorker.getRegistration()
+                    if (!reg) {
+                      toast.error(t('notificationSettings.subscribeError'))
+                      return
+                    }
+                    const newSubscription = await reg.pushManager.subscribe({
+                      userVisibleOnly: true,
+                      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) as BufferSource,
+                    })
+                    const newJson = newSubscription.toJSON()
+                    if (newJson.endpoint && newJson.keys) {
+                      await upsertPush({
+                        clerkId,
+                        endpoint: newJson.endpoint,
+                        p256dh: newJson.keys.p256dh ?? '',
+                        auth: newJson.keys.auth ?? '',
+                      })
+                      toast.success(t('notificationSettings.subscriptionRestored'))
+                    }
+                  } catch {
+                    toast.error(t('notificationSettings.subscribeError'))
+                  }
+                },
+              },
+            })
+            return
           }
         }
         toast.success(t('notificationSettings.unsubscribeSuccess'))
@@ -124,7 +162,7 @@ export function NotificationSettings({ clerkId }: { clerkId: string }) {
         toast.error(t('notificationSettings.unsubscribeError'))
       }
     })
-  }, [t, clerkId, removePush])
+  }, [t, tCommon, clerkId, removePush, upsertPush])
 
   const handleToggle = useCallback(
     (checked: boolean) => {

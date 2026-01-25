@@ -7,18 +7,12 @@
     "cancel": "Cancel",
     "decline": "Decline",
     "delete": "Delete",
-    "save": "Save",
     "submitting": "Sending…",
     "anonymous": "Anonymous",
     "identified": "Identified",
     "user": "User",
-    "menu": "Menu",
     "you": "You",
-    "asker": "Asker"
-  },
-  "metadata": {
-    "title": "Goongoom",
-    "description": "Ask anything. Get honest answers."
+    "undo": "Undo"
   },
   "nav": {
     "appName": "Goongoom",
@@ -33,12 +27,7 @@
   },
   "auth": {
     "login": "Log in",
-    "createProfile": "Create my profile",
-    "viewProfile": "View my profile",
     "loginRequired": "Log in to send a question.",
-    "welcome": "Welcome to Goongoom!",
-    "welcomeDescription": "Log in to send and receive anonymous questions.",
-    "openProfileMenu": "Open profile menu",
     "start": "Start"
   },
   "passkey": {
@@ -61,11 +50,7 @@
     "instagramImageShare": "Share Instagram image",
     "instagramImageShareLoading": "Getting ready for Instagram…",
     "copyLink": "Copy link",
-    "linkCopied": "Link copied!",
-    "easyShare": "Easy sharing",
-    "easyShareDescription": "Share your link anywhere. Get questions with one tap.",
-    "instagramShare": "Instagram sharing",
-    "instagramShareDescription": "Save your answers as images and share them to Instagram Stories or feeds."
+    "linkCopied": "Link copied!"
   },
   "questions": {
     "sendQuestion": "Send a question",
@@ -79,17 +64,12 @@
     "anonymousDescription": "Ask without revealing yourself",
     "identifiedOption": "Identified",
     "identifiedDescription": "Ask with your name",
-    "shuffleAvatar": "Shuffle",
     "termsAgreement": "Sending a question means you agree to our <link>terms of service</link>.",
     "questionSent": "Question sent!",
-    "questionLabel": "Question",
-    "defaultQuestion": "Questions show up here.",
-    "defaultAnswer": "Share your answer.",
     "askAnotherQuestion": "Ask {firstName} another question",
     "questionNumber": "Question #{number} for {firstName}"
   },
   "answers": {
-    "answer": "Answer",
     "answerButton": "Answer",
     "answerDrawerTitle": "Answer this question",
     "answerPlaceholder": "Type your answer…",
@@ -97,7 +77,9 @@
     "deleteResponseTitle": "Delete this answer?",
     "deleteResponseDescription": "We'll remove your answer, and the question will go back to your inbox.",
     "noAnswersYet": "No answered questions yet.",
-    "answerCreated": "Answer sent!"
+    "answerCreated": "Answer sent!",
+    "answerDeleted": "Answer deleted",
+    "answerRestored": "Answer restored"
   },
   "inbox": {
     "title": "Inbox",
@@ -106,7 +88,9 @@
     "emptyDescription": "New questions will show up here.",
     "declineButton": "Decline question",
     "declineTitle": "Decline this question?",
-    "declineDescription": "This will remove it from your inbox. You won't be able to answer it later."
+    "declineDescription": "This will remove it from your inbox. You won't be able to answer it later.",
+    "declineSuccess": "Question declined",
+    "questionRestored": "Question restored"
   },
   "profile": {
     "myProfile": "My profile",
@@ -144,7 +128,6 @@
     "accountSettings": "Account settings",
     "accountSettingsDescription": "Manage your username, phone, and security.",
     "saving": "Saving…",
-    "about": "About",
     "madeBy": "Made by",
     "reportBug": "Report a bug",
     "suggestFeature": "Suggest a feature",
@@ -162,20 +145,19 @@
       "configError": "Try again later. We couldn't set up notifications.",
       "subscribeSuccess": "Push notifications enabled!",
       "subscribeError": "Try again. We couldn't enable notifications.",
-      "unsubscribeSuccess": "Push notifications disabled.",
+      "unsubscribeSuccess": "Push notifications disabled",
       "unsubscribeError": "Try again. We couldn't disable notifications.",
+      "subscriptionRestored": "Push notifications restored",
       "testButton": "Send test notification",
       "testSending": "Sending…",
       "testSuccess": "Test notification sent!",
       "testError": "Try again. We couldn't send the test notification."
     }
   },
-
   "home": {
     "feedTitle": "Stories on Goongoom",
     "feedEmptyTitle": "No stories yet",
     "feedEmptyDescription": "Be the first to ask a question!",
-    "questionLabel": "Question",
     "trustIndicator": "{count} honest conversations shared"
   },
   "footer": {
@@ -189,8 +171,7 @@
     "verifiedLabel": "Only verified users can ask anonymously",
     "verifiedDescription": "Only users with verified phone numbers can send anonymous questions.",
     "identifiedOnlyLabel": "Identified questions only",
-    "identifiedOnlyDescription": "Only accept identified questions.",
-    "invalidSetting": "Check your question security setting"
+    "identifiedOnlyDescription": "Only accept identified questions."
   },
   "restrictions": {
     "anonymousLoginRequired": "Don't worry. You can still ask anonymously.",
@@ -222,14 +203,14 @@
     "answerCreateFailed": "Try again. We couldn't save your answer.",
     "answerDeleteError": "Try again. We couldn't delete your answer.",
     "answerCreateError": "Try again. We hit a snag saving your answer.",
-    "pleaseEnterQuestion": "Enter a question"
+    "pleaseEnterQuestion": "Enter a question",
+    "restoreError": "Couldn't restore. Try again."
   },
   "friends": {
     "title": "Friends",
     "description": "See what your friends are asking and answering",
     "emptyTitle": "No friends activity yet",
-    "emptyDescription": "When your friends answer questions, they'll show up here.",
-    "questionLabel": "Question"
+    "emptyDescription": "When your friends answer questions, they'll show up here."
   },
   "a2hs": {
     "title": "Add to Home Screen",
@@ -240,10 +221,6 @@
     "androidStep1": "Tap the menu button",
     "androidStep2": "Select 'Add to Home Screen'",
     "dismiss": "Maybe later"
-  },
-  "push": {
-    "newQuestionTitle": "You got a new question!",
-    "newQuestionBody": "{content}"
   },
   "ui": {
     "close": "Close",
@@ -278,7 +255,6 @@
     "youtubePlaceholder": "YouTube",
     "githubPlaceholder": "GitHub",
     "naverBlogPlaceholder": "Naver Blog",
-    "labelPlaceholder": "Label",
     "instagram": "Instagram",
     "twitter": "X",
     "youtube": "YouTube",
@@ -290,15 +266,5 @@
     "addGithub": "Add GitHub",
     "addNaverBlog": "Add Naver Blog",
     "remove": "Remove"
-  },
-  "globalError": {
-    "title": "Something went wrong",
-    "description": "We ran into an unexpected error. Try refreshing the page or use one of the options below.",
-    "tryAgain": "Try again",
-    "signOut": "Sign out",
-    "clearData": "Clear cache & data",
-    "clearDataDescription": "This will clear local data and may help resolve the issue.",
-    "dataCleared": "Data cleared. Reloading...",
-    "or": "or"
   }
 }
