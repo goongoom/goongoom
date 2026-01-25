@@ -543,7 +543,7 @@ export function ProfileEditForm({
               }
               return (
                 <Label
-                  className="group relative flex cursor-pointer items-start gap-3 rounded-xl border-2 border-transparent bg-muted/30 p-3 transition-all hover:border-border hover:bg-muted/50 has-data-checked:border-emerald/50 has-data-checked:bg-emerald/5"
+                   className="group relative flex cursor-pointer items-start gap-3 rounded-xl border-2 border-transparent bg-muted/30 p-3 transition-all has-data-checked:border-emerald/50 has-data-checked:bg-emerald/5"
                   key={level}
                 >
                   <RadioGroupItem

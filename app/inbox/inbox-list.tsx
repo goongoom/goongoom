@@ -202,7 +202,7 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
             onClick={() => handleQuestionClick(question)}
             type="button"
           >
-            <div className="flex items-start gap-4 rounded-2xl border border-border/50 bg-background p-4 transition-all group-hover:border-emerald/50 group-hover:bg-emerald/5 group-hover:ring-2 group-hover:ring-emerald/10 group-active:scale-[0.98]">
+             <div className="flex items-start gap-4 rounded-2xl border border-border/50 bg-background p-4 transition-all group-active:scale-[0.98]">
               <div className="relative flex-shrink-0">
                 <Avatar className="size-12 ring-2 ring-background">
                   <AvatarImage alt={question.senderName} src={getQuestionAvatarUrl(question)} />

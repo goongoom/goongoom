@@ -23,13 +23,13 @@ export function HomeCTAButtons({
   if (isLoggedIn && profileUrl && profileLabel) {
     return (
       <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-3">
-        <Link
-          href={profileUrl}
-          className="group relative inline-flex h-14 items-center justify-center overflow-hidden rounded-full bg-primary px-10 text-lg font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 hover:scale-105 hover:shadow-primary/40 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-        >
-          <span className="mr-2">{profileLabel}</span>
-          <svg
-            className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
+       <Link
+           href={profileUrl}
+           className="group relative inline-flex h-14 items-center justify-center overflow-hidden rounded-full bg-primary px-10 text-lg font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+         >
+           <span className="mr-2">{profileLabel}</span>
+           <svg
+             className="h-5 w-5 transition-transform duration-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -45,13 +45,13 @@ export function HomeCTAButtons({
   return (
     <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-3">
       <SignUpButton mode="modal">
-        <button
-          type="button"
-          className="group relative inline-flex h-14 items-center justify-center overflow-hidden rounded-full bg-primary px-10 text-lg font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 hover:scale-105 hover:shadow-primary/40 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-        >
-          <span className="mr-2">{startLabel}</span>
-          <svg
-            className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
+         <button
+           type="button"
+           className="group relative inline-flex h-14 items-center justify-center overflow-hidden rounded-full bg-primary px-10 text-lg font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+         >
+           <span className="mr-2">{startLabel}</span>
+           <svg
+             className="h-5 w-5 transition-transform duration-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

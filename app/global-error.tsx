@@ -105,9 +105,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
             --text-muted: #64748b;
             --border: #e2e8f0;
             --primary: #0ea5e9;
-            --primary-hover: #0284c7;
             --destructive: #ef4444;
-            --destructive-hover: #dc2626;
             --muted: #f1f5f9;
           }
           
@@ -119,9 +117,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
               --text-muted: #94a3b8;
               --border: #334155;
               --primary: #38bdf8;
-              --primary-hover: #0ea5e9;
               --destructive: #f87171;
-              --destructive-hover: #ef4444;
               --muted: #1e293b;
             }
           }
@@ -217,28 +213,16 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
             color: white;
           }
           
-          .btn-primary:hover:not(:disabled) {
-            background: var(--primary-hover);
-          }
-          
           .btn-secondary {
             background: var(--muted);
             color: var(--text);
             border: 1px solid var(--border);
           }
           
-          .btn-secondary:hover:not(:disabled) {
-            background: var(--border);
-          }
-          
           .btn-destructive {
             background: transparent;
             color: var(--destructive);
             border: 1px solid var(--border);
-          }
-          
-          .btn-destructive:hover:not(:disabled) {
-            background: color-mix(in srgb, var(--destructive) 10%, transparent);
           }
           
           .clear-hint {

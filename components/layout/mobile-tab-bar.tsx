@@ -78,9 +78,9 @@ export function MobileTabBar({ isLoggedIn = false }: MobileTabBarProps) {
     return pathname.startsWith(href)
   }
 
-  const tabButtonClass = cn(
-    'flex min-h-12 min-w-16 flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:text-foreground'
-  )
+   const tabButtonClass = cn(
+     'flex min-h-12 min-w-16 flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-muted-foreground transition-colors'
+   )
 
   return (
     <nav
@@ -92,10 +92,10 @@ export function MobileTabBar({ isLoggedIn = false }: MobileTabBarProps) {
           const active = isActive(item.href)
           return (
             <Ultralink
-              className={cn(
-                'flex min-h-12 min-w-16 flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 transition-colors',
-                active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-              )}
+               className={cn(
+                 'flex min-h-12 min-w-16 flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 transition-colors',
+                 active ? 'text-primary' : 'text-muted-foreground'
+               )}
               href={item.href}
               key={item.href}
             >

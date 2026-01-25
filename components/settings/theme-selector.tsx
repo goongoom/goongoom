@@ -66,7 +66,7 @@ export function ThemeSelector() {
       >
         {themes.map((themeOption) => (
           <Label
-            className="group flex min-h-16 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border border-border/50 bg-background p-3 transition-all hover:border-emerald/30 hover:bg-emerald/5 has-data-checked:border-emerald/50 has-data-checked:bg-emerald/5"
+             className="group flex min-h-16 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border border-border/50 bg-background p-3 transition-all has-data-checked:border-emerald/50 has-data-checked:bg-emerald/5"
             key={themeOption.value}
           >
             <RadioGroupItem

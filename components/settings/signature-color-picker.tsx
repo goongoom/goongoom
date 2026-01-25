@@ -46,8 +46,8 @@ export function SignatureColorPicker({ currentColor, labels }: SignatureColorPic
         return (
           <Label className="group relative flex cursor-pointer items-center justify-center" key={colorName}>
             <RadioGroupItem className="pointer-events-none absolute opacity-0" value={colorName} />
-            <div
-              className="size-9 rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-background transition-all group-hover:ring-border group-has-data-checked:ring-foreground"
+             <div
+               className="size-9 rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-background transition-all group-has-data-checked:ring-foreground"
               style={{ backgroundColor: colors.light.primary }}
             />
           </Label>

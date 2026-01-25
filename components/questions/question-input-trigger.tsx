@@ -14,7 +14,7 @@ function QuestionInputTrigger({ className, ref, ...props }: ComponentProps<'butt
       <button
         aria-label={t('writeQuestion')}
         className={cn(
-          'pointer-events-auto flex min-h-12 w-full items-center justify-between gap-4 rounded-full border border-border/50 bg-background/80 px-5 py-3.5 ring-1 ring-foreground/5 backdrop-blur-md transition-all hover:bg-muted/50 hover:ring-emerald/20 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+           'pointer-events-auto flex min-h-12 w-full items-center justify-between gap-4 rounded-full border border-border/50 bg-background/80 px-5 py-3.5 ring-1 ring-foreground/5 backdrop-blur-md transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           className
         )}
         ref={ref}
@@ -22,7 +22,7 @@ function QuestionInputTrigger({ className, ref, ...props }: ComponentProps<'butt
         {...props}
       >
         <span className="font-medium text-muted-foreground/80 text-sm sm:text-base">{t('inputPlaceholder')}</span>
-        <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform duration-300 group-hover:scale-110 group-active:scale-95">
+         <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform duration-300 group-active:scale-95">
           <HugeiconsIcon className="size-5" icon={SentIcon} strokeWidth={2.5} />
         </div>
       </button>

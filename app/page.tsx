@@ -127,7 +127,7 @@ export default function Home() {
               <HomeCarousel>
                 {recentAnswers.map((qa: RecentAnswer) => (
                   <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4" key={qa.question._id}>
-                    <div className="h-full transform rounded-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    <div className="h-full transform rounded-xl transition-all duration-300">
                       <AnsweredQuestionCard
                         anonymousAvatarSeed={qa.question.anonymousAvatarSeed}
                         answerContent={qa.answer.content}

@@ -85,7 +85,7 @@ export function AddToHomeScreenNudge() {
 
         <button
           aria-label={t('dismiss')}
-          className="absolute top-4 right-4 z-50 flex size-11 items-center justify-center rounded-full bg-emerald-foreground/10 text-emerald-foreground transition-colors hover:bg-emerald-foreground/20 focus-visible:ring-2 focus-visible:ring-emerald-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+           className="absolute top-4 right-4 z-50 flex size-11 items-center justify-center rounded-full bg-emerald-foreground/10 text-emerald-foreground transition-colors focus-visible:ring-2 focus-visible:ring-emerald-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
           onClick={handleDismiss}
           type="button"
         >
@@ -151,7 +151,7 @@ export function AddToHomeScreenNudge() {
 
           <div className="w-full">
             <Button
-              className="h-14 w-full rounded-2xl font-medium text-emerald-foreground/70 hover:bg-emerald-foreground/10 hover:text-emerald-foreground"
+              className="h-14 w-full rounded-2xl font-medium text-emerald-foreground/70"
               onClick={handleDismiss}
               size="lg"
               variant="ghost"

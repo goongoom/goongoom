@@ -47,14 +47,14 @@ function MenubarPortal({ ...props }: React.ComponentProps<typeof DropdownMenuPor
 
 function MenubarTrigger({ className, ...props }: React.ComponentProps<typeof DropdownMenuTrigger>) {
   return (
-    <DropdownMenuTrigger
-      data-slot="menubar-trigger"
-      className={cn(
-        'hover:bg-muted aria-expanded:bg-muted rounded-sm px-1.5 py-[2px] text-sm font-medium flex items-center outline-hidden select-none',
-        className
-      )}
-      {...props}
-    />
+     <DropdownMenuTrigger
+       data-slot="menubar-trigger"
+       className={cn(
+         'aria-expanded:bg-muted rounded-sm px-1.5 py-[2px] text-sm font-medium flex items-center outline-hidden select-none',
+         className
+       )}
+       {...props}
+     />
   )
 }
 

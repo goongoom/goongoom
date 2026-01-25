@@ -166,10 +166,10 @@ function ComboboxEmpty({ className, ...props }: ComboboxPrimitive.Empty.Props) {
   return (
     <ComboboxPrimitive.Empty
       data-slot="combobox-empty"
-      className={cn(
-        'text-muted-foreground hidden w-full justify-center py-2 text-center text-sm group-data-empty/combobox-content:flex',
-        className
-      )}
+       className={cn(
+         'opacity-50',
+         className
+       )}
       {...props}
     />
   )
@@ -222,7 +222,7 @@ function ComboboxChip({
       {showRemove && (
         <ComboboxPrimitive.ChipRemove
           render={<Button variant="ghost" size="icon-xs" />}
-          className="-ml-1 opacity-50 hover:opacity-100"
+           className="-ml-1 opacity-50"
           data-slot="combobox-chip-remove"
         >
           <HugeiconsIcon icon={Cancel01Icon} strokeWidth={2} className="pointer-events-none" />

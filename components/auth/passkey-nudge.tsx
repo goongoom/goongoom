@@ -58,7 +58,7 @@ export function PasskeyNudge() {
 
   return (
     <Card className={cn('group relative my-6 overflow-hidden border-primary/20 bg-primary/5', 'text-foreground')}>
-      <div className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 rounded-full bg-white/10 p-12 blur-3xl transition-colors duration-500 group-hover:bg-white/20" />
+       <div className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 rounded-full bg-white/10 p-12 blur-3xl transition-colors duration-500" />
       <div className="absolute bottom-0 left-0 -translate-x-1/3 translate-y-1/3 rounded-full bg-emerald/20 p-10 blur-2xl" />
 
       <CardHeader className="relative z-10 pb-2">
@@ -67,7 +67,7 @@ export function PasskeyNudge() {
             <CardTitle className="flex items-center gap-2 font-bold text-xl">{t('nudgeTitle')}</CardTitle>
             <CardDescription className="font-medium text-muted-foreground">{t('nudgeDescription')}</CardDescription>
           </div>
-          <div className="hidden size-10 rotate-3 items-center justify-center rounded-xl bg-primary/10 text-primary backdrop-blur-md transition-transform duration-300 group-hover:rotate-12 sm:flex">
+           <div className="hidden size-10 rotate-3 items-center justify-center rounded-xl bg-primary/10 text-primary backdrop-blur-md transition-transform duration-300 sm:flex">
             <HugeiconsIcon className="size-6" icon={FingerPrintIcon} />
           </div>
         </div>
@@ -84,7 +84,7 @@ export function PasskeyNudge() {
             <>
               {t('setupNow')}
               <HugeiconsIcon
-                className="ml-2 size-4 transition-transform group-hover/btn:scale-110"
+                className="ml-2 size-4 transition-transform"
                 icon={FingerPrintIcon}
               />
             </>

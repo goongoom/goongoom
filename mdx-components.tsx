@@ -16,14 +16,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       const isInternal = href?.startsWith('/')
       if (isInternal && href) {
         return (
-          <Link className="text-foreground underline underline-offset-4 hover:text-emerald" href={href}>
+          <Link className="text-foreground underline underline-offset-4" href={href}>
             {children}
           </Link>
         )
       }
       return (
         <a
-          className="text-foreground underline underline-offset-4 hover:text-emerald"
+          className="text-foreground underline underline-offset-4"
           href={href}
           rel="noopener noreferrer"
           target="_blank"
