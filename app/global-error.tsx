@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 const translations = {
   en: {
     title: 'Something went wrong',
-    description: 'We ran into an unexpected error. Try refreshing the page or use one of the options below.',
+    description: 'This might be due to server maintenance. Try refreshing the page or use one of the options below.',
     tryAgain: 'Try again',
     signOut: 'Sign out',
     clearData: 'Clear cache & data',
@@ -15,7 +15,7 @@ const translations = {
   },
   ko: {
     title: '문제가 발생했어요',
-    description: '예상치 못한 오류가 생겼어요. 페이지를 새로고침하거나 아래 옵션을 사용해 보세요.',
+    description: '서버 점검 중일 수 있어요. 페이지를 새로고침하거나 아래 옵션을 사용해 보세요.',
     tryAgain: '다시 시도하기',
     signOut: '로그아웃하기',
     clearData: '캐시 및 데이터 지우기',
