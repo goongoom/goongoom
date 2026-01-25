@@ -2,6 +2,7 @@
   "name": "goongoom",
   "version": "1.0.0",
   "private": false,
+  "packageManager": "bun@1.2.19",
   "scripts": {
     "dev": "concurrently \"next dev\" \"convex dev --local\"",
     "build": "next build",
