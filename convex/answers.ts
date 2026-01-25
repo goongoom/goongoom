@@ -86,7 +86,7 @@ export const softDelete = mutation({
     }
 
     await ctx.db.patch(args.id, { deletedAt: Date.now() })
-    await ctx.db.patch(answer.questionId, { answerId: undefined })
+    await ctx.db.patch(answer.questionId, { answerId: null })
     return { success: true, questionId: answer.questionId }
   },
 })
@@ -225,6 +225,7 @@ export const getFriendsAnswers = query({
         q.and(
           q.eq(q.field('isAnonymous'), false),
           q.neq(q.field('answerId'), undefined),
+          q.neq(q.field('answerId'), null),
           q.neq(q.field('senderClerkId'), undefined),
           q.eq(q.field('deletedAt'), undefined)
         )
@@ -244,6 +245,7 @@ export const getFriendsAnswers = query({
         q.and(
           q.eq(q.field('isAnonymous'), false),
           q.neq(q.field('answerId'), undefined),
+          q.neq(q.field('answerId'), null),
           q.eq(q.field('deletedAt'), undefined)
         )
       )

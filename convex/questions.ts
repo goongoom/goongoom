@@ -15,9 +15,9 @@ const PUSH_MESSAGES = {
  */
 async function fetchAnswersMap(
   ctx: QueryCtx,
-  questions: Array<{ answerId?: Id<'answers'> }>
+  questions: Array<{ answerId?: Id<'answers'> | null }>
 ): Promise<Map<Id<'answers'>, Doc<'answers'>>> {
-  const answerIds = questions.map((q) => q.answerId).filter((id): id is Id<'answers'> => id !== undefined)
+  const answerIds = questions.map((q) => q.answerId).filter((id): id is Id<'answers'> => id != null)
 
   const answers = await Promise.all(answerIds.map((id) => ctx.db.get(id)))
   const validAnswers = answers.filter((a): a is Doc<'answers'> => a !== null && !a.deletedAt)
@@ -167,7 +167,7 @@ export const clearAnswerId = mutation({
     if (question.deletedAt) {
       throw new ConvexError('Question deleted')
     }
-    await ctx.db.patch(args.id, { answerId: undefined })
+    await ctx.db.patch(args.id, { answerId: null })
     return { success: true }
   },
 })
@@ -249,7 +249,12 @@ export const getUnanswered = query({
     const questions = await ctx.db
       .query('questions')
       .withIndex('by_recipient', (q) => q.eq('recipientClerkId', args.recipientClerkId))
-      .filter((q) => q.and(q.eq(q.field('answerId'), undefined), q.eq(q.field('deletedAt'), undefined)))
+      .filter((q) =>
+        q.and(
+          q.or(q.eq(q.field('answerId'), undefined), q.eq(q.field('answerId'), null)),
+          q.eq(q.field('deletedAt'), undefined)
+        )
+      )
       .order('desc')
       .collect()
 
@@ -274,7 +279,13 @@ export const getAnsweredByRecipient = query({
     const questions = await ctx.db
       .query('questions')
       .withIndex('by_recipient', (q) => q.eq('recipientClerkId', args.recipientClerkId))
-      .filter((q) => q.and(q.neq(q.field('answerId'), undefined), q.eq(q.field('deletedAt'), undefined)))
+      .filter((q) =>
+        q.and(
+          q.neq(q.field('answerId'), undefined),
+          q.neq(q.field('answerId'), null),
+          q.eq(q.field('deletedAt'), undefined)
+        )
+      )
       .collect()
 
     const answerMap = await fetchAnswersMap(ctx, questions)
@@ -335,7 +346,7 @@ export const getAnsweredNumber = query({
     }
 
     // If the question itself isn't answered, return 0
-    if (question.answerId === undefined) {
+    if (question.answerId == null) {
       return 0
     }
 
@@ -352,7 +363,7 @@ export const getAnsweredNumber = query({
         continue
       }
       // Only count questions that have been answered
-      if (q.answerId !== undefined) {
+      if (q.answerId != null) {
         count++
       }
       // Stop once we've counted our target question
@@ -393,6 +404,7 @@ export const getFriends = query({
         q.and(
           q.eq(q.field('isAnonymous'), false),
           q.neq(q.field('answerId'), undefined),
+          q.neq(q.field('answerId'), null),
           q.neq(q.field('senderClerkId'), undefined),
           q.eq(q.field('deletedAt'), undefined)
         )
@@ -426,6 +438,7 @@ export const getFriends = query({
         q.and(
           q.eq(q.field('isAnonymous'), false),
           q.neq(q.field('answerId'), undefined),
+          q.neq(q.field('answerId'), null),
           q.eq(q.field('deletedAt'), undefined)
         )
       )
