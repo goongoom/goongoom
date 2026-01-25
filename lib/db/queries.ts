@@ -7,7 +7,18 @@ import type { QuestionSecurityLevel } from '@/lib/question-security'
 export type { SocialLinks } from '@/convex/types'
 
 async function getAuthToken() {
-  return (await (await auth()).getToken({ template: 'convex' })) ?? undefined
+  const authResult = await auth()
+  const token = await authResult.getToken({ template: 'convex' })
+  
+  // DEBUG: Log token status (remove after debugging)
+  if (!token) {
+    console.error('[AUTH DEBUG] getToken returned null', {
+      userId: authResult.userId,
+      sessionId: authResult.sessionId,
+    })
+  }
+  
+  return token ?? undefined
 }
 
 export async function getOrCreateUser(clerkId: string) {
