@@ -172,6 +172,9 @@
     word-wrap: break-word;
     word-break: keep-all;
   }
+  html {
+    scrollbar-gutter: stable;
+  }
   body {
     @apply bg-background text-foreground;
     accent-color: var(--emerald);
