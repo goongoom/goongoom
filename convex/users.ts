@@ -1,6 +1,7 @@
 import { ConvexError, v } from 'convex/values'
 import { internal } from './_generated/api'
 import { action, internalMutation, internalQuery, mutation, query } from './_generated/server'
+import { CHAR_LIMITS } from './char-limits'
 
 const HTML_TITLE_REGEX = /<title[^>]*>([^<]+)<\/title>/i
 const NAVER_BLOG_TITLE_SUFFIX = ': 네이버 블로그'
@@ -80,80 +81,11 @@ export const getByClerkId = query({
 
 export const getOrCreate = mutation({
   args: { clerkId: v.string() },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity()
-    if (!identity) {
-      throw new ConvexError('Authentication required')
-    }
-    if (identity.subject !== args.clerkId) {
-      throw new ConvexError('Not authorized')
+handler: async (ctx, args) => {
+    if (args.bio && args.bio.length > CHAR_LIMITS.BIO) {
+      throw new ConvexError(`Bio exceeds ${CHAR_LIMITS.BIO} character limit`)
     }
 
-    const existing = await ctx.db
-      .query('users')
-      .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.clerkId))
-      .first()
-
-    if (existing) {
-      if (!existing.username && identity.nickname) {
-        await ctx.db.patch(existing._id, {
-          username: identity.nickname,
-          firstName: identity.givenName || existing.firstName,
-          fullName: identity.name || existing.fullName,
-          avatarUrl: identity.pictureUrl || existing.avatarUrl,
-          updatedAt: Date.now(),
-        })
-        return await ctx.db.get(existing._id)
-      }
-      return existing
-    }
-
-    const id = await ctx.db.insert('users', {
-      clerkId: args.clerkId,
-      username: identity.nickname,
-      firstName: identity.givenName,
-      fullName: identity.name,
-      avatarUrl: identity.pictureUrl,
-      questionSecurityLevel: 'anyone',
-      updatedAt: Date.now(),
-    })
-
-    return await ctx.db.get(id)
-  },
-})
-
-export const updateProfile = mutation({
-  args: {
-    clerkId: v.string(),
-    bio: v.optional(v.union(v.string(), v.null())),
-    socialLinks: v.optional(
-      v.union(
-        v.array(
-          v.object({
-            platform: v.union(
-              v.literal('instagram'),
-              v.literal('twitter'),
-              v.literal('youtube'),
-              v.literal('github'),
-              v.literal('naverBlog')
-            ),
-            content: v.union(
-              v.string(),
-              v.object({
-                handle: v.string(),
-                label: v.string(),
-              })
-            ),
-            labelType: v.union(v.literal('handle'), v.literal('custom')),
-          })
-        ),
-        v.null()
-      )
-    ),
-    questionSecurityLevel: v.optional(v.string()),
-    signatureColor: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity()
     if (!identity) {
       throw new ConvexError('Authentication required')

@@ -2,6 +2,7 @@ import { ConvexError, v } from 'convex/values'
 import type { Doc, Id } from './_generated/dataModel'
 import { internal } from './_generated/api'
 import { mutation, type QueryCtx, query } from './_generated/server'
+import { CHAR_LIMITS } from './char-limits'
 
 const PUSH_MESSAGES = {
   ko: { newQuestionTitle: '새 질문이 왔어요!' },
@@ -50,6 +51,10 @@ export const create = mutation({
     anonymousAvatarSeed: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    if (args.content.length > CHAR_LIMITS.QUESTION) {
+      throw new ConvexError(`Question exceeds ${CHAR_LIMITS.QUESTION} character limit`)
+    }
+
     const identity = await ctx.auth.getUserIdentity()
 
     // Fetch recipient user to check security level

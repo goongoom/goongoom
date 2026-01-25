@@ -1,6 +1,7 @@
 import { ConvexError, v } from 'convex/values'
 import { internal } from './_generated/api'
 import { mutation, query } from './_generated/server'
+import { CHAR_LIMITS } from './char-limits'
 
 export const create = mutation({
   args: {
@@ -8,6 +9,10 @@ export const create = mutation({
     content: v.string(),
   },
   handler: async (ctx, args) => {
+    if (args.content.length > CHAR_LIMITS.ANSWER) {
+      throw new ConvexError(`Answer exceeds ${CHAR_LIMITS.ANSWER} character limit`)
+    }
+
     const identity = await ctx.auth.getUserIdentity()
     if (!identity) {
       throw new ConvexError('Authentication required')
