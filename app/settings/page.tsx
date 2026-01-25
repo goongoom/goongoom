@@ -87,9 +87,7 @@ export default function SettingsPage() {
         </Card>
 
         <Card>
-          <CardContent>
-            {clerkId && <NotificationSettings clerkId={clerkId} />}
-          </CardContent>
+          <CardContent>{clerkId && <NotificationSettings clerkId={clerkId} />}</CardContent>
         </Card>
 
         <Card>

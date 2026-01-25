@@ -10,6 +10,10 @@ import { type Locale, locales } from '@/i18n/config'
 const LOCALE_COOKIE = 'NEXT_LOCALE'
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365
 
+async function getAuthToken() {
+  return (await (await auth()).getToken({ template: 'convex' })) ?? undefined
+}
+
 export async function setUserLocale(locale: Locale) {
   if (!locales.includes(locale)) {
     return { success: false, error: 'Invalid locale' }
@@ -24,10 +28,8 @@ export async function setUserLocale(locale: Locale) {
 
   const { userId } = await auth()
   if (userId) {
-    await fetchMutation(api.users.updateLocale, {
-      clerkId: userId,
-      locale,
-    })
+    const token = await getAuthToken()
+    await fetchMutation(api.users.updateLocale, { clerkId: userId, locale }, { token })
   }
 
   revalidatePath('/', 'layout')

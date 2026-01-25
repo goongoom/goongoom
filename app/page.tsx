@@ -3,7 +3,8 @@
 import { useUser } from '@clerk/nextjs'
 import { useQuery } from 'convex/react'
 import { useLocale, useTranslations } from 'next-intl'
-import { useMemo } from 'react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useMemo } from 'react'
 import { HomeCTAButtons } from '@/components/home/home-cta-buttons'
 import { AnsweredQuestionCard } from '@/components/questions/answered-question-card'
 import { CarouselItem } from '@/components/ui/carousel'
@@ -11,6 +12,7 @@ import { HomeCarousel } from '@/components/home/home-carousel'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { Spinner } from '@/components/ui/spinner'
 import { api } from '@/convex/_generated/api'
+import { hasRedirectedToProfileThisSession, markRedirectedToProfile } from '@/lib/utils/session-cookie'
 
 export default function Home() {
   const t = useTranslations('home')
@@ -18,6 +20,7 @@ export default function Home() {
   const tProfile = useTranslations('profile')
   const locale = useLocale()
   const { user, isLoaded: isUserLoaded } = useUser()
+  const router = useRouter()
 
   const recentAnswers = useQuery(api.answers.getRecentLimitPerUser, {
     totalLimit: 30,
@@ -33,7 +36,24 @@ export default function Home() {
     [tCommon]
   )
 
-  const isLoading = recentAnswers === undefined || answerCount === undefined
+  // Compute redirect check result synchronously to avoid setState in useEffect
+  const redirectChecked = useMemo(() => {
+    if (!isUserLoaded) return false
+    // If user will be redirected, don't mark as checked yet
+    if (user?.username && !hasRedirectedToProfileThisSession()) return false
+    return true
+  }, [isUserLoaded, user?.username])
+
+  useEffect(() => {
+    if (!isUserLoaded) return
+
+    if (user?.username && !hasRedirectedToProfileThisSession()) {
+      markRedirectedToProfile()
+      router.replace(`/${user.username}`)
+    }
+  }, [isUserLoaded, user, router])
+
+  const isLoading = recentAnswers === undefined || answerCount === undefined || !redirectChecked
 
   if (isLoading) {
     return (

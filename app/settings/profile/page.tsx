@@ -28,10 +28,7 @@ export default function ProfileSettingsPage() {
     }
   }, [isAuthLoading, isAuthenticated, router])
 
-  const dbUser = useQuery(
-    api.users.getByClerkId,
-    clerkId ? { clerkId } : 'skip'
-  )
+  const dbUser = useQuery(api.users.getByClerkId, clerkId ? { clerkId } : 'skip')
 
   const securityOptions = useMemo(
     (): Record<QuestionSecurityLevel, { label: string; description: string }> => ({

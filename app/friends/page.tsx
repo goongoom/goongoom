@@ -26,10 +26,7 @@ export default function FriendsPage() {
     }
   }, [isAuthLoading, isAuthenticated, router])
 
-  const friendsAnswers = useQuery(
-    api.answers.getFriendsAnswers,
-    clerkId ? { clerkId, limit: 30 } : 'skip'
-  )
+  const friendsAnswers = useQuery(api.answers.getFriendsAnswers, clerkId ? { clerkId, limit: 30 } : 'skip')
 
   const cardLabels = useMemo(
     () => ({

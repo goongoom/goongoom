@@ -277,5 +277,14 @@
     "youtube": "유튜브",
     "github": "깃허브",
     "naverBlog": "네이버 블로그"
+  },
+  "globalError": {
+    "title": "문제가 발생했어요",
+    "description": "예상치 못한 오류가 생겼어요. 페이지를 새로고침하거나 아래 옵션을 사용해 보세요.",
+    "tryAgain": "다시 시도하기",
+    "signOut": "로그아웃하기",
+    "clearData": "캐시 및 데이터 지우기",
+    "clearDataDescription": "로컬 데이터를 지우면 문제가 해결될 수 있어요.",
+    "dataCleared": "데이터가 지워졌어요. 새로고침 중..."
   }
 }

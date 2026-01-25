@@ -277,5 +277,14 @@
     "youtube": "YouTube",
     "github": "GitHub",
     "naverBlog": "Naver Blog"
+  },
+  "globalError": {
+    "title": "Something went wrong",
+    "description": "We ran into an unexpected error. Try refreshing the page or use one of the options below.",
+    "tryAgain": "Try again",
+    "signOut": "Sign out",
+    "clearData": "Clear cache & data",
+    "clearDataDescription": "This will clear local data and may help resolve the issue.",
+    "dataCleared": "Data cleared. Reloading..."
   }
 }

@@ -1,3 +1,4 @@
+import { auth } from '@clerk/nextjs/server'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
 import { api } from '@/convex/_generated/api'
 import type { QuestionId, SocialLinks } from '@/convex/types'
@@ -5,8 +6,13 @@ import type { QuestionSecurityLevel } from '@/lib/question-security'
 
 export type { SocialLinks } from '@/convex/types'
 
+async function getAuthToken() {
+  return (await (await auth()).getToken({ template: 'convex' })) ?? undefined
+}
+
 export async function getOrCreateUser(clerkId: string) {
-  return await fetchMutation(api.users.getOrCreate, { clerkId })
+  const token = await getAuthToken()
+  return await fetchMutation(api.users.getOrCreate, { clerkId }, { token })
 }
 
 export async function updateUserProfile(
@@ -18,13 +24,18 @@ export async function updateUserProfile(
     signatureColor?: string | null
   }
 ) {
-  const result = await fetchMutation(api.users.updateProfile, {
-    clerkId,
-    bio: data.bio,
-    socialLinks: data.socialLinks ?? undefined,
-    questionSecurityLevel: data.questionSecurityLevel ?? undefined,
-    signatureColor: data.signatureColor ?? undefined,
-  })
+  const token = await getAuthToken()
+  const result = await fetchMutation(
+    api.users.updateProfile,
+    {
+      clerkId,
+      bio: data.bio,
+      socialLinks: data.socialLinks ?? undefined,
+      questionSecurityLevel: data.questionSecurityLevel ?? undefined,
+      signatureColor: data.signatureColor ?? undefined,
+    },
+    { token }
+  )
   return result ? [result] : []
 }
 
@@ -35,21 +46,31 @@ export async function createQuestion(data: {
   isAnonymous: number
   anonymousAvatarSeed?: string
 }) {
-  const result = await fetchMutation(api.questions.create, {
-    recipientClerkId: data.recipientClerkId,
-    senderClerkId: data.senderClerkId ?? undefined,
-    content: data.content,
-    isAnonymous: data.isAnonymous === 1,
-    anonymousAvatarSeed: data.anonymousAvatarSeed,
-  })
+  const token = await getAuthToken()
+  const result = await fetchMutation(
+    api.questions.create,
+    {
+      recipientClerkId: data.recipientClerkId,
+      senderClerkId: data.senderClerkId ?? undefined,
+      content: data.content,
+      isAnonymous: data.isAnonymous === 1,
+      anonymousAvatarSeed: data.anonymousAvatarSeed,
+    },
+    { token }
+  )
   return result ? [result] : []
 }
 
 export async function createAnswer(data: { questionId: QuestionId; content: string }) {
-  const result = await fetchMutation(api.answers.create, {
-    questionId: data.questionId,
-    content: data.content,
-  })
+  const token = await getAuthToken()
+  const result = await fetchMutation(
+    api.answers.create,
+    {
+      questionId: data.questionId,
+      content: data.content,
+    },
+    { token }
+  )
   return result ? [result] : []
 }
 

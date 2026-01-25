@@ -28,10 +28,7 @@ export default function InboxPage() {
     }
   }, [isAuthLoading, isAuthenticated, router])
 
-  const unansweredQuestions = useQuery(
-    api.questions.getUnanswered,
-    clerkId ? { recipientClerkId: clerkId } : 'skip'
-  )
+  const unansweredQuestions = useQuery(api.questions.getUnanswered, clerkId ? { recipientClerkId: clerkId } : 'skip')
 
   const error = searchParams.get('error') ? decodeURIComponent(searchParams.get('error')!) : null
 
