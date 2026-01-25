@@ -64,7 +64,7 @@ export default async function Image({ params }: PageProps) {
 
   const colors = getSignatureColor(dbUser?.signatureColor)
   const theme = isDark ? colors.dark : colors.light
-  const displayName = dbUser.displayName || dbUser.username || username
+  const fullName = dbUser.fullName || dbUser.username || username
   const bio = dbUser?.bio ? clamp(dbUser.bio, 120) : null
 
   return new ImageResponse(
@@ -102,7 +102,7 @@ export default async function Image({ params }: PageProps) {
       >
         {dbUser.avatarUrl ? (
           <img
-            alt={displayName}
+            alt={fullName}
             height={220}
             src={dbUser.avatarUrl}
             style={{
@@ -126,7 +126,7 @@ export default async function Image({ params }: PageProps) {
               color: theme.primary,
             }}
           >
-            {displayName[0] || '?'}
+            {fullName[0] || '?'}
           </div>
         )}
 
@@ -138,7 +138,7 @@ export default async function Image({ params }: PageProps) {
             flex: 1,
           }}
         >
-          <div style={{ fontSize: '68px', fontWeight: 700, lineHeight: 1.2 }}>{clamp(displayName, 20)}</div>
+          <div style={{ fontSize: '68px', fontWeight: 700, lineHeight: 1.2 }}>{clamp(fullName, 20)}</div>
           <div style={{ fontSize: '40px', color: isDark ? '#9CA3AF' : '#6B7280' }}>
             @{clamp(dbUser.username || username, 24)}
           </div>

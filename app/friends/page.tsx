@@ -69,7 +69,7 @@ export default function FriendsPage() {
               answerContent={qa.answer.content}
               answerCreatedAt={qa.answer._creationTime}
               avatarUrl={qa.recipientAvatarUrl ?? null}
-              displayName={qa.recipientDisplayName || qa.recipientUsername || tCommon('user')}
+              firstName={qa.recipientFirstName || qa.recipientUsername || tCommon('user')}
               isAnonymous={qa.question.isAnonymous}
               key={qa.question._id}
               labels={cardLabels}

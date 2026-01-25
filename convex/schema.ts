@@ -7,6 +7,8 @@ export default defineSchema({
     username: v.optional(v.string()),
     firstName: v.optional(v.string()),
     fullName: v.optional(v.string()),
+    /** @deprecated Use firstName and fullName instead. Will be removed after migration. */
+    displayName: v.optional(v.string()),
     avatarUrl: v.optional(v.string()),
     bio: v.optional(v.string()),
     socialLinks: v.optional(

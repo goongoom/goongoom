@@ -11,7 +11,7 @@ export function AccountSettingsButton() {
   const { openUserProfile } = useClerk()
   const { user } = useUser()
 
-  const displayName = user?.firstName || user?.username || '?'
+  const firstName = user?.firstName || user?.username || '?'
 
   return (
     <button
@@ -20,11 +20,11 @@ export function AccountSettingsButton() {
       type="button"
     >
       <Avatar className="size-12 shrink-0 ring-2 ring-emerald/20">
-        {user?.imageUrl && <AvatarImage alt={displayName} src={user.imageUrl} />}
-        <AvatarFallback className="bg-emerald/10 font-semibold text-emerald">{displayName[0] || '?'}</AvatarFallback>
+        {user?.imageUrl && <AvatarImage alt={firstName} src={user.imageUrl} />}
+        <AvatarFallback className="bg-emerald/10 font-semibold text-emerald">{firstName[0] || '?'}</AvatarFallback>
       </Avatar>
       <div className="min-w-0 flex-1">
-        <h3 className="font-semibold text-foreground">{displayName}</h3>
+        <h3 className="font-semibold text-foreground">{firstName}</h3>
         <p className="truncate text-muted-foreground text-sm">{t('accountSettingsDescription')}</p>
       </div>
       <HugeiconsIcon

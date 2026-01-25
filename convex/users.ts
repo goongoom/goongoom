@@ -402,3 +402,24 @@ export const syncFromClerk = action({
     }
   },
 })
+
+export const migrateDisplayNameToFirstName = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const users = await ctx.db.query('users').collect()
+    let migratedCount = 0
+
+    for (const user of users) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const userDoc = user as any
+      if (userDoc.displayName !== undefined) {
+        await ctx.db.patch(user._id, {
+          displayName: undefined,
+        })
+        migratedCount++
+      }
+    }
+
+    return { totalUsers: users.length, migratedCount }
+  },
+})

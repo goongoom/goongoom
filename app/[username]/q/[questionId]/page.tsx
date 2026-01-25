@@ -210,12 +210,12 @@ export default function QADetailPage() {
           variant="ghost"
         >
           <HugeiconsIcon className="size-5" icon={ArrowLeft01Icon} />
-          {tProfile('backToProfile', { displayName: firstName })}
+          {tProfile('backToProfile', { firstName })}
         </Button>
       </div>
 
       <h1 className="mb-6 font-bold text-2xl">
-        {tQuestions('questionNumber', { displayName: firstName, number: questionNumber })}
+        {tQuestions('questionNumber', { firstName, number: questionNumber })}
       </h1>
 
       <Card>
@@ -277,7 +277,7 @@ export default function QADetailPage() {
             render={<Ultralink href={`/${username}`} />}
             size="lg"
           >
-            {tQuestions('askAnotherQuestion', { displayName: firstName })}
+            {tQuestions('askAnotherQuestion', { firstName })}
           </Button>
         )}
       </div>

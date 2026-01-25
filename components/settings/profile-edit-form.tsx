@@ -472,15 +472,7 @@ export function ProfileEditForm({
                 </FieldLabel>
                 <div className="space-y-2">
                   {githubRows.map((row) => (
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center" key={row.id}>
-                      <Input
-                        autoCapitalize="words"
-                        className="min-h-11 rounded-xl border border-border/50 bg-background transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
-                        onBlur={handleSocialLinksBlur}
-                        onChange={(event) => updateCustomAt(row.id, 'label', event.target.value, setGithubRows)}
-                        placeholder={tSocial('labelPlaceholder')}
-                        value={row.label}
-                      />
+                    <div className="flex items-center gap-2" key={row.id}>
                       <div className="relative flex-1">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                           <HugeiconsIcon
@@ -501,7 +493,7 @@ export function ProfileEditForm({
                       </div>
                       <Button
                         aria-label={tSocial('remove')}
-                        className="self-start sm:self-auto"
+                        className="shrink-0"
                         onClick={() => removeCustomRow(row.id, setGithubRows)}
                         size="icon-sm"
                         type="button"
@@ -523,15 +515,7 @@ export function ProfileEditForm({
                 </FieldLabel>
                 <div className="space-y-2">
                   {naverBlogRows.map((row) => (
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center" key={row.id}>
-                      <Input
-                        autoCapitalize="words"
-                        className="min-h-11 rounded-xl border border-border/50 bg-background transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
-                        onBlur={handleSocialLinksBlur}
-                        onChange={(event) => updateCustomAt(row.id, 'label', event.target.value, setNaverBlogRows)}
-                        placeholder={tSocial('labelPlaceholder')}
-                        value={row.label}
-                      />
+                    <div className="flex items-center gap-2" key={row.id}>
                       <div className="relative flex-1">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                           <HugeiconsIcon
@@ -552,7 +536,7 @@ export function ProfileEditForm({
                       </div>
                       <Button
                         aria-label={tSocial('remove')}
-                        className="self-start sm:self-auto"
+                        className="shrink-0"
                         onClick={() => removeCustomRow(row.id, setNaverBlogRows)}
                         size="icon-sm"
                         type="button"

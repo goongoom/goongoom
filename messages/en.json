@@ -85,8 +85,8 @@
     "questionLabel": "Question",
     "defaultQuestion": "Questions show up here.",
     "defaultAnswer": "Share your answer.",
-    "askAnotherQuestion": "Ask {displayName} another question",
-    "questionNumber": "Question #{number} for {displayName}"
+    "askAnotherQuestion": "Ask {firstName} another question",
+    "questionNumber": "Question #{number} for {firstName}"
   },
   "answers": {
     "answer": "Answer",
@@ -113,7 +113,7 @@
     "inboxMenu": "Inbox",
     "settingsMenu": "Settings",
     "noBio": "No bio yet",
-    "backToProfile": "{displayName}'s profile",
+    "backToProfile": "{firstName}'s profile",
     "edit": "Edit",
     "shareLink": "Share link"
   },

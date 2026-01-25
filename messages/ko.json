@@ -85,8 +85,8 @@
     "questionLabel": "질문",
     "defaultQuestion": "어떤 질문이 올까요?",
     "defaultAnswer": "재치 있는 답변을 공유해 보세요.",
-    "askAnotherQuestion": "{displayName}에게 또 질문하기",
-    "questionNumber": "{displayName}에게 온 질문 #{number}"
+    "askAnotherQuestion": "{firstName}에게 또 질문하기",
+    "questionNumber": "{firstName}에게 온 질문 #{number}"
   },
   "answers": {
     "answer": "답변",
@@ -113,7 +113,7 @@
     "inboxMenu": "받은 질문함",
     "settingsMenu": "설정",
     "noBio": "아직 소개가 없어요",
-    "backToProfile": "{displayName}의 프로필",
+    "backToProfile": "{firstName}의 프로필",
     "edit": "수정",
     "shareLink": "링크 공유"
   },

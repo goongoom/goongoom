@@ -130,7 +130,7 @@ export default function Home() {
                         answerContent={qa.answer.content}
                         answerCreatedAt={qa.answer._creationTime}
                         avatarUrl={qa.recipientAvatarUrl ?? null}
-                        displayName={qa.recipientDisplayName || qa.recipientUsername || tCommon('user')}
+                        firstName={qa.recipientFirstName || qa.recipientUsername || tCommon('user')}
                         isAnonymous={qa.question.isAnonymous}
                         labels={cardLabels}
                         locale={locale}

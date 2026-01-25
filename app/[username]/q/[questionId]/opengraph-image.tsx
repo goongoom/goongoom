@@ -106,7 +106,7 @@ export default async function Image({ params }: PageProps) {
     )
   }
 
-  const displayName = dbUser.displayName || dbUser.username || username
+  const fullName = dbUser.fullName || dbUser.username || username
   const questionContent = clamp(qa.content, 80)
   const answerContent = clamp(qa.answer.content, 100)
   const colors = getSignatureColor(dbUser?.signatureColor)
@@ -191,7 +191,7 @@ export default async function Image({ params }: PageProps) {
           >
             {answerContent}
           </div>
-          <img alt={displayName} height={60} src={answererAvatarUrl} style={{ borderRadius: '30px' }} width={60} />
+          <img alt={fullName} height={60} src={answererAvatarUrl} style={{ borderRadius: '30px' }} width={60} />
         </div>
       </div>
     </div>,
