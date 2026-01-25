@@ -61,7 +61,9 @@ export function ProfileCard(props: ProfileCardProps) {
         <div className="flex flex-1 flex-col gap-1">
           <h1 className="font-semibold text-foreground text-xl">{fullName}</h1>
           <p className="text-muted-foreground text-sm">@{username}</p>
-          <p className="mt-1 whitespace-pre-line text-sm">{bio || <span className="text-muted-foreground">{noBioText}</span>}</p>
+          <p className="mt-1 whitespace-pre-line text-sm">
+            {bio || <span className="text-muted-foreground">{noBioText}</span>}
+          </p>
         </div>
       </CardContent>
       {socialLinks.length > 0 && (

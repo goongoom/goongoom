@@ -23,7 +23,7 @@ function generateAvatarSeed() {
 }
 
 function getAvatarUrl(seed: string) {
-  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
+  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&flip=true`
 }
 
 interface SubmitResult {

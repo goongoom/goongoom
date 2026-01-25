@@ -8,7 +8,7 @@ import { getSignatureColor } from '@/lib/colors/signature-colors'
 import type { QuestionId } from '@/lib/types'
 
 function getDicebearUrl(seed: string) {
-  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
+  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&flip=true`
 }
 
 async function fetchImageAsBase64(url: string): Promise<string> {
@@ -151,7 +151,13 @@ export default async function Image({ params }: PageProps) {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: '14px' }}>
-          <img alt="Asker" height={60} src={askerAvatarUrl} style={{ borderRadius: '30px', objectFit: 'cover' }} width={60} />
+          <img
+            alt="Asker"
+            height={60}
+            src={askerAvatarUrl}
+            style={{ borderRadius: '30px', objectFit: 'cover' }}
+            width={60}
+          />
           <div
             style={{
               display: 'flex',
@@ -191,7 +197,13 @@ export default async function Image({ params }: PageProps) {
           >
             {answerContent}
           </div>
-          <img alt={fullName} height={60} src={answererAvatarUrl} style={{ borderRadius: '30px', objectFit: 'cover' }} width={60} />
+          <img
+            alt={fullName}
+            height={60}
+            src={answererAvatarUrl}
+            style={{ borderRadius: '30px', objectFit: 'cover' }}
+            width={60}
+          />
         </div>
       </div>
     </div>,

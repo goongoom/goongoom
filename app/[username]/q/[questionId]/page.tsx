@@ -27,11 +27,11 @@ function getShareAvatarUrl(clerkAvatarUrl: string | null | undefined, seed: stri
   if (clerkAvatarUrl) {
     return clerkAvatarUrl
   }
-  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
+  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&flip=true`
 }
 
 function getDicebearAvatarUrl(seed: string) {
-  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
+  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&flip=true`
 }
 
 interface QuestionerInfo {

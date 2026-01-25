@@ -17,7 +17,7 @@ const pickText = (value: string | null, fallback: string, max: number) => {
 }
 
 function getDicebearUrl(seed: string) {
-  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
+  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&flip=true`
 }
 
 async function fetchImageAsBase64(url: string): Promise<string> {

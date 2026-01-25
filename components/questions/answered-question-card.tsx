@@ -43,7 +43,7 @@ function getQuestionerAvatarUrl(
 ): string | null {
   if (isAnonymous) {
     const seed = anonymousAvatarSeed || `anon_${questionId}`
-    return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
+    return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&flip=true`
   }
   return senderAvatarUrl || null
 }

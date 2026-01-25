@@ -26,7 +26,7 @@ import { api } from '@/convex/_generated/api'
 import type { QuestionId } from '@/lib/types'
 
 function getDicebearUrl(seed: string) {
-  return `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(seed)}&flip=true`
+  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}&flip=true`
 }
 
 function getQuestionAvatarUrl(question: QuestionItem): string | undefined {
