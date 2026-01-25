@@ -77,11 +77,23 @@ export const getOrCreate = mutation({
       .first()
 
     if (existing) {
+      if (!existing.username && identity.nickname) {
+        await ctx.db.patch(existing._id, {
+          username: identity.nickname,
+          displayName: identity.name || existing.displayName,
+          avatarUrl: identity.pictureUrl || existing.avatarUrl,
+          updatedAt: Date.now(),
+        })
+        return await ctx.db.get(existing._id)
+      }
       return existing
     }
 
     const id = await ctx.db.insert('users', {
       clerkId: args.clerkId,
+      username: identity.nickname,
+      displayName: identity.name,
+      avatarUrl: identity.pictureUrl,
       questionSecurityLevel: 'anyone',
       updatedAt: Date.now(),
     })

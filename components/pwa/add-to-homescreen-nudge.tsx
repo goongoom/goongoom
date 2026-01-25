@@ -151,7 +151,7 @@ export function AddToHomeScreenNudge() {
 
           <div className="w-full">
             <Button
-              className="w-full rounded-xl font-medium text-emerald-foreground/70 hover:bg-emerald-foreground/10 hover:text-emerald-foreground"
+              className="h-14 w-full rounded-2xl font-medium text-emerald-foreground/70 hover:bg-emerald-foreground/10 hover:text-emerald-foreground"
               onClick={handleDismiss}
               size="lg"
               variant="ghost"

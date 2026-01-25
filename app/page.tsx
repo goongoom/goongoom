@@ -10,7 +10,7 @@ import { AnsweredQuestionCard } from '@/components/questions/answered-question-c
 import { CarouselItem } from '@/components/ui/carousel'
 import { HomeCarousel } from '@/components/home/home-carousel'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
-import { Spinner } from '@/components/ui/spinner'
+import { Skeleton } from '@/components/ui/skeleton'
 import { api } from '@/convex/_generated/api'
 import { hasRedirectedToProfileThisSession, markRedirectedToProfile } from '@/lib/utils/session-cookie'
 
@@ -57,8 +57,41 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-background">
-        <Spinner className="size-8" />
+      <div className="flex min-h-screen flex-col bg-background selection:bg-primary/10">
+        <section className="relative overflow-hidden py-16 md:py-24">
+          <div className="absolute inset-0 -z-10 h-full w-full bg-background">
+            <div className="absolute left-1/2 top-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[100px] dark:bg-primary/10" />
+          </div>
+          <div className="container mx-auto px-4">
+            <div className="mb-12 text-center">
+              <Skeleton className="mx-auto h-12 w-64" />
+            </div>
+            <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-4 px-4 md:grid-cols-2 md:px-8 lg:grid-cols-3 xl:grid-cols-4">
+              {[1, 2, 3, 4].map((n) => (
+                <div key={`skeleton-card-${n}`} className="h-full rounded-xl border bg-card p-4">
+                  <div className="flex items-start gap-3">
+                    <Skeleton className="size-10 rounded-full" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-4 w-1/2" />
+                    </div>
+                  </div>
+                  <div className="mt-4 flex items-start justify-end gap-3">
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="ml-auto h-4 w-3/4" />
+                      <Skeleton className="ml-auto h-4 w-1/2" />
+                    </div>
+                    <Skeleton className="size-10 rounded-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-16 flex flex-col items-center gap-6">
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-12 w-40 rounded-full" />
+            </div>
+          </div>
+        </section>
       </div>
     )
   }

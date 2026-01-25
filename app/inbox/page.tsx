@@ -7,7 +7,6 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'
 import { MainContent } from '@/components/layout/main-content'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
-import { Spinner } from '@/components/ui/spinner'
 import { ToastOnMount } from '@/components/ui/toast-on-mount'
 import { api } from '@/convex/_generated/api'
 import { useAuth } from '@clerk/nextjs'
@@ -48,26 +47,10 @@ export default function InboxPage() {
     }))
   }, [unansweredQuestions, tCommon])
 
-  if (isAuthLoading || !isAuthenticated) {
-    return (
-      <MainContent>
-        <div className="flex min-h-[50vh] items-center justify-center">
-          <Spinner className="size-8" />
-        </div>
-      </MainContent>
-    )
-  }
+  const isDataLoading = unansweredQuestions === undefined
 
-  const isLoading = unansweredQuestions === undefined
-
-  if (isLoading) {
-    return (
-      <MainContent>
-        <div className="flex min-h-[50vh] items-center justify-center">
-          <Spinner className="size-8" />
-        </div>
-      </MainContent>
-    )
+  if (!isAuthLoading && !isAuthenticated) {
+    return null
   }
 
   return (
@@ -79,7 +62,9 @@ export default function InboxPage() {
 
       {error && <ToastOnMount message={error} type="error" />}
 
-      {questionsWithSenders.length === 0 ? (
+      {isAuthLoading || isDataLoading ? (
+        <InboxList questions={[]} isLoading />
+      ) : questionsWithSenders.length === 0 ? (
         <Empty>
           <EmptyHeader>
             <EmptyTitle>{t('emptyTitle')}</EmptyTitle>

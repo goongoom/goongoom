@@ -10,7 +10,7 @@ export function EditProfileButton() {
   const t = useTranslations('profile')
 
   return (
-    <Button className="flex-1" nativeButton={false} render={<Ultralink href="/settings/profile" />} variant="outline">
+    <Button className="h-14 flex-1 rounded-2xl font-semibold text-base" nativeButton={false} render={<Ultralink href="/settings/profile" />} variant="outline">
       <HugeiconsIcon className="mr-2 size-4" icon={PencilEdit01Icon} />
       {t('edit')}
     </Button>

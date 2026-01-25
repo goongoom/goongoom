@@ -80,13 +80,13 @@ function SignInPrompt() {
       </div>
       <div className="flex gap-3">
         <PasskeySignInButton>
-          <Button className="h-12 flex-1 rounded-xl font-semibold" size="lg" variant="outline">
+          <Button className="h-14 flex-1 rounded-2xl font-semibold" size="lg" variant="outline">
             {tCommon('login')}
           </Button>
         </PasskeySignInButton>
         <SignUpButton mode="modal">
           <Button
-            className="h-12 flex-1 rounded-xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold"
+            className="h-14 flex-1 rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold"
             size="lg"
           >
             {tCommon('start')}

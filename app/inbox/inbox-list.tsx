@@ -31,6 +31,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { Textarea } from '@/components/ui/textarea'
 import { api } from '@/convex/_generated/api'
@@ -59,11 +60,12 @@ interface QuestionItem {
 
 interface InboxListProps {
   questions: QuestionItem[]
+  isLoading?: boolean
 }
 
 const localeMap = { ko, en: enUS } as const
 
-export function InboxList({ questions }: InboxListProps) {
+export function InboxList({ questions, isLoading }: InboxListProps) {
   const t = useTranslations('answers')
   const tCommon = useTranslations('common')
   const tInbox = useTranslations('inbox')
@@ -161,6 +163,33 @@ export function InboxList({ questions }: InboxListProps) {
       setIsDeclining(false)
       setIsDeclineDialogOpen(false)
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-3">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <div
+            key={`inbox-skeleton-${n}`}
+            className="flex items-start gap-4 rounded-2xl border border-border/50 bg-background p-4"
+          >
+            <div className="relative flex-shrink-0">
+              <Skeleton className="size-12 rounded-full" />
+              <Skeleton className="absolute -right-0.5 -bottom-0.5 size-5 rounded-full" />
+            </div>
+            <div className="min-w-0 flex-1 space-y-2">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-3 w-20" />
+              </div>
+            </div>
+            <Skeleton className="size-10 rounded-full" />
+          </div>
+        ))}
+      </div>
+    )
   }
 
   return (

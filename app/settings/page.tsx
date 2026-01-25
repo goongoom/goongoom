@@ -15,7 +15,7 @@ import { NotificationSettings } from '@/components/settings/notification-setting
 import { ThemeSelector } from '@/components/settings/theme-selector'
 import { Card, CardContent } from '@/components/ui/card'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
-import { Spinner } from '@/components/ui/spinner'
+import { Skeleton } from '@/components/ui/skeleton'
 import { ToastOnMount } from '@/components/ui/toast-on-mount'
 
 export default function SettingsPage() {
@@ -38,8 +38,45 @@ export default function SettingsPage() {
   if (isAuthLoading || !isAuthenticated || !isUserLoaded) {
     return (
       <MainContent>
-        <div className="flex min-h-[50vh] items-center justify-center">
-          <Spinner className="size-8" />
+        <div className="mb-8 space-y-2">
+          <Skeleton className="h-9 w-32" />
+          <Skeleton className="h-5 w-64" />
+        </div>
+        <div className="space-y-4">
+          <Card>
+            <CardContent className="flex items-center gap-4">
+              <Skeleton className="size-12 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-5 w-40" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              <Skeleton className="h-10 w-full" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              <Skeleton className="h-10 w-full" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              <Skeleton className="h-10 w-full" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              <Skeleton className="h-10 w-full" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              <Skeleton className="h-10 w-full" />
+            </CardContent>
+          </Card>
         </div>
       </MainContent>
     )

@@ -4,30 +4,36 @@ import { Ultralink } from '@/components/navigation/ultralink'
 import { ClampedAnswer } from '@/components/questions/clamped-answer'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { getSignatureColor } from '@/lib/colors/signature-colors'
 
 const localeMap = { ko, en: enUS } as const
 
-interface AnsweredQuestionCardProps {
-  questionId: string
-  questionContent: string
-  isAnonymous: boolean
-  anonymousAvatarSeed?: string
-  senderName?: string
-  senderAvatarUrl?: string | null
-  questionCreatedAt: number
-  answerContent: string
-  answerCreatedAt: number
-  username: string
-  displayName: string
-  avatarUrl: string | null
-  locale: string
-  labels: {
-    anonymous: string
-    identified: string
-  }
-  signatureColor?: string | null
-}
+type AnsweredQuestionCardProps =
+  | {
+      isLoading: true
+    }
+  | {
+      isLoading?: false
+      questionId: string
+      questionContent: string
+      isAnonymous: boolean
+      anonymousAvatarSeed?: string
+      senderName?: string
+      senderAvatarUrl?: string | null
+      questionCreatedAt: number
+      answerContent: string
+      answerCreatedAt: number
+      username: string
+      displayName: string
+      avatarUrl: string | null
+      locale: string
+      labels: {
+        anonymous: string
+        identified: string
+      }
+      signatureColor?: string | null
+    }
 
 function getQuestionerAvatarUrl(
   isAnonymous: boolean,
@@ -42,23 +48,48 @@ function getQuestionerAvatarUrl(
   return senderAvatarUrl || null
 }
 
-export function AnsweredQuestionCard({
-  questionId,
-  questionContent,
-  isAnonymous,
-  anonymousAvatarSeed,
-  senderName,
-  senderAvatarUrl,
-  questionCreatedAt,
-  answerContent,
-  answerCreatedAt,
-  username,
-  displayName,
-  avatarUrl,
-  locale,
-  labels,
-  signatureColor,
-}: AnsweredQuestionCardProps) {
+export function AnsweredQuestionCard(props: AnsweredQuestionCardProps) {
+  if (props.isLoading) {
+    return (
+      <Card className="group relative">
+        <CardContent className="flex flex-col gap-4">
+          <div className="flex w-full items-start gap-3">
+            <Skeleton className="size-10 rounded-full" />
+            <div className="flex flex-1 flex-col gap-2">
+              <Skeleton className="h-16 w-3/4 rounded-lg" />
+              <Skeleton className="h-3 w-24" />
+            </div>
+          </div>
+          <div className="flex w-full items-start justify-end gap-3">
+            <div className="flex flex-1 flex-col items-end gap-2">
+              <Skeleton className="h-16 w-3/4 rounded-lg" />
+              <Skeleton className="h-3 w-24" />
+            </div>
+            <Skeleton className="size-10 rounded-full" />
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  const {
+    questionId,
+    questionContent,
+    isAnonymous,
+    anonymousAvatarSeed,
+    senderName,
+    senderAvatarUrl,
+    questionCreatedAt,
+    answerContent,
+    answerCreatedAt,
+    username,
+    displayName,
+    avatarUrl,
+    locale,
+    labels,
+    signatureColor,
+  } = props
+
   const anonymityLabel = isAnonymous ? labels.anonymous : senderName || labels.identified
   const fallbackInitial = displayName[0] || '?'
   const questionerAvatarUrl = getQuestionerAvatarUrl(isAnonymous, anonymousAvatarSeed, questionId, senderAvatarUrl)

@@ -41,7 +41,6 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'e2e/.auth/user.json',
       },
       dependencies: ['setup'],
     },
@@ -49,7 +48,6 @@ export default defineConfig({
       name: 'mobile',
       use: {
         ...devices['iPhone 14'],
-        storageState: 'e2e/.auth/user.json',
       },
       dependencies: ['setup'],
     },

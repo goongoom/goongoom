@@ -74,7 +74,7 @@ export function PasskeyNudge() {
       </CardHeader>
 
       <CardContent className="relative z-10 pt-4 pb-6">
-        <Button className="group/btn w-full font-bold text-base" disabled={isLoading} onClick={createPasskey} size="lg">
+        <Button className="group/btn h-14 w-full rounded-2xl font-bold text-base" disabled={isLoading} onClick={createPasskey} size="lg">
           {isLoading ? (
             <>
               <Spinner className="mr-2 size-5" />

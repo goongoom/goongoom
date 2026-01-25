@@ -8,7 +8,6 @@ import { useEffect, useMemo } from 'react'
 import { MainContent } from '@/components/layout/main-content'
 import { AnsweredQuestionCard } from '@/components/questions/answered-question-card'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
-import { Spinner } from '@/components/ui/spinner'
 import { api } from '@/convex/_generated/api'
 
 export default function FriendsPage() {
@@ -36,26 +35,10 @@ export default function FriendsPage() {
     [tCommon]
   )
 
-  if (isAuthLoading || !isAuthenticated) {
-    return (
-      <MainContent>
-        <div className="flex min-h-[50vh] items-center justify-center">
-          <Spinner className="size-8" />
-        </div>
-      </MainContent>
-    )
-  }
+  const isDataLoading = friendsAnswers === undefined
 
-  const isLoading = friendsAnswers === undefined
-
-  if (isLoading) {
-    return (
-      <MainContent>
-        <div className="flex min-h-[50vh] items-center justify-center">
-          <Spinner className="size-8" />
-        </div>
-      </MainContent>
-    )
+  if (!isAuthLoading && !isAuthenticated) {
+    return null
   }
 
   return (
@@ -65,7 +48,13 @@ export default function FriendsPage() {
         <p className="text-muted-foreground text-sm">{t('description')}</p>
       </div>
 
-      {friendsAnswers.length === 0 ? (
+      {isAuthLoading || isDataLoading ? (
+        <div className="space-y-6 pb-24">
+          {[1, 2, 3].map((n) => (
+            <AnsweredQuestionCard key={`friends-skeleton-${n}`} isLoading />
+          ))}
+        </div>
+      ) : friendsAnswers.length === 0 ? (
         <Empty>
           <EmptyHeader>
             <EmptyTitle>{t('emptyTitle')}</EmptyTitle>

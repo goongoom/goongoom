@@ -19,7 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Empty, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
-import { Spinner } from '@/components/ui/spinner'
+import { Skeleton } from '@/components/ui/skeleton'
 import { api } from '@/convex/_generated/api'
 import type { Id } from '@/convex/_generated/dataModel'
 
@@ -154,8 +154,31 @@ export default function QADetailPage() {
   if (isLoading) {
     return (
       <MainContent>
-        <div className="flex min-h-[50vh] items-center justify-center">
-          <Spinner className="size-8" />
+        <div className="mb-4">
+          <Skeleton className="h-10 w-48" />
+        </div>
+        <Skeleton className="mb-6 h-8 w-64" />
+        <Card>
+          <CardContent className="flex flex-col gap-4">
+            <div className="flex w-full items-start gap-3">
+              <Skeleton className="size-10 rounded-full" />
+              <div className="flex flex-1 flex-col gap-2">
+                <Skeleton className="h-16 w-3/4 rounded-lg" />
+                <Skeleton className="h-3 w-24" />
+              </div>
+            </div>
+            <div className="flex w-full items-start justify-end gap-3">
+              <div className="flex flex-1 flex-col items-end gap-2">
+                <Skeleton className="h-16 w-3/4 rounded-lg" />
+                <Skeleton className="h-3 w-24" />
+              </div>
+              <Skeleton className="size-10 rounded-full" />
+            </div>
+          </CardContent>
+        </Card>
+        <div className="mt-6 flex flex-col gap-3">
+          <Skeleton className="h-14 w-full rounded-xl" />
+          <Skeleton className="h-14 w-full rounded-xl" />
         </div>
       </MainContent>
     )
@@ -239,16 +262,16 @@ export default function QADetailPage() {
         {isOwner && instagramShareUrl ? (
           <>
             <ShareInstagramButton
-              className="h-14 w-full rounded-xl font-semibold"
+              className="h-14 w-full rounded-2xl font-semibold"
               mode="button"
               shareUrl={instagramShareUrl}
             />
-            <CopyLinkButton className="h-14 w-full rounded-xl" fullWidth url={canonicalUrl} variant="secondary" />
+            <CopyLinkButton className="h-14 w-full rounded-2xl" fullWidth url={canonicalUrl} variant="secondary" />
             <DeleteResponseButton answerId={answer._id} profileUrl={`/${username}`} />
           </>
         ) : (
           <Button
-            className="h-14 w-full rounded-xl font-semibold"
+            className="h-14 w-full rounded-2xl font-semibold"
             nativeButton={false}
             render={<Ultralink href={`/${username}`} />}
             size="lg"

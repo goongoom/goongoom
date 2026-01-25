@@ -58,7 +58,7 @@ export function DeleteResponseButton({ answerId, profileUrl }: DeleteResponseBut
   return (
     <AlertDialog onOpenChange={setOpen} open={open}>
       <AlertDialogTrigger
-        render={<Button className="h-14 w-full rounded-xl text-destructive" type="button" variant="outline" />}
+        render={<Button className="h-14 w-full rounded-2xl text-destructive" type="button" variant="outline" />}
       >
         {tAnswers('deleteResponse')}
       </AlertDialogTrigger>

@@ -157,7 +157,7 @@ export function ShareInstagramButton({ shareUrl, mode = 'icon', className }: Sha
         </DrawerHeader>
         <div className="flex flex-col gap-2 px-4 pb-4">
           <Button
-            className="w-full font-semibold text-base"
+            className="h-14 w-full rounded-2xl font-semibold text-base"
             disabled={isLoading}
             onClick={async () => {
               await handleShare()

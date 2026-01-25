@@ -1,22 +1,17 @@
 'use client'
 
 import { useAuth } from '@clerk/nextjs'
-import { HugeiconsIcon } from '@hugeicons/react'
 import { useMutation, useQuery } from 'convex/react'
-import Link from 'next/link'
 import { useParams, useSearchParams } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'
 import { MainContent } from '@/components/layout/main-content'
 import { EditProfileButton } from '@/components/profile/edit-profile-button'
 import { ProfileActions } from '@/components/profile/profile-actions'
+import { ProfileCard } from '@/components/profile/profile-card'
 import { AnsweredQuestionCard } from '@/components/questions/answered-question-card'
 import { QuestionDrawer } from '@/components/questions/question-drawer'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { Empty, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
-import { Spinner } from '@/components/ui/spinner'
 import { ToastOnMount } from '@/components/ui/toast-on-mount'
 import { api } from '@/convex/_generated/api'
 import { DEFAULT_QUESTION_SECURITY_LEVEL } from '@/lib/question-security'
@@ -118,17 +113,9 @@ export default function UserProfilePage() {
     [recipientClerkId, viewerId, createQuestion, tErrors]
   )
 
-  if (isLoading) {
-    return (
-      <MainContent>
-        <div className="flex min-h-[50vh] items-center justify-center">
-          <Spinner className="size-8" />
-        </div>
-      </MainContent>
-    )
-  }
+  const isAnswersLoading = answeredQuestions === undefined
 
-  if (!dbUser) {
+  if (dbUser === null) {
     return (
       <MainContent>
         <Empty className="pb-24">
@@ -142,54 +129,38 @@ export default function UserProfilePage() {
 
   return (
     <MainContent>
-      <Card className="mb-6">
-        <CardContent className="flex items-center gap-6">
-          <Avatar className="size-24 ring-2 ring-primary/30">
-            {dbUser?.avatarUrl && <AvatarImage alt={displayName} src={dbUser.avatarUrl} />}
-            <AvatarFallback>{displayName[0] || '?'}</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-1 flex-col gap-1">
-            <h1 className="font-semibold text-foreground text-xl">{displayName}</h1>
-            <p className="text-muted-foreground text-sm">@{recipientUsername}</p>
-            <p className="mt-1 text-sm">
-              {dbUser?.bio || <span className="text-muted-foreground">{tProfile('noBio')}</span>}
-            </p>
-          </div>
-        </CardContent>
-        {socialLinks.length > 0 && (
-          <CardContent className="flex flex-wrap gap-2 pt-0">
-            {socialLinks.map((link) => (
-              <Button
-                aria-label={link.label}
-                className="h-8 gap-1.5 rounded-full px-3"
-                key={link.key}
-                render={<Link href={link.href} rel="noopener noreferrer" target="_blank" />}
-                size="sm"
-                variant="outline"
-              >
-                <HugeiconsIcon className="size-4" icon={link.icon} />
-                <span className="text-sm">{link.text}</span>
-              </Button>
-            ))}
-          </CardContent>
-        )}
-        {isOwnProfile && (
-          <CardContent className="pt-0">
-            <ProfileActions editButton={<EditProfileButton />} username={recipientUsername} />
-          </CardContent>
-        )}
-      </Card>
+      {isLoading ? (
+        <ProfileCard isLoading />
+      ) : (
+        <ProfileCard
+          displayName={displayName}
+          username={recipientUsername}
+          avatarUrl={dbUser.avatarUrl}
+          bio={dbUser.bio}
+          noBioText={tProfile('noBio')}
+          socialLinks={socialLinks}
+          isOwnProfile={isOwnProfile}
+        >
+          <ProfileActions editButton={<EditProfileButton />} username={recipientUsername} />
+        </ProfileCard>
+      )}
 
       {status && <ToastOnMount message={status.message} type={status.type} />}
 
-      {questionsWithAnswers.length > 0 ? (
+      {isLoading || isAnswersLoading ? (
+        <div className="space-y-6 pb-24">
+          {[1, 2, 3].map((n) => (
+            <AnsweredQuestionCard key={`profile-skeleton-${n}`} isLoading />
+          ))}
+        </div>
+      ) : questionsWithAnswers.length > 0 ? (
         <div className="space-y-6 pb-24">
           {questionsWithAnswers.map((qa) => (
             <AnsweredQuestionCard
               anonymousAvatarSeed={qa.anonymousAvatarSeed}
               answerContent={qa.firstAnswer.content}
               answerCreatedAt={qa.firstAnswer._creationTime}
-              avatarUrl={dbUser?.avatarUrl ?? null}
+              avatarUrl={dbUser.avatarUrl ?? null}
               displayName={displayName}
               isAnonymous={qa.isAnonymous}
               key={qa._id}
@@ -200,7 +171,7 @@ export default function UserProfilePage() {
               questionId={qa._id}
               senderAvatarUrl={qa.senderAvatarUrl ?? null}
               senderName={qa.senderDisplayName || qa.senderUsername}
-              signatureColor={dbUser?.signatureColor}
+              signatureColor={dbUser.signatureColor}
               username={recipientUsername}
             />
           ))}
