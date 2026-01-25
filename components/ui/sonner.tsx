@@ -19,6 +19,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       theme={theme as ToasterProps['theme']}
       position="top-center"
       className="toaster group"
+      richColors
       icons={{
         success: <HugeiconsIcon icon={CheckmarkCircle02Icon} strokeWidth={2} className="size-4" />,
         info: <HugeiconsIcon icon={InformationCircleIcon} strokeWidth={2} className="size-4" />,
@@ -34,19 +35,6 @@ const Toaster = ({ ...props }: ToasterProps) => {
           '--border-radius': 'var(--radius)',
         } as React.CSSProperties
       }
-      toastOptions={{
-        classNames: {
-          toast: 'cn-toast !backdrop-blur-md !shadow-lg',
-          default: '!bg-popover/80 !border-border !text-popover-foreground',
-          success:
-            '!bg-emerald-600 !border-emerald-700 !text-white dark:!bg-emerald-600 dark:!border-emerald-500 dark:!text-white [&_[data-icon]]:!text-white dark:[&_[data-icon]]:!text-emerald-100',
-          error:
-            '!bg-red-600 !border-red-700 !text-white dark:!bg-red-600 dark:!border-red-500 dark:!text-white [&_[data-icon]]:!text-white dark:[&_[data-icon]]:!text-red-100',
-          warning:
-            '!bg-amber-500 !border-amber-600 !text-white dark:!bg-amber-500 dark:!border-amber-400 dark:!text-white [&_[data-icon]]:!text-white dark:[&_[data-icon]]:!text-amber-100',
-          info: '!bg-blue-600 !border-blue-700 !text-white dark:!bg-blue-600 dark:!border-blue-500 dark:!text-white [&_[data-icon]]:!text-white dark:[&_[data-icon]]:!text-blue-100',
-        },
-      }}
       {...props}
     />
   )

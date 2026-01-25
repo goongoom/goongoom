@@ -138,7 +138,10 @@ export function AnsweredQuestionCard(props: AnsweredQuestionCardProps) {
                 }
                 style={answerCardStyle}
               >
-                <ClampedAnswer content={answerContent} />
+                <ClampedAnswer
+                  content={answerContent}
+                  gradientColors={colors ? { light: colors.light.primary, dark: colors.dark.primary } : undefined}
+                />
               </Card>
               <p className="mt-1 mr-1 text-muted-foreground text-xs">
                 {firstName} ·{' '}
