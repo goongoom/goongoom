@@ -9,7 +9,6 @@ import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Spinner } from '@/components/ui/spinner'
 import { cn } from '@/lib/utils'
 
 export function PasskeyNudge() {
@@ -74,21 +73,8 @@ export function PasskeyNudge() {
       </CardHeader>
 
       <CardContent className="relative z-10 pt-4 pb-6">
-        <Button className="group/btn h-14 w-full rounded-2xl font-bold text-base" disabled={isLoading} onClick={createPasskey} size="lg">
-          {isLoading ? (
-            <>
-              <Spinner className="mr-2 size-5" />
-              {t('settingUp')}
-            </>
-          ) : (
-            <>
-              {t('setupNow')}
-              <HugeiconsIcon
-                className="ml-2 size-4 transition-transform group-hover/btn:scale-110"
-                icon={FingerPrintIcon}
-              />
-            </>
-          )}
+        <Button className="h-14 w-full rounded-2xl font-bold" disabled={isLoading} onClick={createPasskey} size="lg">
+          {isLoading ? t('settingUp') : t('setupNow')}
         </Button>
       </CardContent>
     </Card>

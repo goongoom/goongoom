@@ -38,7 +38,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         classNames: {
           toast: 'cn-toast !bg-popover/80 !backdrop-blur-md !border-border !text-popover-foreground !shadow-lg',
           success:
-            '!bg-emerald-50/80 !border-emerald-200 !text-emerald-800 dark:!bg-emerald-950/50 dark:!border-emerald-800 dark:!text-emerald-200 [&_[data-icon]]:!text-emerald-600 dark:[&_[data-icon]]:!text-emerald-400',
+            '!bg-emerald-600 !border-emerald-700 !text-white dark:!bg-emerald-600 dark:!border-emerald-500 dark:!text-white [&_[data-icon]]:!text-white dark:[&_[data-icon]]:!text-emerald-100',
           error:
             '!bg-red-50/80 !border-red-200 !text-red-800 dark:!bg-red-950/50 dark:!border-red-800 dark:!text-red-200 [&_[data-icon]]:!text-red-600 dark:[&_[data-icon]]:!text-red-400',
           warning:

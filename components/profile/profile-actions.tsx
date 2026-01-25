@@ -1,7 +1,5 @@
 'use client'
 
-import { Share08Icon } from '@hugeicons/core-free-icons'
-import { HugeiconsIcon } from '@hugeicons/react'
 import { useTranslations } from 'next-intl'
 import { useCallback } from 'react'
 import { Button } from '@/components/ui/button'
@@ -31,8 +29,7 @@ export function ProfileActions({ username, editButton }: ProfileActionsProps) {
   return (
     <div className="flex gap-3">
       {editButton}
-      <Button className="h-14 flex-1 rounded-2xl font-semibold text-base" onClick={handleShare} variant="outline">
-        <HugeiconsIcon className="mr-2 size-4" icon={Share08Icon} />
+      <Button className="h-14 flex-1 rounded-2xl font-semibold" onClick={handleShare} variant="outline">
         {t('shareLink')}
       </Button>
     </div>

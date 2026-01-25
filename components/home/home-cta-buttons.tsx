@@ -62,7 +62,7 @@ export function HomeCTAButtons({
         </button>
       </SignUpButton>
       <PasskeySignInButton>
-        <Button variant="ghost" size="lg" className="h-14 rounded-full px-8 text-lg font-medium">
+        <Button variant="ghost" size="lg" className="h-14 rounded-full px-8 font-medium">
           {loginLabel}
         </Button>
       </PasskeySignInButton>

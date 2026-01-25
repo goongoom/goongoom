@@ -1,7 +1,7 @@
 'use client'
 
 import { useUser } from '@clerk/nextjs'
-import { AnonymousIcon, ArrowRight01Icon, SentIcon, UserIcon } from '@hugeicons/core-free-icons'
+import { AnonymousIcon, ArrowRight01Icon, UserIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useMutation } from 'convex/react'
 import { formatDistanceToNow } from 'date-fns'
@@ -31,7 +31,6 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Spinner } from '@/components/ui/spinner'
 import { Textarea } from '@/components/ui/textarea'
 import { api } from '@/convex/_generated/api'
 import type { QuestionId } from '@/lib/types'
@@ -306,22 +305,12 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
 
             <DrawerFooter className="gap-2 pt-4">
               <Button
-                className="h-14 w-full rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold text-base transition-all disabled:opacity-70"
+                className="h-14 w-full rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold transition-all disabled:opacity-70"
                 disabled={!answer.trim() || isSubmitting}
                 onClick={handleSubmit}
                 type="button"
               >
-                {isSubmitting ? (
-                  <span className="flex items-center gap-2.5">
-                    <Spinner className="size-5 text-white" />
-                    <span>{tCommon('submitting')}</span>
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-2.5">
-                    <HugeiconsIcon className="size-5" icon={SentIcon} strokeWidth={2.5} />
-                    <span>{t('answerButton')}</span>
-                  </span>
-                )}
+                {isSubmitting ? tCommon('submitting') : t('answerButton')}
               </Button>
               <Button
                 className="h-14 w-full rounded-2xl text-destructive"
@@ -340,7 +329,6 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
                   <AlertDialogFooter>
                     <AlertDialogCancel>{tCommon('cancel')}</AlertDialogCancel>
                     <AlertDialogAction disabled={isDeclining} onClick={handleDecline} type="button">
-                      {isDeclining ? <Spinner className="mr-2 size-4" /> : null}
                       {tCommon('decline')}
                     </AlertDialogAction>
                   </AlertDialogFooter>

@@ -214,7 +214,7 @@ export function NotificationSettings({ clerkId }: { clerkId: string }) {
         </div>
 
         {isSubscribed && (
-          <Button className="h-14 w-full rounded-2xl font-semibold text-base" disabled={isPending} onClick={handleTestNotification} variant="outline">
+          <Button className="h-14 w-full rounded-2xl font-semibold" disabled={isPending} onClick={handleTestNotification} variant="outline">
             {isPending ? t('notificationSettings.testSending') : t('notificationSettings.testButton')}
           </Button>
         )}

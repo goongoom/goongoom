@@ -1,8 +1,6 @@
 'use client'
 
 import { useAuth } from '@clerk/nextjs'
-import { ArrowLeft01Icon } from '@hugeicons/core-free-icons'
-import { HugeiconsIcon } from '@hugeicons/react'
 import { useQuery } from 'convex/react'
 import { formatDistanceToNow } from 'date-fns'
 import { enUS, ko } from 'date-fns/locale'
@@ -203,13 +201,11 @@ export default function QADetailPage() {
     <MainContent>
       <div className="mb-4">
         <Button
-          className="gap-2 pl-2"
           nativeButton={false}
           render={<Ultralink href={`/${username}`} />}
           size="lg"
           variant="ghost"
         >
-          <HugeiconsIcon className="size-5" icon={ArrowLeft01Icon} />
           {tProfile('backToProfile', { firstName })}
         </Button>
       </div>

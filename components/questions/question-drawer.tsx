@@ -1,7 +1,7 @@
 'use client'
 
 import { SignUpButton, useUser } from '@clerk/nextjs'
-import { LockIcon, SentIcon } from '@hugeicons/core-free-icons'
+import { LockIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -14,7 +14,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { Label } from '@/components/ui/label'
-import { Spinner } from '@/components/ui/spinner'
 import { Textarea } from '@/components/ui/textarea'
 
 function generateAvatarSeed() {
@@ -44,22 +43,12 @@ function SubmitButton({ pending }: { pending: boolean }) {
   const t = useTranslations('questions')
   return (
     <Button
-      className="h-14 w-full rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold text-base transition-all disabled:opacity-70"
+      className="h-14 w-full rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold transition-all disabled:opacity-70"
       disabled={pending}
       size="lg"
       type="submit"
     >
-      {pending ? (
-        <span className="flex items-center gap-2.5">
-          <Spinner className="size-5 text-white" />
-          <span>{t('sending')}</span>
-        </span>
-      ) : (
-        <span className="flex items-center gap-2.5">
-          <HugeiconsIcon className="size-5" icon={SentIcon} strokeWidth={2.5} />
-          <span>{t('sendQuestion')}</span>
-        </span>
-      )}
+      {pending ? t('sending') : t('sendQuestion')}
     </Button>
   )
 }

@@ -1,7 +1,5 @@
 'use client'
 
-import { CheckmarkCircle02Icon, Link01Icon } from '@hugeicons/core-free-icons'
-import { HugeiconsIcon } from '@hugeicons/react'
 import { useTranslations } from 'next-intl'
 import { useCallback, useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -47,14 +45,10 @@ export function CopyLinkButton({ url, fullWidth = false, className, variant = 'g
       aria-label={copied ? t('linkCopied') : t('copyLink')}
       className={className}
       onClick={handleCopy}
-      size={fullWidth ? 'lg' : 'icon-xs'}
+      size={fullWidth ? 'lg' : 'sm'}
       variant={variant}
     >
-      <HugeiconsIcon
-        className={fullWidth ? 'mr-2 size-5' : 'size-4'}
-        icon={copied ? CheckmarkCircle02Icon : Link01Icon}
-      />
-      {fullWidth && (copied ? t('linkCopied') : t('copyLink'))}
+      {copied ? t('linkCopied') : t('copyLink')}
     </Button>
   )
 }

@@ -126,7 +126,7 @@ export function QuickAnswerDialog({ question, open, onOpenChange }: QuickAnswerD
 
           <div className="mt-6 flex gap-3">
             <Button
-              className="h-14 flex-1 rounded-2xl font-semibold text-base"
+              className="h-14 flex-1 rounded-2xl font-semibold"
               onClick={handleClose}
               type="button"
               variant="outline"
@@ -134,7 +134,7 @@ export function QuickAnswerDialog({ question, open, onOpenChange }: QuickAnswerD
               {tCommon('cancel')}
             </Button>
             <Button
-              className="h-14 flex-1 rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold text-base transition-all disabled:opacity-70"
+              className="h-14 flex-1 rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold transition-all disabled:opacity-70"
               disabled={!answer.trim() || isSubmitting}
               onClick={handleSubmit}
               type="button"

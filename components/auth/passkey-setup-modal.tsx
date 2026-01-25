@@ -116,7 +116,7 @@ export function PasskeySetupModal() {
 
               <div className="w-full space-y-2">
                 <Button
-                  className="h-14 w-full rounded-2xl border-none bg-white font-bold text-base text-primary transition-all hover:bg-white/90"
+                  className="h-14 w-full rounded-2xl border-none bg-white font-bold text-primary transition-all hover:bg-white/90"
                   disabled={isLoading}
                   onClick={createPasskey}
                   size="lg"
