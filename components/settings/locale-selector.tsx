@@ -2,36 +2,25 @@
 
 import { useAuth } from '@clerk/nextjs'
 import { useMutation } from 'convex/react'
-import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { useState, useTransition } from 'react'
 import { api } from '@/convex/_generated/api'
 import { type Locale, localeNames, locales } from '@/i18n/config'
+import { localeStore } from '@/i18n/locale-store'
 import { Label } from '../ui/label'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 
-const LOCALE_COOKIE = 'NEXT_LOCALE'
-const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365
-
 export function LocaleSelector() {
   const t = useTranslations('settings')
-  const currentLocale = useLocale()
+  const currentLocale = useLocale() as Locale
   const { userId } = useAuth()
-  const router = useRouter()
-  const [isPending, startTransition] = useTransition()
-  const [selectedLocale, setSelectedLocale] = useState<Locale>(currentLocale as Locale)
   const updateLocale = useMutation(api.users.updateLocale)
 
   function handleLocaleChange(value: string) {
     const locale = value as Locale
-    setSelectedLocale(locale)
-    startTransition(async () => {
-      document.cookie = `${LOCALE_COOKIE}=${locale}; path=/; max-age=${ONE_YEAR_IN_SECONDS}; samesite=lax`
-      if (userId) {
-        await updateLocale({ clerkId: userId, locale })
-      }
-      router.refresh()
-    })
+    localeStore.setLocale(locale)
+    if (userId) {
+      updateLocale({ clerkId: userId, locale })
+    }
   }
 
   return (
@@ -43,9 +32,8 @@ export function LocaleSelector() {
 
       <RadioGroup
         className="flex w-full gap-2"
-        disabled={isPending}
         onValueChange={handleLocaleChange}
-        value={selectedLocale}
+        value={currentLocale}
       >
         {locales.map((locale) => (
           <Label

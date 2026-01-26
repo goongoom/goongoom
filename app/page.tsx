@@ -241,7 +241,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <span className="shrink-0 rounded bg-pink-100 px-1.5 py-0.5 text-xs text-pink-700 dark:bg-pink-900/30 dark:text-pink-300">
-                    민주
+                    {t('mockSenderName')}
                   </span>
                   <span className="truncate text-foreground">{t('mockQuestion3')}</span>
                   <span className="ml-auto shrink-0 text-xs">{t('mockTime5m')}</span>

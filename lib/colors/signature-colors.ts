@@ -302,7 +302,7 @@ export const SIGNATURE_COLORS = {
 
 export type SignatureColor = keyof typeof SIGNATURE_COLORS
 
-export const DEFAULT_SIGNATURE_COLOR: SignatureColor = 'emerald'
+export const DEFAULT_SIGNATURE_COLOR: SignatureColor = 'pink'
 
 export function getSignatureColor(key: string | undefined | null): SignatureColorValue {
   if (!(key && key in SIGNATURE_COLORS)) {

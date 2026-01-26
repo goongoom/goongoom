@@ -1,14 +1,36 @@
 import type { MetadataRoute } from 'next'
+import { getUserLocale } from '@/i18n/request'
 
-export default function manifest(): MetadataRoute.Manifest {
-  return {
+const manifestStrings = {
+  ko: {
     name: '궁금닷컴',
     short_name: '궁금닷컴',
     description: '궁금한 것을 물어보고 답변을 받아보세요',
+  },
+  en: {
+    name: 'Goongoom',
+    short_name: 'Goongoom',
+    description: 'Ask questions and get answers',
+  },
+  ja: {
+    name: 'Goongoom',
+    short_name: 'Goongoom',
+    description: '質問して回答をもらおう',
+  },
+} as const
+
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+  const locale = await getUserLocale()
+  const strings = manifestStrings[locale]
+
+  return {
+    name: strings.name,
+    short_name: strings.short_name,
+    description: strings.description,
     start_url: '/',
     display: 'standalone',
-    background_color: '#ecfdf5',
-    theme_color: '#10b981',
+    background_color: '#fdf2f8',
+    theme_color: '#E1306C',
     orientation: 'portrait',
     icons: [
       {

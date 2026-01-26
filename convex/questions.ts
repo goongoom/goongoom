@@ -7,6 +7,7 @@ import { CHAR_LIMITS } from './charLimits'
 const PUSH_MESSAGES = {
   ko: { newQuestionTitle: '새 질문이 왔어요!' },
   en: { newQuestionTitle: 'You got a new question!' },
+  ja: { newQuestionTitle: '新しい質問が届きました！' },
 } as const
 
 /**

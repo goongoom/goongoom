@@ -52,6 +52,14 @@ http.route({
         first_name?: string | null
         last_name?: string | null
         image_url?: string | null
+        unsafe_metadata?: {
+          referrerUsername?: string
+          utmSource?: string
+          utmMedium?: string
+          utmCampaign?: string
+          utmTerm?: string
+          utmContent?: string
+        }
       }
     }
 
@@ -68,7 +76,42 @@ http.route({
 
     const { type, data } = evt
 
-    if (type === 'user.created' || type === 'user.updated') {
+    if (type === 'user.created') {
+      const firstName = data.first_name ?? undefined
+      const fullName = buildFullName(data.first_name, data.last_name)
+      
+      // Extract referral data from unsafe_metadata (first-touch only)
+      const { referrerUsername, utmSource, utmMedium, utmCampaign, utmTerm, utmContent } = data.unsafe_metadata || {}
+      
+      // Create or update user
+      const userId = await ctx.runMutation(internal.users.upsertFromWebhook, {
+        clerkId: data.id,
+        username: data.username ?? undefined,
+        firstName,
+        fullName,
+        avatarUrl: data.image_url ?? undefined,
+        referrerUsername,
+        utmSource,
+        utmMedium,
+        utmCampaign,
+        utmTerm,
+        utmContent,
+      })
+      
+      // Record referral if referrer is present
+      if (referrerUsername) {
+        await ctx.runMutation(internal.referrals.recordReferral, {
+          referrerUsername,
+          referredUserId: userId,
+          referredClerkId: data.id,
+          utmSource,
+          utmMedium,
+          utmCampaign,
+          utmTerm,
+          utmContent,
+        })
+      }
+    } else if (type === 'user.updated') {
       const firstName = data.first_name ?? undefined
       const fullName = buildFullName(data.first_name, data.last_name)
       await ctx.runMutation(internal.users.upsertFromWebhook, {

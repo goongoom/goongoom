@@ -1,6 +1,7 @@
 import { ConvexError, v } from 'convex/values'
 import { internal } from './_generated/api'
 import { action, internalMutation, internalQuery, mutation, query } from './_generated/server'
+import type { Id } from './_generated/dataModel'
 import { CHAR_LIMITS } from './charLimits'
 
 const HTML_TITLE_REGEX = /<title[^>]*>([^<]+)<\/title>/i
@@ -230,6 +231,12 @@ export const upsertFromWebhook = internalMutation({
     firstName: v.optional(v.string()),
     fullName: v.optional(v.string()),
     avatarUrl: v.optional(v.string()),
+    referrerUsername: v.optional(v.string()),
+    utmSource: v.optional(v.string()),
+    utmMedium: v.optional(v.string()),
+    utmCampaign: v.optional(v.string()),
+    utmTerm: v.optional(v.string()),
+    utmContent: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
@@ -251,19 +258,30 @@ export const upsertFromWebhook = internalMutation({
       if (args.fullName !== undefined) updates.fullName = args.fullName
       if (args.avatarUrl !== undefined) updates.avatarUrl = args.avatarUrl
 
-      await ctx.db.patch(existing._id, updates)
-      return existing._id
-    }
-
-    return await ctx.db.insert('users', {
-      clerkId: args.clerkId,
-      username: args.username,
-      firstName: args.firstName,
-      fullName: args.fullName,
-      avatarUrl: args.avatarUrl,
-      questionSecurityLevel: 'anyone',
-      updatedAt: Date.now(),
-    })
+       await ctx.db.patch(existing._id, updates)
+       return existing._id
+     }
+ 
+     // Look up referrer if provided
+     let referredByUserId: Id<'users'> | undefined
+     if (args.referrerUsername) {
+       const referrer = await ctx.db
+         .query('users')
+         .withIndex('by_username', (q) => q.eq('username', args.referrerUsername))
+         .unique()
+       referredByUserId = referrer?._id
+     }
+ 
+     return await ctx.db.insert('users', {
+       clerkId: args.clerkId,
+       username: args.username,
+       firstName: args.firstName,
+       fullName: args.fullName,
+       avatarUrl: args.avatarUrl,
+       referredByUserId,
+       questionSecurityLevel: 'anyone',
+       updatedAt: Date.now(),
+     })
   },
 })
 

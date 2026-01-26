@@ -23,6 +23,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
 import { api } from '@/convex/_generated/api'
+import { useLogCollector } from '@/hooks/use-log-collector'
 import type { QuestionId } from '@/lib/types'
 
 function getDicebearUrl(seed: string) {
@@ -65,6 +66,7 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
   const createAnswerMutation = useMutation(api.answers.create)
   const declineQuestionMutation = useMutation(api.questions.softDelete)
   const restoreQuestionMutation = useMutation(api.questions.restore)
+  const { logAction } = useLogCollector()
 
   const [dismissedQuestionIds, setDismissedQuestionIds] = useState<Set<string>>(new Set())
   const [selectedQuestion, setSelectedQuestion] = useState<QuestionItem | null>(null)
@@ -100,9 +102,16 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
 
     setIsSubmitting(true)
     try {
-      await createAnswerMutation({
+      const result = await createAnswerMutation({
         questionId: selectedQuestion.id,
         content: answer.trim(),
+      })
+      logAction({
+        action: 'createAnswer',
+        entityType: 'answer',
+        entityId: result?._id,
+        success: true,
+        payload: { questionId: selectedQuestion.id },
       })
 
       setDismissedQuestionIds((prev) => {
@@ -115,6 +124,12 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
       toast.success(t('answerCreated'))
     } catch (error) {
       console.error('Failed to create answer:', error)
+      logAction({
+        action: 'createAnswer',
+        success: false,
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        payload: { questionId: selectedQuestion.id },
+      })
       toast.error(tErrors('answerCreateError'))
     } finally {
       setIsSubmitting(false)
@@ -136,6 +151,12 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
       await declineQuestionMutation({
         id: questionToDecline.id,
         recipientClerkId: user.id,
+      })
+      logAction({
+        action: 'declineQuestion',
+        entityType: 'question',
+        entityId: questionToDecline.id,
+        success: true,
       })
 
       setDismissedQuestionIds((prev) => {
@@ -171,6 +192,13 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
       })
     } catch (error) {
       console.error('Failed to decline question:', error)
+      logAction({
+        action: 'declineQuestion',
+        entityType: 'question',
+        entityId: questionToDecline.id,
+        success: false,
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+      })
       toast.error(tErrors('questionDeleteError'))
     } finally {
       setIsDeclining(false)

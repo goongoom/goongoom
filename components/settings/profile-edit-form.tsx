@@ -23,6 +23,7 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import { api } from '@/convex/_generated/api'
+import { useLogCollector } from '@/hooks/use-log-collector'
 import { CHAR_LIMITS } from '@/lib/charLimits'
 import type { SignatureColor } from '@/lib/colors/signature-colors'
 import { QUESTION_SECURITY_LEVELS } from '@/lib/question-security'
@@ -190,6 +191,7 @@ export function ProfileEditForm({
   const { userId } = useAuth()
   const updateProfile = useMutation(api.users.updateProfile)
   const fetchNaverBlogTitleAction = useAction(api.users.fetchNaverBlogTitle)
+  const { logAction } = useLogCollector()
 
   const initialLinks = useMemo(() => parseInitialSocialLinks(initialSocialLinks), [initialSocialLinks])
 
@@ -207,13 +209,32 @@ export function ProfileEditForm({
   const saveProfile = useCallback(
     (data: { bio?: string | null; socialLinks?: SocialLinks | null; questionSecurityLevel?: string }) => {
       if (!userId) return
-      toast.promise(updateProfile({ clerkId: userId, ...data }), {
-        loading: t('saving'),
-        success: t('profileUpdated'),
-        error: (err) => err?.message || tErrors('genericError'),
-      })
+      toast.promise(
+        updateProfile({ clerkId: userId, ...data }).then((result) => {
+          logAction({
+            action: 'updateProfile',
+            entityType: 'user',
+            success: true,
+            payload: { fields: Object.keys(data) },
+          })
+          return result
+        }),
+        {
+          loading: t('saving'),
+          success: t('profileUpdated'),
+          error: (err) => {
+            logAction({
+              action: 'updateProfile',
+              entityType: 'user',
+              success: false,
+              errorMessage: err?.message || 'Unknown error',
+            })
+            return err?.message || tErrors('genericError')
+          },
+        }
+      )
     },
-    [t, tErrors, userId, updateProfile]
+    [t, tErrors, userId, updateProfile, logAction]
   )
 
   const handleBioBlur = useCallback(() => {

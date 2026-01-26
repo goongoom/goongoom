@@ -34,10 +34,12 @@ export default defineSchema({
     questionSecurityLevel: v.string(),
     locale: v.optional(v.string()),
     signatureColor: v.optional(v.string()),
+    referredByUserId: v.optional(v.id('users')),
     updatedAt: v.number(),
   })
     .index('by_clerk_id', ['clerkId'])
-    .index('by_username', ['username']),
+    .index('by_username', ['username'])
+    .index('by_referred_by', ['referredByUserId']),
 
   questions: defineTable({
     recipientClerkId: v.string(),
@@ -91,4 +93,21 @@ export default defineSchema({
     .index('by_user', ['userId'])
     .index('by_action', ['action'])
     .index('by_entity', ['entityType', 'entityId']),
+
+  referrals: defineTable({
+    referrerUserId: v.id('users'),
+    referrerUsername: v.string(),
+    referredUserId: v.id('users'),
+    referredClerkId: v.string(),
+    utmSource: v.optional(v.string()),
+    utmMedium: v.optional(v.string()),
+    utmCampaign: v.optional(v.string()),
+    utmTerm: v.optional(v.string()),
+    utmContent: v.optional(v.string()),
+    referralSource: v.string(),
+    createdAt: v.number(),
+  })
+    .index('by_referrer', ['referrerUserId'])
+    .index('by_referred', ['referredUserId'])
+    .index('by_referred_clerk_id', ['referredClerkId']),
 })

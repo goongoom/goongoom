@@ -3,6 +3,23 @@ import { internal } from './_generated/api'
 import { mutation, query } from './_generated/server'
 import { CHAR_LIMITS } from './charLimits'
 
+const ANSWER_PUSH_MESSAGES = {
+  ko: {
+    titleWithName: (name: string) => `${name}님이 답변했어요!`,
+    fallbackName: '누군가',
+  },
+  en: {
+    titleWithName: (name: string) => `${name} replied!`,
+    fallbackName: 'Someone',
+  },
+  ja: {
+    titleWithName: (name: string) => `${name}さんが回答しました！`,
+    fallbackName: '誰か',
+  },
+} as const
+
+type SupportedLocale = keyof typeof ANSWER_PUSH_MESSAGES
+
 export const create = mutation({
   args: {
     questionId: v.id('questions'),
@@ -37,17 +54,26 @@ export const create = mutation({
     await ctx.db.patch(args.questionId, { answerId })
 
     if (question.senderClerkId) {
-      const recipientUser = await ctx.db
+      const senderClerkId = question.senderClerkId
+
+      const answerAuthor = await ctx.db
         .query('users')
         .withIndex('by_clerk_id', (q) => q.eq('clerkId', question.recipientClerkId))
         .first()
 
-      const recipientName = recipientUser?.username ?? '누군가'
+      const senderUser = await ctx.db
+        .query('users')
+        .withIndex('by_clerk_id', (q) => q.eq('clerkId', senderClerkId))
+        .first()
+
+      const senderLocale = (senderUser?.locale ?? 'ko') as SupportedLocale
+      const messages = ANSWER_PUSH_MESSAGES[senderLocale] ?? ANSWER_PUSH_MESSAGES.ko
+      const authorName = answerAuthor?.username ?? messages.fallbackName
       const truncatedContent = args.content.length > 50 ? `${args.content.slice(0, 50)}...` : args.content
 
       await ctx.scheduler.runAfter(0, internal.pushActions.sendNotification, {
-        recipientClerkId: question.senderClerkId,
-        title: `${recipientName}님이 답변했어요!`,
+        recipientClerkId: senderClerkId,
+        title: messages.titleWithName(authorName),
         body: truncatedContent,
         url: '/sent',
         tag: `answer-${answerId}`,

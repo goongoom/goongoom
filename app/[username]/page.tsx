@@ -4,7 +4,7 @@ import { useAuth } from '@clerk/nextjs'
 import { useMutation, useQuery } from 'convex/react'
 import { useParams, useSearchParams } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { MainContent } from '@/components/layout/main-content'
 import { ProfileActions } from '@/components/profile/profile-actions'
 import { ProfileCard } from '@/components/profile/profile-card'
@@ -17,6 +17,7 @@ import { Ultralink } from '@/components/navigation/ultralink'
 import { usePrefetchQuestionRoutes } from '@/components/navigation/use-prefetch-question-routes'
 import { api } from '@/convex/_generated/api'
 import type { FunctionReturnType } from 'convex/server'
+import { useLogCollector } from '@/hooks/use-log-collector'
 import { DEFAULT_QUESTION_SECURITY_LEVEL } from '@/lib/question-security'
 
 type AnsweredQuestion = NonNullable<FunctionReturnType<typeof api.questions.getAnsweredByRecipient>>[number]
@@ -30,8 +31,31 @@ export default function UserProfilePage() {
   const username = params.username
   const { userId: viewerId } = useAuth()
 
+  useEffect(() => {
+    if (viewerId) return
+    if (document.cookie.includes('referral=')) return
+
+    const utmSource = searchParams.get('utm_source')
+    const utmMedium = searchParams.get('utm_medium')
+    const utmCampaign = searchParams.get('utm_campaign')
+    const utmTerm = searchParams.get('utm_term')
+    const utmContent = searchParams.get('utm_content')
+
+    const payload: Record<string, string> = { u: username }
+
+    if (utmSource) payload.s = utmSource
+    if (utmMedium) payload.m = utmMedium
+    if (utmCampaign) payload.c = utmCampaign
+    if (utmTerm) payload.t = utmTerm
+    if (utmContent) payload.n = utmContent
+
+    const cookieValue = encodeURIComponent(JSON.stringify(payload))
+    document.cookie = `referral=${cookieValue}; path=/; max-age=604800; SameSite=Lax`
+  }, [viewerId, username, searchParams])
+
   const locale = useLocale()
   const createQuestion = useMutation(api.questions.create)
+  const { logAction } = useLogCollector()
 
   const t = useTranslations('questions')
   const tCommon = useTranslations('common')
@@ -106,19 +130,33 @@ export default function UserProfilePage() {
 
       const isAnonymous = questionType !== 'public'
       try {
-        await createQuestion({
+        const result = await createQuestion({
           recipientClerkId,
           senderClerkId: viewerId ?? undefined,
           content,
           isAnonymous,
           anonymousAvatarSeed: isAnonymous && avatarSeed ? avatarSeed : undefined,
         })
+        logAction({
+          action: 'createQuestion',
+          entityType: 'question',
+          entityId: result?._id,
+          success: true,
+          payload: { recipientClerkId, isAnonymous },
+        })
         return { success: true, error: undefined }
       } catch (err) {
-        return { success: false, error: err instanceof Error ? err.message : tErrors('genericError') }
+        const errorMessage = err instanceof Error ? err.message : tErrors('genericError')
+        logAction({
+          action: 'createQuestion',
+          success: false,
+          errorMessage,
+          payload: { recipientClerkId, isAnonymous },
+        })
+        return { success: false, error: errorMessage }
       }
     },
-    [recipientClerkId, viewerId, createQuestion, tErrors]
+    [recipientClerkId, viewerId, createQuestion, tErrors, logAction]
   )
 
   const isAnswersLoading = answeredQuestions === undefined

@@ -310,6 +310,7 @@
     "mockTimeNow": "now",
     "mockTime2m": "2m",
     "mockTime5m": "5m",
-    "mockTime8m": "8m"
+    "mockTime8m": "8m",
+    "mockSenderName": "Minju"
   }
 }

@@ -310,6 +310,7 @@
     "mockTimeNow": "지금",
     "mockTime2m": "2분 전",
     "mockTime5m": "5분 전",
-    "mockTime8m": "8분 전"
+    "mockTime8m": "8분 전",
+    "mockSenderName": "민주"
   }
 }

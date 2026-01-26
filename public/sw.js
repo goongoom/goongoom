@@ -26,7 +26,7 @@ self.addEventListener('push', (event) => {
     requireInteraction: false,
   }
 
-  event.waitUntil(self.registration.showNotification(title || '궁금닷컴', options))
+  event.waitUntil(self.registration.showNotification(title || 'Goongoom', options))
 })
 
 self.addEventListener('notificationclick', (event) => {

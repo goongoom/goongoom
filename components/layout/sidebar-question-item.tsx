@@ -22,6 +22,7 @@ import { SidebarMenuButton } from '@/components/ui/sidebar'
 import { Textarea } from '@/components/ui/textarea'
 import { api } from '@/convex/_generated/api'
 import type { Id } from '@/convex/_generated/dataModel'
+import { useLogCollector } from '@/hooks/use-log-collector'
 import { CHAR_LIMITS } from '@/lib/charLimits'
 import { cn } from '@/lib/utils'
 
@@ -48,20 +49,34 @@ export function SidebarQuestionItem({ question }: SidebarQuestionItemProps) {
   const [answer, setAnswer] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const createAnswer = useMutation(api.answers.create)
+  const { logAction } = useLogCollector()
 
   async function handleSubmit() {
     if (!answer.trim() || isSubmitting) return
 
     setIsSubmitting(true)
     try {
-      await createAnswer({
+      const result = await createAnswer({
         questionId: question.id as Id<'questions'>,
         content: answer.trim(),
+      })
+      logAction({
+        action: 'createAnswer',
+        entityType: 'answer',
+        entityId: result?._id,
+        success: true,
+        payload: { questionId: question.id },
       })
       setAnswer('')
       setOpen(false)
       router.refresh()
     } catch (err) {
+      logAction({
+        action: 'createAnswer',
+        success: false,
+        errorMessage: err instanceof Error ? err.message : 'Unknown error',
+        payload: { questionId: question.id },
+      })
       toast.error(err instanceof Error ? err.message : tErrors('genericError'))
     } finally {
       setIsSubmitting(false)

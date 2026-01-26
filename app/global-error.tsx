@@ -39,7 +39,7 @@ const translations = {
 type Locale = keyof typeof translations
 
 function getLocale(): Locale {
-  if (typeof document === 'undefined') return 'ko'
+  if (typeof document === 'undefined') return 'en'
 
   const cookieMatch = document.cookie.match(/NEXT_LOCALE=([^;]+)/)
   const cookieLocale = cookieMatch?.[1]
@@ -53,7 +53,7 @@ function getLocale(): Locale {
     if (lang.startsWith('ja')) return 'ja'
   }
 
-  return 'ko'
+  return 'en'
 }
 
 function clearAllData(): void {

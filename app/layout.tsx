@@ -1,9 +1,9 @@
 import { enUS, jaJP, koKR } from '@clerk/localizations'
 import { ClerkProvider } from '@clerk/nextjs'
 import type { Metadata, Viewport } from 'next'
+import { cookies } from 'next/headers'
 import localFont from 'next/font/local'
-import { NextIntlClientProvider } from 'next-intl'
-import { getMessages, getTranslations } from 'next-intl/server'
+import { getTranslations } from 'next-intl/server'
 import Script from 'next/script'
 import { ConvexClientProvider } from '@/app/ConvexClientProvider'
 import { Providers } from '@/components/providers'
@@ -49,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export const viewport: Viewport = {
   viewportFit: 'cover',
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#0ea5e9' },
+    { media: '(prefers-color-scheme: light)', color: '#E1306C' },
     { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
   ],
 }
@@ -60,16 +60,38 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const locale = await getUserLocale()
-  const messages = await getMessages()
+
+  // Read referral cookie server-side
+  let signUpUnsafeMetadata: Record<string, string> | undefined
+  try {
+    const cookieStore = await cookies()
+    const referralRaw = cookieStore.get('referral')?.value
+
+    if (referralRaw) {
+      const referralData = JSON.parse(decodeURIComponent(referralRaw))
+      signUpUnsafeMetadata = {
+        referrerUsername: referralData.u,
+        utmSource: referralData.s,
+        utmMedium: referralData.m,
+        utmCampaign: referralData.c,
+        utmTerm: referralData.t,
+        utmContent: referralData.n,
+      }
+    }
+  } catch (err) {
+    console.warn('Failed to parse referral cookie:', err)
+  }
 
   return (
-    <ClerkProvider localization={clerkLocalizations[locale]}>
+    <ClerkProvider
+      localization={clerkLocalizations[locale]}
+      // @ts-ignore - signUpUnsafeMetadata is a custom prop for referral tracking
+      signUpUnsafeMetadata={signUpUnsafeMetadata}
+    >
       <html className={`${lineSeedKR.variable} ${lineSeedJP.variable}`} lang={locale} suppressHydrationWarning>
         <body className="bg-background font-sans antialiased">
           <ConvexClientProvider>
-            <NextIntlClientProvider locale={locale} messages={messages}>
-              <Providers>{children}</Providers>
-            </NextIntlClientProvider>
+            <Providers initialLocale={locale}>{children}</Providers>
           </ConvexClientProvider>
           <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />
           <Script src="/_vercel/speed-insights/script.js" strategy="afterInteractive" />

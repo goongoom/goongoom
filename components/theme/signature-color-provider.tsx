@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { getSignatureColor, isValidSignatureColor } from '@/lib/colors/signature-colors'
 
 interface SignatureColorContextValue {
@@ -18,6 +18,29 @@ export function useSignatureColor() {
   return context
 }
 
+let nextRegistryId = 0
+const metaThemeRegistry = new Map<number, string>()
+
+function applyMetaThemeColor() {
+  if (typeof document === 'undefined' || metaThemeRegistry.size === 0) return
+  const maxId = Math.max(...metaThemeRegistry.keys())
+  const color = metaThemeRegistry.get(maxId)
+  if (!color) return
+
+  const lightMeta = document.querySelector('meta[name="theme-color"][media="(prefers-color-scheme: light)"]')
+  if (lightMeta) lightMeta.setAttribute('content', color)
+}
+
+function registerMetaTheme(id: number, color: string) {
+  metaThemeRegistry.set(id, color)
+  applyMetaThemeColor()
+}
+
+function unregisterMetaTheme(id: number) {
+  metaThemeRegistry.delete(id)
+  applyMetaThemeColor()
+}
+
 interface SignatureColorProviderProps {
   children?: React.ReactNode
   signatureColor: string | null | undefined
@@ -26,6 +49,10 @@ interface SignatureColorProviderProps {
 export function SignatureColorProvider({ children, signatureColor: initialColor }: SignatureColorProviderProps) {
   const [mounted, setMounted] = useState(false)
   const [signatureColor, setSignatureColorState] = useState(initialColor)
+  const registryId = useRef(-1)
+  if (registryId.current === -1) {
+    registryId.current = nextRegistryId++
+  }
 
   useEffect(() => {
     setMounted(true)
@@ -34,6 +61,14 @@ export function SignatureColorProvider({ children, signatureColor: initialColor 
   useEffect(() => {
     setSignatureColorState(initialColor)
   }, [initialColor])
+
+  useEffect(() => {
+    const colors = getSignatureColor(signatureColor)
+    registerMetaTheme(registryId.current, colors.light.primary)
+    return () => {
+      unregisterMetaTheme(registryId.current)
+    }
+  }, [signatureColor])
 
   const setSignatureColor = useCallback((color: string) => {
     setSignatureColorState(color)
