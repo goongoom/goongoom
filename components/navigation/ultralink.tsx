@@ -2,7 +2,7 @@
 
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
-import type { ComponentProps, MouseEvent } from 'react'
+import type { ComponentProps, FocusEvent, MouseEvent, TouchEvent } from 'react'
 import { imageCache, prefetchImage } from './prefetch-cache'
 import { useUltralink } from './use-ultralink'
 
@@ -15,32 +15,49 @@ interface UltralinkProps extends NextLinkProps {
 
 export function Ultralink({
   children,
+  prefetch = true,
   prefetchImages = [],
   prefetchDebounce = 300,
+  onFocus,
   onMouseEnter,
   onMouseDown,
   onNavigate,
+  onTouchStart,
   ...props
 }: UltralinkProps) {
   const router = useRouter()
   const href = String(props.href)
 
+  const shouldPrefetch = prefetch !== false
   const ref = useUltralink({
     href,
-    prefetch: props.prefetch !== false,
+    prefetch: shouldPrefetch,
     prefetchImages,
     debounceMs: prefetchDebounce,
   })
 
-  const handleMouseEnter = (e: MouseEvent<HTMLAnchorElement>) => {
+  const prefetchAssets = () => {
+    if (!shouldPrefetch) {
+      return
+    }
+
     router.prefetch(href)
 
     const cachedImages = imageCache.get(href) || prefetchImages
     for (const src of cachedImages) {
       prefetchImage(src)
     }
+  }
+
+  const handleMouseEnter = (e: MouseEvent<HTMLAnchorElement>) => {
+    prefetchAssets()
 
     onMouseEnter?.(e)
+  }
+
+  const handleFocus = (e: FocusEvent<HTMLAnchorElement>) => {
+    prefetchAssets()
+    onFocus?.(e)
   }
 
   const handleMouseDown = (e: MouseEvent<HTMLAnchorElement>) => {
@@ -60,6 +77,11 @@ export function Ultralink({
     onMouseDown?.(e)
   }
 
+  const handleTouchStart = (e: TouchEvent<HTMLAnchorElement>) => {
+    prefetchAssets()
+    onTouchStart?.(e)
+  }
+
   const handleNavigate = (e: Parameters<NonNullable<NextLinkProps['onNavigate']>>[0]) => {
     document.documentElement.dataset.navDirection = 'forward'
     onNavigate?.(e)
@@ -67,10 +89,12 @@ export function Ultralink({
 
   return (
     <NextLink
+      onFocus={handleFocus}
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
       onNavigate={handleNavigate}
-      prefetch={false}
+      onTouchStart={handleTouchStart}
+      prefetch={shouldPrefetch}
       ref={ref}
       {...props}
     >

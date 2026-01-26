@@ -56,12 +56,6 @@ export function usePrefetchRoutes(routes: readonly string[], options: UsePrefetc
       return
     }
 
-    if ('requestIdleCallback' in window) {
-      const id = requestIdleCallback(prefetchRoutes, { timeout: 2000 })
-      return () => cancelIdleCallback(id)
-    }
-
-    const id = setTimeout(prefetchRoutes, 100)
-    return () => clearTimeout(id)
+    prefetchRoutes()
   }, [enabled, isLoaded, isSignedIn, pathname, router, routes])
 }

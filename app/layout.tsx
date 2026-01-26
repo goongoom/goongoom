@@ -2,7 +2,8 @@ import { enUS, jaJP, koKR } from '@clerk/localizations'
 import { ClerkProvider } from '@clerk/nextjs'
 import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
-import { getTranslations } from 'next-intl/server'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages, getTranslations } from 'next-intl/server'
 import Script from 'next/script'
 import { ConvexClientProvider } from '@/app/ConvexClientProvider'
 import { Providers } from '@/components/providers'
@@ -59,13 +60,16 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const locale = await getUserLocale()
+  const messages = await getMessages()
 
   return (
     <ClerkProvider localization={clerkLocalizations[locale]}>
-        <html className={`${lineSeedKR.variable} ${lineSeedJP.variable}`} lang={locale} suppressHydrationWarning>
+      <html className={`${lineSeedKR.variable} ${lineSeedJP.variable}`} lang={locale} suppressHydrationWarning>
         <body className="bg-background font-sans antialiased">
           <ConvexClientProvider>
-            <Providers>{children}</Providers>
+            <NextIntlClientProvider locale={locale} messages={messages}>
+              <Providers>{children}</Providers>
+            </NextIntlClientProvider>
           </ConvexClientProvider>
           <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />
           <Script src="/_vercel/speed-insights/script.js" strategy="afterInteractive" />

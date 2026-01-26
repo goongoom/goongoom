@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 import { MainContent } from '@/components/layout/main-content'
 import { AnsweredQuestionCard } from '@/components/questions/answered-question-card'
+import { usePrefetchQuestionRoutes } from '@/components/navigation/use-prefetch-question-routes'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { api } from '@/convex/_generated/api'
 import type { FunctionReturnType } from 'convex/server'
@@ -31,6 +32,14 @@ export default function FriendsPage() {
   )
 
   const isDataLoading = friendsAnswers === undefined
+  const prefetchQuestionRoutes = useMemo(() => {
+    if (!friendsAnswers || friendsAnswers.length === 0) return []
+    return friendsAnswers
+      .slice(0, 6)
+      .map((qa: FriendsAnswer) => `/${qa.recipientUsername || qa.recipientClerkId}/q/${qa.question._id}`)
+  }, [friendsAnswers])
+
+  usePrefetchQuestionRoutes(prefetchQuestionRoutes, !isAuthLoading && !isDataLoading)
 
   if (!isAuthLoading && !isAuthenticated) {
     return null

@@ -13,9 +13,7 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { PasskeySignInButton } from '@/components/auth/passkey-sign-in-button'
-import { GUEST_TAB_ROUTES, TAB_ROUTES } from '@/components/navigation/navigation-routes'
 import { Ultralink } from '@/components/navigation/ultralink'
-import { usePrefetchRoutes } from '@/components/navigation/use-prefetch-routes'
 import { cn } from '@/lib/utils'
 
 const guestTabItems = [
@@ -66,7 +64,6 @@ export function MobileTabBar({ isLoggedIn = false }: MobileTabBarProps) {
   ]
 
   const tabItems = isLoggedIn ? loggedInTabItems : guestTabItems
-  usePrefetchRoutes(isLoggedIn ? TAB_ROUTES : GUEST_TAB_ROUTES)
 
   const isActive = (href: string) => {
     if (href === '/') {

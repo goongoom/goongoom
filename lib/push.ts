@@ -1,6 +1,7 @@
 import webpush from 'web-push'
-import { env } from '@/env'
+import { getServerEnv } from '@/env'
 
+const env = getServerEnv()
 const vapidPublicKey = env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
 const vapidPrivateKey = env.VAPID_PRIVATE_KEY
 const vapidSubject = env.VAPID_SUBJECT

@@ -8,10 +8,11 @@ import { useCallback, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { useIsClient } from 'usehooks-ts'
 import { api } from '@/convex/_generated/api'
+import { clientEnv } from '@/env'
 import { Button } from '../ui/button'
 import { Switch } from '../ui/switch'
 
-const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+const VAPID_PUBLIC_KEY = clientEnv.NEXT_PUBLIC_VAPID_PUBLIC_KEY
 
 type PermissionState = 'granted' | 'denied' | 'default'
 

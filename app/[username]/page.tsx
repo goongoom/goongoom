@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Empty, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { ToastOnMount } from '@/components/ui/toast-on-mount'
 import { Ultralink } from '@/components/navigation/ultralink'
+import { usePrefetchQuestionRoutes } from '@/components/navigation/use-prefetch-question-routes'
 import { api } from '@/convex/_generated/api'
 import type { FunctionReturnType } from 'convex/server'
 import { DEFAULT_QUESTION_SECURITY_LEVEL } from '@/lib/question-security'
@@ -121,6 +122,14 @@ export default function UserProfilePage() {
   )
 
   const isAnswersLoading = answeredQuestions === undefined
+  const prefetchQuestionRoutes = useMemo(() => {
+    if (!recipientUsername || questionsWithAnswers.length === 0) return []
+    return questionsWithAnswers
+      .slice(0, 6)
+      .map((qa) => `/${recipientUsername}/q/${qa._id}`)
+  }, [questionsWithAnswers, recipientUsername])
+
+  usePrefetchQuestionRoutes(prefetchQuestionRoutes, !isLoading && !isAnswersLoading)
 
   if (dbUser === null) {
     return (

@@ -18,9 +18,7 @@ import { useTranslations } from 'next-intl'
 import type * as React from 'react'
 import { PasskeySignInButton } from '@/components/auth/passkey-sign-in-button'
 import { SidebarQuestionItem } from '@/components/layout/sidebar-question-item'
-import { GUEST_TAB_ROUTES, TAB_ROUTES } from '@/components/navigation/navigation-routes'
 import { Ultralink } from '@/components/navigation/ultralink'
-import { usePrefetchRoutes } from '@/components/navigation/use-prefetch-routes'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Logo } from '@/components/ui/logo'
 import {
@@ -56,8 +54,6 @@ export function AppSidebar({ recentQuestions = [], ...props }: AppSidebarProps) 
   const tFooter = useTranslations('footer')
   const pathname = usePathname()
   const { user } = useUser()
-
-  usePrefetchRoutes(user ? TAB_ROUTES : GUEST_TAB_ROUTES)
 
   const loggedInNavItems = [
     {
