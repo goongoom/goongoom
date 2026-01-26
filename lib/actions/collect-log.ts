@@ -4,6 +4,7 @@ import { auth } from '@clerk/nextjs/server'
 import { geolocation, ipAddress } from '@vercel/functions'
 import { fetchMutation } from 'convex/nextjs'
 import { headers } from 'next/headers'
+import { after } from 'next/server'
 import { api } from '@/convex/_generated/api'
 
 interface CollectLogData {
@@ -26,7 +27,7 @@ export async function collectLog(data: CollectLogData): Promise<void> {
     const geo = geolocation(request)
     const { userId } = await auth()
 
-    await fetchMutation(api.logs.create, {
+    const payload = {
       ipAddress: ipAddress(request) ?? undefined,
       geoCity: geo.city ?? undefined,
       geoCountry: geo.country ?? undefined,
@@ -46,6 +47,14 @@ export async function collectLog(data: CollectLogData): Promise<void> {
       entityId: data.entityId,
       success: data.success,
       errorMessage: data.errorMessage,
+    }
+
+    after(async () => {
+      try {
+        await fetchMutation(api.logs.create, payload)
+      } catch (error) {
+        console.error('[Log Collector] Failed to collect log:', error)
+      }
     })
   } catch (error) {
     console.error('[Log Collector] Failed to collect log:', error)

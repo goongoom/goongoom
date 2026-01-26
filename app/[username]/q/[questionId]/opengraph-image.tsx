@@ -49,14 +49,15 @@ export default async function Image({ params }: PageProps) {
   const themeCookie = cookieStore.get('theme')?.value
   const isDark = themeCookie === 'dark'
 
-  const [fontRegular, fontBold, fontJpRegular, fontJpBold] = await Promise.all([
+  const dbUserPromise = fetchQuery(api.users.getByUsername, { username })
+  const [fontRegular, fontBold, fontJpRegular, fontJpBold, dbUser] = await Promise.all([
     fontRegularPromise,
     fontBoldPromise,
     fontJpRegularPromise,
     fontJpBoldPromise,
+    dbUserPromise,
   ])
 
-  const dbUser = await fetchQuery(api.users.getByUsername, { username })
   if (!dbUser) {
     const defaultColors = getSignatureColor(null)
     return new ImageResponse(

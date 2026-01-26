@@ -1,8 +1,5 @@
-'use client'
-
 export const dynamic = 'force-static'
 
-import { SignUpButton, useUser } from '@clerk/nextjs'
 import {
   AnonymousIcon,
   Rocket01Icon,
@@ -12,15 +9,10 @@ import {
   MessageQuestionIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { useQuery } from 'convex-helpers/react/cache/hooks'
-import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
-import { HomeCTAButtons } from '@/components/home/home-cta-buttons'
+import { getTranslations } from 'next-intl/server'
+import { HomeHeroActions } from '@/components/home/home-hero-actions'
+import { HomeSignUpButton } from '@/components/home/home-signup-button'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
-import { api } from '@/convex/_generated/api'
 
 const features = [
   { icon: AnonymousIcon, key: 'feature1' },
@@ -34,63 +26,12 @@ const useCases = [
   { icon: MessageQuestionIcon, key: 'useCase3' },
 ]
 
-export default function Home() {
-  const t = useTranslations('landing')
-  const tCommon = useTranslations('common')
-  const tProfile = useTranslations('profile')
-  const { user, isLoaded: isUserLoaded } = useUser()
-  const router = useRouter()
-
-  const answerCount = useQuery(api.answers.count, {})
-
-  useEffect(() => {
-    if (isUserLoaded && user?.username) {
-      router.prefetch(`/${user.username}`)
-      router.replace(`/${user.username}`)
-    }
-  }, [isUserLoaded, user, router])
-
-  const isRedirecting = isUserLoaded && !!user?.username
-  const isLoading = answerCount === undefined || isRedirecting
-
-  if (isLoading) {
-    return (
-      <div className="flex flex-col bg-background">
-        <section className="relative overflow-hidden py-16 md:py-24">
-          <div className="mx-auto max-w-4xl px-6">
-            <div className="mx-auto max-w-2xl text-center">
-              <Skeleton className="mx-auto mb-6 h-6 w-48" />
-              <Skeleton className="mx-auto h-12 w-72" />
-              <Skeleton className="mx-auto mt-2 h-12 w-56" />
-              <Skeleton className="mx-auto mt-6 h-5 w-full max-w-md" />
-              <Skeleton className="mx-auto mt-2 h-5 w-80" />
-              <div className="mt-10 flex justify-center gap-4">
-                <Skeleton className="h-14 w-36 rounded-full" />
-                <Skeleton className="h-14 w-24 rounded-full" />
-              </div>
-              <Skeleton className="mx-auto mt-8 h-5 w-48" />
-            </div>
-          </div>
-        </section>
-
-        <section className="border-t bg-muted/30 py-16">
-          <div className="mx-auto max-w-4xl px-6">
-            <Skeleton className="mx-auto mb-4 h-8 w-40" />
-            <Skeleton className="mx-auto mb-12 h-5 w-64" />
-            <div className="grid gap-6 md:grid-cols-3">
-              {[1, 2, 3].map((n) => (
-                <div key={n} className="relative rounded-2xl border bg-card p-6">
-                  <Skeleton className="absolute -top-4 left-6 size-8 rounded-full" />
-                  <Skeleton className="mt-4 h-6 w-28" />
-                  <Skeleton className="mt-2 h-4 w-full" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </div>
-    )
-  }
+export default async function Home() {
+  const [t, tCommon, tProfile] = await Promise.all([
+    getTranslations('landing'),
+    getTranslations('common'),
+    getTranslations('profile'),
+  ])
 
   return (
     <div className="flex flex-col bg-background">
@@ -118,16 +59,12 @@ export default function Home() {
             </p>
 
             <div className="mt-10">
-              <HomeCTAButtons
+              <HomeHeroActions
                 startLabel={tCommon('start')}
                 loginLabel={tCommon('login')}
-                isLoggedIn={isUserLoaded && !!user}
                 profileLabel={tProfile('myProfile')}
-                profileUrl={user?.username ? `/${user.username}` : undefined}
               />
             </div>
-
-            <p className="mt-8 text-sm text-muted-foreground">{t('trustIndicator', { count: answerCount })}</p>
           </div>
         </div>
       </section>
@@ -214,11 +151,7 @@ export default function Home() {
               </div>
 
               <div className="mt-8">
-                <SignUpButton mode="modal">
-                  <Button size="lg" className="h-11 rounded-full px-6">
-                    {t('ctaButton')}
-                  </Button>
-                </SignUpButton>
+                <HomeSignUpButton label={t('ctaButton')} />
               </div>
             </div>
 
@@ -264,11 +197,7 @@ export default function Home() {
           <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">{t('ctaTitle')}</h2>
           <p className="mx-auto mt-3 max-w-md text-zinc-400">{t('ctaSubtitle')}</p>
           <div className="mt-8">
-            <SignUpButton mode="modal">
-              <Button size="lg" className="h-11 rounded-full bg-white px-6 text-zinc-900 hover:bg-zinc-100">
-                {t('ctaButton')}
-              </Button>
-            </SignUpButton>
+            <HomeSignUpButton label={t('ctaButton')} className="bg-white text-zinc-900 hover:bg-zinc-100" />
           </div>
         </div>
       </section>

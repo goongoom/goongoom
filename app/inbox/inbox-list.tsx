@@ -8,7 +8,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { enUS, ko } from 'date-fns/locale'
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -54,6 +54,68 @@ interface InboxListProps {
 
 const localeMap = { ko, en: enUS } as const
 
+interface InboxListItemProps {
+  question: QuestionItem
+  onSelect: (question: QuestionItem) => void
+  anonymousLabel: string
+  dateLocale: (typeof localeMap)[keyof typeof localeMap]
+}
+
+const InboxListItem = memo(function InboxListItem({
+  question,
+  onSelect,
+  anonymousLabel,
+  dateLocale,
+}: InboxListItemProps) {
+  const senderLabel = question.isAnonymous ? anonymousLabel : question.senderName
+
+  return (
+    <button
+      className="group w-full rounded-2xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      onClick={() => onSelect(question)}
+      type="button"
+    >
+      <div className="content-auto flex items-start gap-4 rounded-2xl border border-border/50 bg-background p-4 transition-all group-active:scale-[0.98]">
+        <div className="relative flex-shrink-0">
+          <Avatar className="size-12 ring-2 ring-background">
+            <AvatarImage alt={question.senderName} src={getQuestionAvatarUrl(question)} />
+            <AvatarFallback className="bg-gradient-to-br from-muted to-muted/50 font-semibold text-muted-foreground">
+              {question.senderName[0] || '?'}
+            </AvatarFallback>
+          </Avatar>
+          <div className="absolute -right-0.5 -bottom-0.5 flex size-5 items-center justify-center rounded-full ring-2 ring-background bg-gradient-to-br from-emerald to-emerald/80">
+            <HugeiconsIcon
+              className="size-3 text-white"
+              icon={question.isAnonymous ? AnonymousIcon : UserIcon}
+              strokeWidth={2.5}
+            />
+          </div>
+        </div>
+
+        <div className="min-w-0 flex-1 space-y-1.5">
+          <p className="line-clamp-2 whitespace-pre-line font-medium text-foreground leading-relaxed">
+            {question.content}
+          </p>
+          <div className="flex items-center gap-2 text-muted-foreground text-xs">
+            <span className="font-medium text-emerald">{senderLabel}</span>
+            <span className="text-muted-foreground/60">·</span>
+            <span>
+              {formatDistanceToNow(question.createdAt, {
+                addSuffix: true,
+                locale: dateLocale,
+              })}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-all group-hover:bg-emerald group-hover:text-emerald-foreground">
+          <HugeiconsIcon className="size-5" icon={ArrowRight01Icon} strokeWidth={2} />
+        </div>
+      </div>
+    </button>
+  )
+})
+
 export function InboxList({ questions, isLoading }: InboxListProps) {
   const t = useTranslations('answers')
   const tCommon = useTranslations('common')
@@ -76,13 +138,18 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
   const [isDeclining, setIsDeclining] = useState(false)
   const [shouldRefreshOnClose, setShouldRefreshOnClose] = useState(false)
 
-  const visibleQuestions = questions.filter((question) => !dismissedQuestionIds.has(question.id))
+  const visibleQuestions = useMemo(
+    () => questions.filter((question) => !dismissedQuestionIds.has(question.id)),
+    [dismissedQuestionIds, questions]
+  )
+  const anonymousLabel = tCommon('anonymous')
+  const dateLocale = localeMap[locale as keyof typeof localeMap] ?? enUS
 
-  function handleQuestionClick(question: QuestionItem) {
+  const handleQuestionClick = useCallback((question: QuestionItem) => {
     setSelectedQuestion(question)
     setAnswer('')
     setIsDrawerOpen(true)
-  }
+  }, [])
 
   function handleDrawerAnimationEnd(open: boolean) {
     if (!open) {
@@ -236,56 +303,13 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
     <>
       <div className="space-y-3">
         {visibleQuestions.map((question) => (
-          <button
-            className="group w-full rounded-2xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          <InboxListItem
+            anonymousLabel={anonymousLabel}
+            dateLocale={dateLocale}
             key={question.id}
-            onClick={() => handleQuestionClick(question)}
-            type="button"
-          >
-            <div className="flex items-start gap-4 rounded-2xl border border-border/50 bg-background p-4 transition-all group-active:scale-[0.98]">
-              <div className="relative flex-shrink-0">
-                <Avatar className="size-12 ring-2 ring-background">
-                  <AvatarImage alt={question.senderName} src={getQuestionAvatarUrl(question)} />
-                  <AvatarFallback className="bg-gradient-to-br from-muted to-muted/50 font-semibold text-muted-foreground">
-                    {question.senderName[0] || '?'}
-                  </AvatarFallback>
-                </Avatar>
-                <div
-                  className={`absolute -right-0.5 -bottom-0.5 flex size-5 items-center justify-center rounded-full ring-2 ring-background ${
-                    question.isAnonymous
-                      ? 'bg-gradient-to-br from-emerald to-emerald/80'
-                      : 'bg-gradient-to-br from-emerald to-emerald/80'
-                  }`}
-                >
-                  <HugeiconsIcon
-                    className="size-3 text-white"
-                    icon={question.isAnonymous ? AnonymousIcon : UserIcon}
-                    strokeWidth={2.5}
-                  />
-                </div>
-              </div>
-
-              <div className="min-w-0 flex-1 space-y-1.5">
-                <p className="line-clamp-2 whitespace-pre-line font-medium text-foreground leading-relaxed">{question.content}</p>
-                <div className="flex items-center gap-2 text-muted-foreground text-xs">
-                  <span className={`font-medium ${question.isAnonymous ? 'text-emerald' : 'text-emerald'}`}>
-                    {question.isAnonymous ? tCommon('anonymous') : question.senderName}
-                  </span>
-                  <span className="text-muted-foreground/60">·</span>
-                  <span>
-                    {formatDistanceToNow(question.createdAt, {
-                      addSuffix: true,
-                      locale: localeMap[locale as keyof typeof localeMap] ?? enUS,
-                    })}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-all group-hover:bg-emerald group-hover:text-emerald-foreground">
-                <HugeiconsIcon className="size-5" icon={ArrowRight01Icon} strokeWidth={2} />
-              </div>
-            </div>
-          </button>
+            onSelect={handleQuestionClick}
+            question={question}
+          />
         ))}
       </div>
 

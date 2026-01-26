@@ -51,36 +51,42 @@ export const create = mutation({
       content: args.content,
     })
 
-    await ctx.db.patch(args.questionId, { answerId })
+    const patchPromise = ctx.db.patch(args.questionId, { answerId })
 
     if (question.senderClerkId) {
       const senderClerkId = question.senderClerkId
 
-      const answerAuthor = await ctx.db
+      const answerAuthorPromise = ctx.db
         .query('users')
         .withIndex('by_clerk_id', (q) => q.eq('clerkId', question.recipientClerkId))
         .first()
 
-      const senderUser = await ctx.db
+      const senderUserPromise = ctx.db
         .query('users')
         .withIndex('by_clerk_id', (q) => q.eq('clerkId', senderClerkId))
         .first()
 
+      const [answerAuthor, senderUser] = await Promise.all([answerAuthorPromise, senderUserPromise, patchPromise])
+
       const senderLocale = (senderUser?.locale ?? 'ko') as SupportedLocale
       const messages = ANSWER_PUSH_MESSAGES[senderLocale] ?? ANSWER_PUSH_MESSAGES.ko
       const authorName = answerAuthor?.username ?? messages.fallbackName
+      const authorUsername = answerAuthor?.username
       const truncatedContent = args.content.length > 50 ? `${args.content.slice(0, 50)}...` : args.content
+      const notificationUrl = authorUsername ? `/${authorUsername}/q/${question._id}` : '/friends'
 
       await ctx.scheduler.runAfter(0, internal.pushActions.sendNotification, {
         recipientClerkId: senderClerkId,
         title: messages.titleWithName(authorName),
         body: truncatedContent,
-        url: '/sent',
+        url: notificationUrl,
         tag: `answer-${answerId}`,
       })
+    } else {
+      await patchPromise
     }
 
-    return await ctx.db.get(answerId)
+    return ctx.db.get(answerId)
   },
 })
 
@@ -277,38 +283,39 @@ export const getFriendsAnswers = query({
 
     const friendIds = new Set<string>()
 
-    const receivedQuestions = await ctx.db
-      .query('questions')
-      .withIndex('by_recipient', (q) => q.eq('recipientClerkId', args.clerkId))
-      .filter((q) =>
-        q.and(
-          q.eq(q.field('isAnonymous'), false),
-          q.neq(q.field('answerId'), undefined),
-          q.neq(q.field('answerId'), null),
-          q.neq(q.field('senderClerkId'), undefined),
-          q.eq(q.field('deletedAt'), undefined)
+    const [receivedQuestions, sentQuestions] = await Promise.all([
+      ctx.db
+        .query('questions')
+        .withIndex('by_recipient', (q) => q.eq('recipientClerkId', args.clerkId))
+        .filter((q) =>
+          q.and(
+            q.eq(q.field('isAnonymous'), false),
+            q.neq(q.field('answerId'), undefined),
+            q.neq(q.field('answerId'), null),
+            q.neq(q.field('senderClerkId'), undefined),
+            q.eq(q.field('deletedAt'), undefined)
+          )
         )
-      )
-      .collect()
+        .collect(),
+      ctx.db
+        .query('questions')
+        .withIndex('by_sender', (q) => q.eq('senderClerkId', args.clerkId))
+        .filter((q) =>
+          q.and(
+            q.eq(q.field('isAnonymous'), false),
+            q.neq(q.field('answerId'), undefined),
+            q.neq(q.field('answerId'), null),
+            q.eq(q.field('deletedAt'), undefined)
+          )
+        )
+        .collect(),
+    ])
 
     for (const question of receivedQuestions) {
       if (question.senderClerkId && question.senderClerkId !== args.clerkId) {
         friendIds.add(question.senderClerkId)
       }
     }
-
-    const sentQuestions = await ctx.db
-      .query('questions')
-      .withIndex('by_sender', (q) => q.eq('senderClerkId', args.clerkId))
-      .filter((q) =>
-        q.and(
-          q.eq(q.field('isAnonymous'), false),
-          q.neq(q.field('answerId'), undefined),
-          q.neq(q.field('answerId'), null),
-          q.eq(q.field('deletedAt'), undefined)
-        )
-      )
-      .collect()
 
     for (const question of sentQuestions) {
       if (question.recipientClerkId !== args.clerkId) {

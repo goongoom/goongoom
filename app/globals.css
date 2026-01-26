@@ -308,6 +308,11 @@
     }
   }
 
+  .content-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 100px;
+  }
+
   .hover-lift {
     transition:
       transform 0.2s cubic-bezier(0, 0, 0.2, 1),

@@ -3,6 +3,7 @@
 import { useAuth } from '@clerk/nextjs'
 import { useQuery } from 'convex-helpers/react/cache/hooks'
 import { useMutation } from 'convex/react'
+import dynamic from 'next/dynamic'
 import { useParams, useSearchParams } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -10,7 +11,6 @@ import { MainContent } from '@/components/layout/main-content'
 import { ProfileActions } from '@/components/profile/profile-actions'
 import { ProfileCard } from '@/components/profile/profile-card'
 import { AnsweredQuestionCard } from '@/components/questions/answered-question-card'
-import { QuestionDrawer } from '@/components/questions/question-drawer'
 import { Button } from '@/components/ui/button'
 import { Empty, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { ToastOnMount } from '@/components/ui/toast-on-mount'
@@ -25,6 +25,11 @@ type AnsweredQuestion = NonNullable<FunctionReturnType<typeof api.questions.getA
 type AnsweredQuestionWithAnswer = AnsweredQuestion & { answer: NonNullable<AnsweredQuestion['answer']> }
 type QuestionWithFirstAnswer = AnsweredQuestionWithAnswer & { firstAnswer: NonNullable<AnsweredQuestion['answer']> }
 import { buildSocialLinks, canAskAnonymousQuestion } from '@/lib/utils/social-links'
+
+const QuestionDrawer = dynamic(
+  () => import('@/components/questions/question-drawer').then((mod) => mod.QuestionDrawer),
+  { ssr: false }
+)
 
 export default function UserProfilePage() {
   const params = useParams<{ username: string }>()

@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
-import { Analytics } from '@vercel/analytics/react'
-import { SpeedInsights } from '@vercel/speed-insights/next'
+import { AnalyticsLoader } from '@/components/analytics/analytics-loader'
 import { ClientProviders } from '@/app/client-providers'
+import { clientEnv } from '@/env'
 import { defaultLocale } from '@/i18n/config'
 import './globals.css'
 
@@ -30,6 +30,7 @@ const lineSeedJP = localFont({
 export const metadata: Metadata = {
   title: 'Goongoom',
   description: 'Ask anything and get honest answers.',
+  metadataBase: new URL(clientEnv.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
 }
 
 export const viewport: Viewport = {
@@ -49,8 +50,7 @@ export default function RootLayout({
     <html className={`${lineSeedKR.variable} ${lineSeedJP.variable}`} lang={defaultLocale} suppressHydrationWarning>
       <body className="bg-background font-sans antialiased">
         <ClientProviders>{children}</ClientProviders>
-        <Analytics />
-        <SpeedInsights />
+        <AnalyticsLoader />
       </body>
     </html>
   )
