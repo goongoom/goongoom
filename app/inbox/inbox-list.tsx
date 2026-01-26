@@ -266,7 +266,7 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
               </div>
 
               <div className="min-w-0 flex-1 space-y-1.5">
-                <p className="line-clamp-2 font-medium text-foreground leading-relaxed">{question.content}</p>
+                <p className="line-clamp-2 whitespace-pre-line font-medium text-foreground leading-relaxed">{question.content}</p>
                 <div className="flex items-center gap-2 text-muted-foreground text-xs">
                   <span className={`font-medium ${question.isAnonymous ? 'text-emerald' : 'text-emerald'}`}>
                     {question.isAnonymous ? tCommon('anonymous') : question.senderName}
@@ -323,7 +323,7 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
                       {selectedQuestion.isAnonymous ? tCommon('anonymous') : selectedQuestion.senderName}
                     </span>
                   </div>
-                  <p className="leading-relaxed">{selectedQuestion.content}</p>
+                  <p className="whitespace-pre-line leading-relaxed">{selectedQuestion.content}</p>
                 </DrawerDescription>
               )}
             </DrawerHeader>

@@ -117,7 +117,7 @@ export function AnsweredQuestionCard(props: AnsweredQuestionCardProps) {
             </Avatar>
             <div className="flex flex-col">
               <Card className="max-w-prose bg-muted/40 px-4 py-3">
-                <p className="text-foreground leading-relaxed">{questionContent}</p>
+                <p className="whitespace-pre-line text-foreground leading-relaxed">{questionContent}</p>
               </Card>
               <p className="mt-1 ml-1 text-muted-foreground text-xs">
                 {anonymityLabel} ·{' '}

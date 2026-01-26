@@ -41,7 +41,7 @@ export function ClampedAnswer({ content, gradientColors }: ClampedAnswerProps) {
 
   return (
     <div className="relative">
-      <p className="line-clamp-4 leading-relaxed" ref={textRef}>
+      <p className="line-clamp-4 whitespace-pre-line leading-relaxed" ref={textRef}>
         {content}
       </p>
       {isClamped && (
