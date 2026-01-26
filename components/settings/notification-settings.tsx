@@ -89,6 +89,11 @@ export function NotificationSettings({ clerkId }: { clerkId: string }) {
           return
         }
 
+        const existing = await registration.pushManager.getSubscription()
+        if (existing) {
+          await existing.unsubscribe()
+        }
+
         const subscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) as BufferSource,
