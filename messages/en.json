@@ -65,7 +65,7 @@
     "identifiedOption": "Identified",
     "identifiedDescription": "Ask with your name",
     "termsAgreement": "Sending a question means you agree to our <link>terms of service</link>.",
-    "questionSent": "Question sent!",
+    "questionSent": "Question sent! It will only be public once they respond.",
     "askAnotherQuestion": "Ask {firstName} another question",
     "questionNumber": "Question #{number} for {firstName}"
   },

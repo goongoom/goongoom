@@ -65,7 +65,7 @@
     "identifiedOption": "実名",
     "identifiedDescription": "名前を出して質問する",
     "termsAgreement": "質問を送ると<link>利用規約</link>に同意したことになります。",
-    "questionSent": "質問を送りました！",
+    "questionSent": "質問を送りました！相手が返信すると公開されます。",
     "askAnotherQuestion": "{firstName}さんにもう一つ質問",
     "questionNumber": "{firstName}さんへの質問 #{number}"
   },
