@@ -9,8 +9,10 @@
  */
 
 import type * as answers from "../answers.js";
+import type * as backfill from "../backfill.js";
 import type * as charLimits from "../charLimits.js";
 import type * as http from "../http.js";
+import type * as language from "../language.js";
 import type * as logs from "../logs.js";
 import type * as push from "../push.js";
 import type * as pushActions from "../pushActions.js";
@@ -27,8 +29,10 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   answers: typeof answers;
+  backfill: typeof backfill;
   charLimits: typeof charLimits;
   http: typeof http;
+  language: typeof language;
   logs: typeof logs;
   push: typeof push;
   pushActions: typeof pushActions;

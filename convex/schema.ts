@@ -49,6 +49,7 @@ export default defineSchema({
     isAnonymous: v.boolean(),
     anonymousAvatarSeed: v.optional(v.string()),
     answerId: v.optional(v.union(v.id('answers'), v.null())),
+    language: v.optional(v.string()),
     deletedAt: v.optional(v.number()),
   })
     .index('by_recipient', ['recipientClerkId'])
@@ -58,6 +59,7 @@ export default defineSchema({
   answers: defineTable({
     questionId: v.id('questions'),
     content: v.string(),
+    language: v.optional(v.string()),
     deletedAt: v.optional(v.number()),
   }).index('by_question', ['questionId']),
 

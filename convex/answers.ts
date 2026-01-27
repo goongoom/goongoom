@@ -2,6 +2,7 @@ import { ConvexError, v } from 'convex/values'
 import { internal } from './_generated/api'
 import { mutation, query } from './_generated/server'
 import { CHAR_LIMITS } from './charLimits'
+import { detectLanguage } from './language'
 
 const ANSWER_PUSH_MESSAGES = {
   ko: {
@@ -49,6 +50,7 @@ export const create = mutation({
     const answerId = await ctx.db.insert('answers', {
       questionId: args.questionId,
       content: args.content,
+      language: detectLanguage(args.content),
     })
 
     const patchPromise = ctx.db.patch(args.questionId, { answerId })

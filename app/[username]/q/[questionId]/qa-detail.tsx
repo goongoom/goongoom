@@ -235,7 +235,7 @@ export default function QADetailPage() {
                   locale: localeMap[locale as keyof typeof localeMap] ?? enUS,
                 })}
               </p>
-              <TranslateButton text={qa.content} />
+              {qa.language && qa.language !== locale && <TranslateButton text={qa.content} />}
             </div>
           </div>
           <div className="flex w-full items-start justify-end gap-3">
@@ -250,7 +250,9 @@ export default function QADetailPage() {
                   locale: localeMap[locale as keyof typeof localeMap] ?? enUS,
                 })}
               </p>
-              <TranslateButton align="end" text={answer.content} />
+              {answer.language && answer.language !== locale && (
+                <TranslateButton align="end" text={answer.content} />
+              )}
             </div>
             <Avatar className="size-10 flex-shrink-0">
               {dbUser.avatarUrl && <AvatarImage alt={firstName} src={dbUser.avatarUrl} />}
