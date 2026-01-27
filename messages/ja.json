@@ -240,6 +240,12 @@
     "mobileNavigation": "モバイルナビゲーション",
     "logo": "Goongoomロゴ"
   },
+  "translate": {
+    "translate": "翻訳",
+    "translating": "翻訳中…",
+    "hideTranslation": "翻訳を非表示",
+    "translationError": "翻訳に失敗しました。もう一度お試しください。"
+  },
   "og": {
     "appName": "Goongoom",
     "tagline": "なんでも聞いてみよう",

@@ -240,6 +240,12 @@
     "mobileNavigation": "모바일 메뉴",
     "logo": "궁금닷컴 로고"
   },
+  "translate": {
+    "translate": "번역",
+    "translating": "번역하는 중…",
+    "hideTranslation": "번역 숨기기",
+    "translationError": "번역에 실패했어요. 다시 시도해 주세요."
+  },
   "og": {
     "appName": "궁금닷컴",
     "tagline": "무엇이든 물어보세요",

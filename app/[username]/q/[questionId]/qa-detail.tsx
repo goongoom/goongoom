@@ -13,6 +13,7 @@ import { Ultralink } from '@/components/navigation/ultralink'
 import { CopyLinkButton } from '@/components/questions/copy-link-button'
 import { DeleteResponseButton } from '@/components/questions/delete-response-button'
 import { ShareInstagramButton } from '@/components/questions/share-instagram-button'
+import { TranslateButton } from '@/components/questions/translate-button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -234,6 +235,7 @@ export default function QADetailPage() {
                   locale: localeMap[locale as keyof typeof localeMap] ?? enUS,
                 })}
               </p>
+              <TranslateButton text={qa.content} />
             </div>
           </div>
           <div className="flex w-full items-start justify-end gap-3">
@@ -248,6 +250,7 @@ export default function QADetailPage() {
                   locale: localeMap[locale as keyof typeof localeMap] ?? enUS,
                 })}
               </p>
+              <TranslateButton align="end" text={answer.content} />
             </div>
             <Avatar className="size-10 flex-shrink-0">
               {dbUser.avatarUrl && <AvatarImage alt={firstName} src={dbUser.avatarUrl} />}

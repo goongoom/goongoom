@@ -240,6 +240,12 @@
     "mobileNavigation": "Mobile navigation",
     "logo": "Goongoom logo"
   },
+  "translate": {
+    "translate": "Translate",
+    "translating": "Translating…",
+    "hideTranslation": "Hide translation",
+    "translationError": "Translation failed. Try again."
+  },
   "og": {
     "appName": "Goongoom",
     "tagline": "Ask anything",
