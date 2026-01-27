@@ -14,7 +14,7 @@ export type AnswerId = Id<'answers'>
 export type PushSubscriptionId = Id<'pushSubscriptions'>
 export type LogId = Id<'logs'>
 
-export type SocialLinkPlatform = 'instagram' | 'twitter' | 'youtube' | 'github' | 'naverBlog'
+export type SocialLinkPlatform = 'instagram' | 'twitter' | 'youtube' | 'github' | 'naverBlog' | 'threads'
 
 export type SocialLinkLabelType = 'handle' | 'custom'
 

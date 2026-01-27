@@ -93,7 +93,8 @@ export const updateProfile = mutation({
               v.literal('twitter'),
               v.literal('youtube'),
               v.literal('github'),
-              v.literal('naverBlog')
+              v.literal('naverBlog'),
+              v.literal('threads')
             ),
             content: v.union(
               v.string(),
@@ -136,7 +137,7 @@ export const updateProfile = mutation({
     const updateData: {
       bio?: string
       socialLinks?: {
-        platform: 'instagram' | 'twitter' | 'youtube' | 'github' | 'naverBlog'
+        platform: 'instagram' | 'twitter' | 'youtube' | 'github' | 'naverBlog' | 'threads'
         content: string | { handle: string; label: string }
         labelType: 'handle' | 'custom'
       }[]

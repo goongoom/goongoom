@@ -18,7 +18,8 @@ export default defineSchema({
             v.literal('twitter'),
             v.literal('youtube'),
             v.literal('github'),
-            v.literal('naverBlog')
+            v.literal('naverBlog'),
+            v.literal('threads')
           ),
           content: v.union(
             v.string(),

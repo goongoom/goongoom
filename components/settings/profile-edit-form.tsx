@@ -10,7 +10,7 @@ import {
   UserMultipleIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { SiGithub, SiInstagram, SiNaver, SiX, SiYoutube } from '@icons-pack/react-simple-icons'
+import { SiGithub, SiInstagram, SiNaver, SiThreads, SiX, SiYoutube } from '@icons-pack/react-simple-icons'
 import { useAction, useMutation } from 'convex/react'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useRef, useState } from 'react'
@@ -28,7 +28,12 @@ import { CHAR_LIMITS } from '@/lib/charLimits'
 import type { SignatureColor } from '@/lib/colors/signature-colors'
 import { QUESTION_SECURITY_LEVELS } from '@/lib/question-security'
 import type { SocialLinkEntry, SocialLinks } from '@/lib/types'
-import { normalizeHandle, normalizeNaverBlogHandle, normalizeYoutubeHandle } from '@/lib/utils/social-links'
+import {
+  normalizeHandle,
+  normalizeNaverBlogHandle,
+  normalizeYoutubeHandle,
+  stripNonAscii,
+} from '@/lib/utils/social-links'
 import { SignatureColorPicker } from './signature-color-picker'
 
 const SECURITY_ICONS: Record<string, typeof AnonymousIcon> = {
@@ -79,6 +84,7 @@ const parseInitialSocialLinks = (socialLinks: SocialLinks | null | undefined) =>
   const youtube: HandleRow[] = []
   const github: CustomLinkRow[] = []
   const naverBlog: CustomLinkRow[] = []
+  const threads: HandleRow[] = []
 
   if (Array.isArray(socialLinks)) {
     for (const entry of socialLinks) {
@@ -103,6 +109,9 @@ const parseInitialSocialLinks = (socialLinks: SocialLinks | null | undefined) =>
           naverBlog.push(createCustomRow(label, handle))
           break
         }
+        case 'threads':
+          threads.push(createHandleRow(extractHandle(content)))
+          break
         default:
           break
       }
@@ -115,6 +124,7 @@ const parseInitialSocialLinks = (socialLinks: SocialLinks | null | undefined) =>
     youtube: ensureHandleList(youtube),
     github: ensureCustomList(github),
     naverBlog: ensureCustomList(naverBlog),
+    threads: ensureHandleList(threads),
   }
 }
 
@@ -124,11 +134,12 @@ const buildSocialLinksPayload = (data: {
   youtube: HandleRow[]
   github: CustomLinkRow[]
   naverBlog: CustomLinkRow[]
+  threads: HandleRow[]
 }): SocialLinkEntry[] => {
   const links: SocialLinkEntry[] = []
 
   const addHandleLinks = (
-    platform: 'instagram' | 'twitter' | 'youtube',
+    platform: 'instagram' | 'twitter' | 'youtube' | 'threads',
     values: HandleRow[],
     normalize: (value: string) => string
   ) => {
@@ -164,6 +175,7 @@ const buildSocialLinksPayload = (data: {
   addHandleLinks('youtube', data.youtube, normalizeYoutubeHandle)
   addCustomLinks('github', data.github, normalizeHandle)
   addCustomLinks('naverBlog', data.naverBlog, normalizeNaverBlogHandle)
+  addHandleLinks('threads', data.threads, normalizeHandle)
 
   return links
 }
@@ -201,6 +213,7 @@ export function ProfileEditForm({
   const [youtubeRows, setYoutubeRows] = useState(() => initialLinks.youtube)
   const [githubRows, setGithubRows] = useState(() => initialLinks.github)
   const [naverBlogRows, setNaverBlogRows] = useState(() => initialLinks.naverBlog)
+  const [threadsRows, setThreadsRows] = useState(() => initialLinks.threads)
   const [securityLevel, setSecurityLevel] = useState(initialQuestionSecurityLevel)
 
   const lastSavedBio = useRef(initialBio || '')
@@ -252,6 +265,7 @@ export function ProfileEditForm({
       youtube: youtubeRows,
       github: githubRows,
       naverBlog: naverBlogRows,
+      threads: threadsRows,
     })
     const serialized = serializeSocialLinks(links)
 
@@ -259,7 +273,7 @@ export function ProfileEditForm({
       lastSavedSocialLinks.current = serialized
       saveProfile({ socialLinks: links.length ? links : null })
     }
-  }, [githubRows, instagramRows, naverBlogRows, twitterRows, youtubeRows, saveProfile])
+  }, [githubRows, instagramRows, naverBlogRows, threadsRows, twitterRows, youtubeRows, saveProfile])
 
   const handleSecurityLevelChange = useCallback(
     (value: string) => {
@@ -288,6 +302,7 @@ export function ProfileEditForm({
         youtube: youtubeRows,
         github: githubRows,
         naverBlog: naverBlogRows,
+        threads: threadsRows,
       })
       const serialized = serializeSocialLinks(links)
       if (serialized !== lastSavedSocialLinks.current) {
@@ -295,7 +310,7 @@ export function ProfileEditForm({
         saveProfile({ socialLinks: links.length ? links : null })
       }
     },
-    [instagramRows, twitterRows, youtubeRows, githubRows, naverBlogRows, saveProfile]
+    [instagramRows, twitterRows, youtubeRows, githubRows, naverBlogRows, threadsRows, saveProfile]
   )
 
   const removeTwitterRow = useCallback(
@@ -309,6 +324,7 @@ export function ProfileEditForm({
         youtube: youtubeRows,
         github: githubRows,
         naverBlog: naverBlogRows,
+        threads: threadsRows,
       })
       const serialized = serializeSocialLinks(links)
       if (serialized !== lastSavedSocialLinks.current) {
@@ -316,7 +332,7 @@ export function ProfileEditForm({
         saveProfile({ socialLinks: links.length ? links : null })
       }
     },
-    [instagramRows, twitterRows, youtubeRows, githubRows, naverBlogRows, saveProfile]
+    [instagramRows, twitterRows, youtubeRows, githubRows, naverBlogRows, threadsRows, saveProfile]
   )
 
   const removeYoutubeRow = useCallback(
@@ -330,6 +346,7 @@ export function ProfileEditForm({
         youtube: newYoutube,
         github: githubRows,
         naverBlog: naverBlogRows,
+        threads: threadsRows,
       })
       const serialized = serializeSocialLinks(links)
       if (serialized !== lastSavedSocialLinks.current) {
@@ -337,7 +354,7 @@ export function ProfileEditForm({
         saveProfile({ socialLinks: links.length ? links : null })
       }
     },
-    [instagramRows, twitterRows, youtubeRows, githubRows, naverBlogRows, saveProfile]
+    [instagramRows, twitterRows, youtubeRows, githubRows, naverBlogRows, threadsRows, saveProfile]
   )
 
   const updateCustomAt = (
@@ -364,6 +381,7 @@ export function ProfileEditForm({
         youtube: youtubeRows,
         github: newGithub,
         naverBlog: naverBlogRows,
+        threads: threadsRows,
       })
       const serialized = serializeSocialLinks(links)
       if (serialized !== lastSavedSocialLinks.current) {
@@ -371,7 +389,7 @@ export function ProfileEditForm({
         saveProfile({ socialLinks: links.length ? links : null })
       }
     },
-    [instagramRows, twitterRows, youtubeRows, githubRows, naverBlogRows, saveProfile]
+    [instagramRows, twitterRows, youtubeRows, githubRows, naverBlogRows, threadsRows, saveProfile]
   )
 
   const removeNaverBlogRow = useCallback(
@@ -385,6 +403,7 @@ export function ProfileEditForm({
         youtube: youtubeRows,
         github: githubRows,
         naverBlog: newNaverBlog,
+        threads: threadsRows,
       })
       const serialized = serializeSocialLinks(links)
       if (serialized !== lastSavedSocialLinks.current) {
@@ -392,7 +411,29 @@ export function ProfileEditForm({
         saveProfile({ socialLinks: links.length ? links : null })
       }
     },
-    [instagramRows, twitterRows, youtubeRows, githubRows, naverBlogRows, saveProfile]
+    [instagramRows, twitterRows, youtubeRows, githubRows, naverBlogRows, threadsRows, saveProfile]
+  )
+
+  const removeThreadsRow = useCallback(
+    (id: string) => {
+      const nextRows = threadsRows.filter((item) => item.id !== id)
+      const newThreads = nextRows.length ? nextRows : [createHandleRow()]
+      setThreadsRows(newThreads)
+      const links = buildSocialLinksPayload({
+        instagram: instagramRows,
+        twitter: twitterRows,
+        youtube: youtubeRows,
+        github: githubRows,
+        naverBlog: naverBlogRows,
+        threads: newThreads,
+      })
+      const serialized = serializeSocialLinks(links)
+      if (serialized !== lastSavedSocialLinks.current) {
+        lastSavedSocialLinks.current = serialized
+        saveProfile({ socialLinks: links.length ? links : null })
+      }
+    },
+    [instagramRows, twitterRows, youtubeRows, githubRows, naverBlogRows, threadsRows, saveProfile]
   )
 
   const handleNaverBlogHandleBlur = useCallback(
@@ -466,7 +507,7 @@ export function ProfileEditForm({
                           autoCorrect="off"
                           className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
                           onBlur={handleSocialLinksBlur}
-                          onChange={(event) => updateHandleAt(row.id, event.target.value, setInstagramRows)}
+                          onChange={(event) => updateHandleAt(row.id, stripNonAscii(event.target.value), setInstagramRows)}
                           placeholder={tSocial('instagramPlaceholder')}
                           value={row.value}
                         />
@@ -505,7 +546,7 @@ export function ProfileEditForm({
                           autoCorrect="off"
                           className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
                           onBlur={handleSocialLinksBlur}
-                          onChange={(event) => updateHandleAt(row.id, event.target.value, setTwitterRows)}
+                          onChange={(event) => updateHandleAt(row.id, stripNonAscii(event.target.value), setTwitterRows)}
                           placeholder={tSocial('twitterPlaceholder')}
                           value={row.value}
                         />
@@ -544,7 +585,7 @@ export function ProfileEditForm({
                           autoCorrect="off"
                           className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
                           onBlur={handleSocialLinksBlur}
-                          onChange={(event) => updateHandleAt(row.id, event.target.value, setYoutubeRows)}
+                          onChange={(event) => updateHandleAt(row.id, stripNonAscii(event.target.value), setYoutubeRows)}
                           placeholder={tSocial('youtubePlaceholder')}
                           value={row.value}
                         />
@@ -583,7 +624,7 @@ export function ProfileEditForm({
                           autoCorrect="off"
                           className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
                           onBlur={handleSocialLinksBlur}
-                          onChange={(event) => updateCustomAt(row.id, 'handle', event.target.value, setGithubRows)}
+                          onChange={(event) => updateCustomAt(row.id, 'handle', stripNonAscii(event.target.value), setGithubRows)}
                           placeholder={tSocial('githubPlaceholder')}
                           value={row.handle}
                         />
@@ -622,7 +663,7 @@ export function ProfileEditForm({
                           autoCorrect="off"
                           className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
                           onBlur={() => handleNaverBlogHandleBlur(row.id, row.handle)}
-                          onChange={(event) => updateCustomAt(row.id, 'handle', event.target.value, setNaverBlogRows)}
+                          onChange={(event) => updateCustomAt(row.id, 'handle', stripNonAscii(event.target.value), setNaverBlogRows)}
                           placeholder={tSocial('naverBlogPlaceholder')}
                           value={row.handle}
                         />
@@ -641,6 +682,45 @@ export function ProfileEditForm({
                   ))}
                   <Button onClick={() => addCustomRow(setNaverBlogRows)} size="sm" type="button" variant="outline">
                     {tSocial('addNaverBlog')}
+                  </Button>
+                </div>
+              </Field>
+
+              <Field>
+                <FieldLabel className="font-medium text-muted-foreground text-xs">
+                  {tSocial('threadsPlaceholder')}
+                </FieldLabel>
+                <div className="space-y-2">
+                  {threadsRows.map((row) => (
+                    <div className="flex items-center gap-2" key={row.id}>
+                      <div className="relative flex-1">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                          <SiThreads className="size-5 text-muted-foreground/60" />
+                        </div>
+                        <Input
+                          autoCapitalize="none"
+                          autoCorrect="off"
+                          className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
+                          onBlur={handleSocialLinksBlur}
+                          onChange={(event) => updateHandleAt(row.id, stripNonAscii(event.target.value), setThreadsRows)}
+                          placeholder={tSocial('threadsPlaceholder')}
+                          value={row.value}
+                        />
+                      </div>
+                      <Button
+                        aria-label={tSocial('remove')}
+                        className="shrink-0"
+                        onClick={() => removeThreadsRow(row.id)}
+                        size="icon-sm"
+                        type="button"
+                        variant="ghost"
+                      >
+                        <HugeiconsIcon className="size-4" icon={Cancel01Icon} />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button onClick={() => addHandleRow(setThreadsRows)} size="sm" type="button" variant="outline">
+                    {tSocial('addThreads')}
                   </Button>
                 </div>
               </Field>

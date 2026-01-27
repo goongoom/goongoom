@@ -1,13 +1,15 @@
-import { SiGithub, SiInstagram, SiNaver, SiX, SiYoutube } from '@icons-pack/react-simple-icons'
+import { SiGithub, SiInstagram, SiNaver, SiThreads, SiX, SiYoutube } from '@icons-pack/react-simple-icons'
 import type { SocialLinkEntry, SocialLinks } from '@/lib/types'
 
 const HTTPS_PROTOCOL_REGEX = /^https?:\/\//i
 const LEADING_SLASHES_REGEX = /^\/+/
 const HANDLE_PREFIX_REGEX = /^@/
 const URL_PATTERN_REGEX =
-  /:\/\/|\/|instagram\.com|twitter\.com|x\.com|youtube\.com|youtu\.be|github\.com|blog\.naver\.com|naver\.com|www\./i
+  /:\/\/|\/|instagram\.com|twitter\.com|x\.com|youtube\.com|youtu\.be|github\.com|blog\.naver\.com|naver\.com|threads\.net|www\./i
 
-const HANDLE_PLATFORMS = new Set(['instagram', 'twitter', 'youtube'])
+const NON_ASCII_REGEX = /[^\x20-\x7E]/g
+
+const HANDLE_PLATFORMS = new Set(['instagram', 'twitter', 'youtube', 'threads'])
 const CUSTOM_LABEL_PLATFORMS = new Set(['github', 'naverBlog'])
 
 function toProfileUrl(value: string | undefined, domain: string) {
@@ -48,8 +50,12 @@ function toYoutubeUrl(value: string | undefined) {
   return `https://www.youtube.com/@${trimmed}`
 }
 
+export function stripNonAscii(value: string) {
+  return value.replace(NON_ASCII_REGEX, '')
+}
+
 export function normalizeHandle(value: string) {
-  const trimmed = value.trim()
+  const trimmed = stripNonAscii(value).trim()
   if (!trimmed) {
     return ''
   }
@@ -68,7 +74,7 @@ export function normalizeHandle(value: string) {
 }
 
 export function normalizeYoutubeHandle(value: string) {
-  const trimmed = value.trim()
+  const trimmed = stripNonAscii(value).trim()
   if (!trimmed) {
     return ''
   }
@@ -94,7 +100,7 @@ export function normalizeYoutubeHandle(value: string) {
 }
 
 export function normalizeNaverBlogHandle(value: string) {
-  const trimmed = value.trim()
+  const trimmed = stripNonAscii(value).trim()
   if (!trimmed) {
     return ''
   }
@@ -185,6 +191,7 @@ export interface SocialLabels {
   youtube: string
   github: string
   naverBlog: string
+  threads: string
 }
 
 const DEFAULT_LABELS: SocialLabels = {
@@ -193,6 +200,7 @@ const DEFAULT_LABELS: SocialLabels = {
   youtube: 'YouTube',
   github: 'GitHub',
   naverBlog: 'Naver Blog',
+  threads: 'Threads',
 }
 
 export function buildSocialLinks(
@@ -247,6 +255,15 @@ export function buildSocialLinks(
           icon: SiNaver,
           href: toProfileUrl(entry.content.handle, 'blog.naver.com'),
           text: entry.content.label || entry.content.handle,
+        }
+      }
+      if (entry.platform === 'threads' && typeof entry.content === 'string') {
+        return {
+          key: `threads-${entry.content}-${index}`,
+          label: resolvedLabels.threads,
+          icon: SiThreads,
+          href: toProfileUrl(entry.content, 'www.threads.net'),
+          text: formatHandleLabel(entry.content),
         }
       }
       return null

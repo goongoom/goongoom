@@ -97,6 +97,7 @@ export default function UserProfilePage() {
         youtube: tSocial('youtube'),
         github: tSocial('github'),
         naverBlog: tSocial('naverBlog'),
+        threads: tSocial('threads'),
       }),
     [dbUser?.socialLinks, tSocial]
   )
