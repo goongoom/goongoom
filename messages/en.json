@@ -245,6 +245,7 @@
     "tagline": "Ask anything",
     "logoAlt": "Goongoom logo",
     "userNotFound": "We couldn't find this user.",
+    "questionNotFound": "Question not found.",
     "defaultQuestion": "Questions show up here.",
     "defaultAnswer": "Share your answer.",
     "defaultUser": "User",

@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { getCache } from '@vercel/functions'
 import { ImageResponse } from 'next/og'
 import { getTranslations } from 'next-intl/server'
+import { getUserLocale } from '@/i18n/get-user-locale'
 import { getSignatureColor } from '@/lib/colors/signature-colors'
 
 const clamp = (value: string, max: number) => (value.length > max ? `${value.slice(0, max - 1)}…` : value)
@@ -64,7 +65,8 @@ export async function GET(request: Request) {
     })
   }
 
-  const t = await getTranslations('og')
+  const locale = getUserLocale(searchParams.get('locale'))
+  const t = await getTranslations({ locale, namespace: 'og' })
   const question = pickText(searchParams.get('question'), t('defaultQuestion'), 180)
   const answer = pickText(searchParams.get('answer'), t('defaultAnswer'), 260)
   const name = pickText(searchParams.get('name'), t('defaultUser'), 40)

@@ -245,6 +245,7 @@
     "tagline": "무엇이든 물어보세요",
     "logoAlt": "궁금닷컴 로고",
     "userNotFound": "사용자를 찾지 못했어요",
+    "questionNotFound": "질문을 찾지 못했어요",
     "defaultQuestion": "어떤 질문이 올까요?",
     "defaultAnswer": "재치 있는 답변을 공유해 보세요.",
     "defaultUser": "사용자",

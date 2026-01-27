@@ -2,8 +2,10 @@ import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { cookies } from 'next/headers'
 import { ImageResponse } from 'next/og'
+import { getTranslations } from 'next-intl/server'
 import { fetchQuery } from 'convex/nextjs'
 import { api } from '@/convex/_generated/api'
+import { getUserLocale } from '@/i18n/get-user-locale'
 import { getSignatureColor } from '@/lib/colors/signature-colors'
 import type { QuestionId } from '@/lib/types'
 
@@ -113,6 +115,7 @@ export default async function Image({ params }: PageProps) {
 
   if (!dbUser) {
     const defaultColors = getSignatureColor(null)
+    const t = await getTranslations('og')
     return new ImageResponse(
       <div
         style={{
@@ -127,7 +130,7 @@ export default async function Image({ params }: PageProps) {
           color: '#6B7280',
         }}
       >
-        User not found
+        {t('userNotFound')}
       </div>,
       {
         ...size,
@@ -146,6 +149,9 @@ export default async function Image({ params }: PageProps) {
     qa = null
   }
 
+  const locale = getUserLocale(dbUser?.locale)
+  const t = await getTranslations({ locale, namespace: 'og' })
+
   if (!qa?.answer) {
     const userColors = getSignatureColor(dbUser?.signatureColor)
     return new ImageResponse(
@@ -162,7 +168,7 @@ export default async function Image({ params }: PageProps) {
           color: '#6B7280',
         }}
       >
-        Question not found
+        {t('questionNotFound')}
       </div>,
       {
         ...size,

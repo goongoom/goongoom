@@ -5,6 +5,7 @@ import { ImageResponse } from 'next/og'
 import { getTranslations } from 'next-intl/server'
 import { fetchQuery } from 'convex/nextjs'
 import { api } from '@/convex/_generated/api'
+import { getUserLocale } from '@/i18n/get-user-locale'
 import { getSignatureColor } from '@/lib/colors/signature-colors'
 
 export const runtime = 'nodejs'
@@ -62,10 +63,9 @@ export default async function Image({ params }: PageProps) {
     )
   }
 
-  let t: Awaited<ReturnType<typeof getTranslations<'og'>>>
   let dbUser: Awaited<ReturnType<typeof fetchQuery<typeof api.users.getByUsername>>> | null
   try {
-    ;[t, dbUser] = await Promise.all([getTranslations('og'), fetchQuery(api.users.getByUsername, { username })])
+    dbUser = await fetchQuery(api.users.getByUsername, { username })
   } catch {
     const fallbackColors = getSignatureColor(null)
     return new ImageResponse(
@@ -94,6 +94,9 @@ export default async function Image({ params }: PageProps) {
       }
     )
   }
+
+  const locale = getUserLocale(dbUser?.locale)
+  const t = await getTranslations({ locale, namespace: 'og' })
 
   const cookieStore = await cookies()
   const themeCookie = cookieStore.get('theme')?.value
@@ -206,9 +209,6 @@ export default async function Image({ params }: PageProps) {
           }}
         >
           <div style={{ fontSize: '68px', fontWeight: 700, lineHeight: 1.2 }}>{clamp(fullName, 20)}</div>
-          <div style={{ fontSize: '40px', color: isDark ? '#9CA3AF' : '#6B7280' }}>
-            {`@${dbUser.username || username}`}
-          </div>
           {bio && (
             <div
               style={{
@@ -224,18 +224,6 @@ export default async function Image({ params }: PageProps) {
         </div>
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          fontSize: '28px',
-          color: isDark ? '#6B7280' : '#9CA3AF',
-        }}
-      >
-        <div>{t('tagline')}</div>
-        <div>{`goongoom.com/${dbUser.username || username}`}</div>
-      </div>
     </div>,
     {
       ...size,

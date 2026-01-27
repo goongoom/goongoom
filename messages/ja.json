@@ -245,6 +245,7 @@
     "tagline": "なんでも聞いてみよう",
     "logoAlt": "Goongoomロゴ",
     "userNotFound": "ユーザーが見つかりませんでした。",
+    "questionNotFound": "質問が見つかりませんでした。",
     "defaultQuestion": "ここに質問が届きます。",
     "defaultAnswer": "あなたの回答を共有しましょう。",
     "defaultUser": "ユーザー",
