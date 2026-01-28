@@ -9,7 +9,7 @@
     "delete": "削除",
     "submitting": "送信中…",
     "anonymous": "匿名",
-    "identified": "実名",
+    "public": "公開",
     "user": "ユーザー",
     "you": "あなた",
     "undo": "元に戻す"
@@ -57,13 +57,14 @@
     "sending": "送信中…",
     "inputPlaceholder": "何を聞きたいですか？",
     "writeQuestion": "質問を書く",
-    "toRecipient": "{recipientName}さんへ",
+    "toRecipientPrefix": "",
+    "toRecipientSuffix": "さんへ",
     "newQuestion": "新しい質問を残しましょう",
     "whoToAsk": "どのように質問しますか？",
     "anonymousOption": "匿名",
     "anonymousDescription": "匿名で質問する",
-    "identifiedOption": "実名",
-    "identifiedDescription": "名前を出して質問する",
+    "publicOption": "公開",
+    "publicDescription": "名前を出して質問する",
     "termsAgreement": "質問を送ると<link>利用規約</link>に同意したことになります。",
     "questionSent": "質問を送りました！相手が返信すると公開されます。",
     "askAnotherQuestion": "{firstName}さんにもう一つ質問",
@@ -170,13 +171,13 @@
     "anyoneDescription": "非会員でも匿名で質問を送れます。",
     "verifiedLabel": "認証済みユーザーのみ匿名を許可",
     "verifiedDescription": "電話番号を認証したユーザーのみ匿名で質問できます。",
-    "identifiedOnlyLabel": "実名の質問のみ受付",
-    "identifiedOnlyDescription": "実名の質問のみ受け付けます。"
+    "publicOnlyLabel": "公開質問のみ受付",
+    "publicOnlyDescription": "公開質問のみ受け付けます。"
   },
   "restrictions": {
     "anonymousLoginRequired": "ご安心ください。匿名で質問できます。",
-    "identifiedOnly": "このユーザーは実名の質問のみ受け付けています。",
-    "loginForIdentified": "ログインすると名前を出して質問できます。"
+    "publicOnly": "このユーザーは公開質問のみ受け付けています。",
+    "loginForPublic": "ログインすると公開で質問できます。"
   },
   "errors": {
     "genericError": "もう一度お試しください。問題が発生しました。",

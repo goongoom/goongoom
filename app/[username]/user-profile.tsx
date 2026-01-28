@@ -110,7 +110,7 @@ export default function UserProfilePage() {
   const cardLabels = useMemo(
     () => ({
       anonymous: tCommon('anonymous'),
-      identified: tCommon('identified'),
+      public: tCommon('public'),
     }),
     [tCommon]
   )

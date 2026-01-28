@@ -9,7 +9,7 @@
     "delete": "Delete",
     "submitting": "Sending…",
     "anonymous": "Anonymous",
-    "identified": "Identified",
+    "public": "Public",
     "user": "User",
     "you": "You",
     "undo": "Undo"
@@ -57,13 +57,14 @@
     "sending": "Sending…",
     "inputPlaceholder": "What do you want to ask?",
     "writeQuestion": "Write a question",
-    "toRecipient": "To {recipientName}",
+    "toRecipientPrefix": "To ",
+    "toRecipientSuffix": "",
     "newQuestion": "Leave a new question",
     "whoToAsk": "How do you want to ask?",
     "anonymousOption": "Anonymous",
     "anonymousDescription": "Ask without revealing yourself",
-    "identifiedOption": "Identified",
-    "identifiedDescription": "Ask with your name",
+    "publicOption": "Public",
+    "publicDescription": "Ask with your name visible",
     "termsAgreement": "Sending a question means you agree to our <link>terms of service</link>.",
     "questionSent": "Question sent! It will only be public once they respond.",
     "askAnotherQuestion": "Ask {firstName} another question",
@@ -167,16 +168,16 @@
   },
   "questionSecurity": {
     "anyoneLabel": "Anyone can ask",
-    "anyoneDescription": "Even non-members can send anonymous questions.",
-    "verifiedLabel": "Only verified users can ask anonymously",
+    "anyoneDescription": "Anyone can send anonymous questions, even without signing up.",
+    "verifiedLabel": "Verified users only for anonymous",
     "verifiedDescription": "Only users with verified phone numbers can send anonymous questions.",
-    "identifiedOnlyLabel": "Identified questions only",
-    "identifiedOnlyDescription": "Only accept identified questions."
+    "publicOnlyLabel": "Public questions only",
+    "publicOnlyDescription": "Only accept questions where the sender's name is visible."
   },
   "restrictions": {
-    "anonymousLoginRequired": "Don't worry. You can still ask anonymously.",
-    "identifiedOnly": "This user only accepts identified questions.",
-    "loginForIdentified": "Log in to ask with your name."
+    "anonymousLoginRequired": "Don't worry—you can still ask anonymously.",
+    "publicOnly": "This user only accepts public questions.",
+    "loginForPublic": "Log in to ask publicly."
   },
   "errors": {
     "genericError": "Try again. Something went wrong.",
@@ -187,8 +188,8 @@
     "profileUpdateError": "Try again. We couldn't update your profile.",
     "recipientAndContentRequired": "Add a recipient and a question.",
     "userDoesNotExist": "We couldn't find this user.",
-    "publicQuestionLoginRequired": "Log in to send public questions.",
-    "publicQuestionOnly": "This user only accepts public questions.",
+    "publicQuestionLoginRequired": "Log in to ask with your name visible.",
+    "publicQuestionOnly": "This user only accepts questions with your name visible.",
     "anonymousLoginRequired": "Log in to send anonymous questions.",
     "questionCreateFailed": "Try again. We couldn't send your question.",
     "questionCreateError": "Try again. We hit a snag sending your question.",

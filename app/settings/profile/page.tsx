@@ -36,8 +36,8 @@ export default function ProfileSettingsPage() {
         description: tSecurity('verifiedDescription'),
       },
       public_only: {
-        label: tSecurity('identifiedOnlyLabel'),
-        description: tSecurity('identifiedOnlyDescription'),
+        label: tSecurity('publicOnlyLabel'),
+        description: tSecurity('publicOnlyDescription'),
       },
     }),
     [tSecurity]

@@ -161,13 +161,13 @@ function QuestionTypeSelector({
           </AvatarFallback>
         </Avatar>
         <div className="space-y-1 text-center">
-          <p className="font-bold text-foreground text-sm">{t('identifiedOption')}</p>
+          <p className="font-bold text-foreground text-sm">{t('publicOption')}</p>
           <p
             className={`font-medium text-xs leading-relaxed ${
               isAnonymous ? 'text-muted-foreground/70' : 'text-emerald'
             }`}
           >
-            {canAskPublic ? t('identifiedDescription') : tRestrictions('loginForIdentified')}
+            {canAskPublic ? t('publicDescription') : tRestrictions('loginForPublic')}
           </p>
         </div>
       </button>
@@ -281,10 +281,11 @@ export function QuestionDrawer({
           <div className="mx-auto w-full max-w-lg">
             <DrawerHeader className="pb-2 text-left">
               <DrawerTitle className="font-bold text-xl tracking-tight">
+                <span className="text-foreground">{t('toRecipientPrefix')}</span>
                 <span className="bg-gradient-to-r from-emerald to-emerald bg-clip-text text-transparent">
                   {recipientName}
                 </span>
-                <span className="text-foreground"> {t('toRecipient', { recipientName: '' })}</span>
+                <span className="text-foreground">{t('toRecipientSuffix')}</span>
               </DrawerTitle>
               <DrawerDescription className="text-base">{t('newQuestion')}</DrawerDescription>
             </DrawerHeader>

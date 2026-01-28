@@ -30,7 +30,7 @@ type AnsweredQuestionCardProps =
       locale: string
       labels: {
         anonymous: string
-        identified: string
+        public: string
       }
       signatureColor?: string | null
     }
@@ -90,7 +90,7 @@ export function AnsweredQuestionCard(props: AnsweredQuestionCardProps) {
     signatureColor,
   } = props
 
-  const anonymityLabel = isAnonymous ? labels.anonymous : senderName || labels.identified
+  const anonymityLabel = isAnonymous ? labels.anonymous : senderName || labels.public
   const fallbackInitial = firstName[0] || '?'
   const questionerAvatarUrl = getQuestionerAvatarUrl(isAnonymous, anonymousAvatarSeed, questionId, senderAvatarUrl)
   const questionerFallback = isAnonymous ? '?' : senderName?.[0] || '?'

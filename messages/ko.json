@@ -9,7 +9,7 @@
     "delete": "삭제",
     "submitting": "보내는 중…",
     "anonymous": "익명",
-    "identified": "실명",
+    "public": "공개",
     "user": "사용자",
     "you": "나",
     "undo": "되돌리기"
@@ -57,13 +57,14 @@
     "sending": "보내는 중…",
     "inputPlaceholder": "어떤 걸 물어보고 싶나요?",
     "writeQuestion": "질문 작성",
-    "toRecipient": "{recipientName}에게",
+    "toRecipientPrefix": "",
+    "toRecipientSuffix": "에게",
     "newQuestion": "새 질문을 남겨 보세요",
     "whoToAsk": "어떤 방식으로 질문할까요?",
     "anonymousOption": "익명",
     "anonymousDescription": "익명으로 질문해요",
-    "identifiedOption": "실명",
-    "identifiedDescription": "내 이름으로 질문해요",
+    "publicOption": "공개",
+    "publicDescription": "내 이름으로 질문해요",
     "termsAgreement": "질문을 보내면 <link>이용약관</link>에 동의하게 돼요",
     "questionSent": "질문을 보냈어요! 상대방이 답변하면 공개돼요.",
     "askAnotherQuestion": "{firstName}에게 또 질문",
@@ -170,13 +171,13 @@
     "anyoneDescription": "비회원도 익명으로 질문을 보낼 수 있어요.",
     "verifiedLabel": "번호 인증한 사람만 익명 허용",
     "verifiedDescription": "전화번호를 인증한 사람만 익명 질문을 보낼 수 있어요.",
-    "identifiedOnlyLabel": "실명 질문만 받기",
-    "identifiedOnlyDescription": "실명 질문만 받을 수 있어요."
+    "publicOnlyLabel": "공개 질문만 받기",
+    "publicOnlyDescription": "공개 질문만 받을 수 있어요."
   },
   "restrictions": {
     "anonymousLoginRequired": "걱정 마세요! 여전히 익명으로 질문할 수 있어요.",
-    "identifiedOnly": "이 사용자는 실명 질문만 받고 있어요.",
-    "loginForIdentified": "로그인하면 내 이름으로도 질문할 수 있어요."
+    "publicOnly": "이 사용자는 공개 질문만 받고 있어요.",
+    "loginForPublic": "로그인하면 공개로 질문할 수 있어요."
   },
   "errors": {
     "genericError": "다시 시도해 주세요. 문제가 생겼어요.",

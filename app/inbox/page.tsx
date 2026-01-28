@@ -45,7 +45,7 @@ function InboxContent() {
       createdAt: question._creationTime,
       senderName: question.isAnonymous
         ? tCommon('anonymous')
-        : question.senderFirstName || question.senderUsername || tCommon('identified'),
+        : question.senderFirstName || question.senderUsername || tCommon('public'),
       senderAvatarUrl: question.isAnonymous ? undefined : question.senderAvatarUrl,
       anonymousAvatarSeed: question.isAnonymous ? question.anonymousAvatarSeed : undefined,
     }))

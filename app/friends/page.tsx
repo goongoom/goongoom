@@ -32,7 +32,7 @@ export default function FriendsPage() {
   const cardLabels = useMemo(
     () => ({
       anonymous: tCommon('anonymous'),
-      identified: tCommon('identified'),
+      public: tCommon('public'),
     }),
     [tCommon]
   )

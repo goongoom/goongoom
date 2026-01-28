@@ -47,7 +47,7 @@ function getQuestionerInfo(
   senderFirstName: string | undefined,
   senderAvatarUrl: string | undefined,
   anonymousLabel: string,
-  identifiedLabel: string
+  publicLabel: string
 ): QuestionerInfo {
   if (isAnonymous) {
     return {
@@ -58,7 +58,7 @@ function getQuestionerInfo(
   }
   return {
     avatarUrl: senderAvatarUrl || null,
-    name: senderFirstName || identifiedLabel,
+    name: senderFirstName || publicLabel,
     fallback: senderFirstName?.[0] || '?',
   }
 }
@@ -127,7 +127,7 @@ export default function QADetailPage() {
       qa.senderFirstName,
       qa.senderAvatarUrl,
       tCommon('anonymous'),
-      tCommon('identified')
+      tCommon('public')
     )
   }, [qa, tCommon])
 
