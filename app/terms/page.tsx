@@ -1,7 +1,5 @@
 'use client'
 
-export const dynamic = 'force-static'
-
 import { useLocale } from 'next-intl'
 import { MainContent } from '@/components/layout/main-content'
 import TermsKo from '@/content/legal/terms.ko.mdx'

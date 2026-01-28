@@ -8,43 +8,39 @@
  * @module
  */
 
-import type * as answers from "../answers.js";
-import type * as backfill from "../backfill.js";
-import type * as charLimits from "../charLimits.js";
-import type * as http from "../http.js";
-import type * as languageActions from "../languageActions.js";
-import type * as languageMutations from "../languageMutations.js";
-import type * as logs from "../logs.js";
-import type * as push from "../push.js";
-import type * as pushActions from "../pushActions.js";
-import type * as questions from "../questions.js";
-import type * as referrals from "../referrals.js";
-import type * as slackActions from "../slackActions.js";
-import type * as types from "../types.js";
-import type * as users from "../users.js";
+import type * as answers from '../answers.js'
+import type * as backfill from '../backfill.js'
+import type * as charLimits from '../charLimits.js'
+import type * as http from '../http.js'
+import type * as languageActions from '../languageActions.js'
+import type * as languageMutations from '../languageMutations.js'
+import type * as logs from '../logs.js'
+import type * as push from '../push.js'
+import type * as pushActions from '../pushActions.js'
+import type * as questions from '../questions.js'
+import type * as referrals from '../referrals.js'
+import type * as slackActions from '../slackActions.js'
+import type * as types from '../types.js'
+import type * as users from '../users.js'
 
-import type {
-  ApiFromModules,
-  FilterApi,
-  FunctionReference,
-} from "convex/server";
+import type { ApiFromModules, FilterApi, FunctionReference } from 'convex/server'
 
 declare const fullApi: ApiFromModules<{
-  answers: typeof answers;
-  backfill: typeof backfill;
-  charLimits: typeof charLimits;
-  http: typeof http;
-  languageActions: typeof languageActions;
-  languageMutations: typeof languageMutations;
-  logs: typeof logs;
-  push: typeof push;
-  pushActions: typeof pushActions;
-  questions: typeof questions;
-  referrals: typeof referrals;
-  slackActions: typeof slackActions;
-  types: typeof types;
-  users: typeof users;
-}>;
+  answers: typeof answers
+  backfill: typeof backfill
+  charLimits: typeof charLimits
+  http: typeof http
+  languageActions: typeof languageActions
+  languageMutations: typeof languageMutations
+  logs: typeof logs
+  push: typeof push
+  pushActions: typeof pushActions
+  questions: typeof questions
+  referrals: typeof referrals
+  slackActions: typeof slackActions
+  types: typeof types
+  users: typeof users
+}>
 
 /**
  * A utility for referencing Convex functions in your app's public API.
@@ -54,10 +50,7 @@ declare const fullApi: ApiFromModules<{
  * const myFunctionReference = api.myModule.myFunction;
  * ```
  */
-export declare const api: FilterApi<
-  typeof fullApi,
-  FunctionReference<any, "public">
->;
+export declare const api: FilterApi<typeof fullApi, FunctionReference<any, 'public'>>
 
 /**
  * A utility for referencing Convex functions in your app's internal API.
@@ -67,9 +60,6 @@ export declare const api: FilterApi<
  * const myFunctionReference = internal.myModule.myFunction;
  * ```
  */
-export declare const internal: FilterApi<
-  typeof fullApi,
-  FunctionReference<any, "internal">
->;
+export declare const internal: FilterApi<typeof fullApi, FunctionReference<any, 'internal'>>
 
-export declare const components: {};
+export declare const components: {}

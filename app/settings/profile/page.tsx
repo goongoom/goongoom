@@ -1,7 +1,5 @@
 'use client'
 
-export const dynamic = 'force-static'
-
 import { useAuth, useUser } from '@clerk/nextjs'
 import { useQuery } from 'convex-helpers/react/cache/hooks'
 import { useConvexAuth } from 'convex/react'

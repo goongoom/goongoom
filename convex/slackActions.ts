@@ -109,9 +109,12 @@ export const notifyNewQuestion = internalAction({
       return
     }
 
-    const recipientDisplay = args.recipientUsername ? `@${args.recipientUsername}` : `(${args.recipientClerkId.slice(0, 8)}...)`
+    const recipientDisplay = args.recipientUsername
+      ? `@${args.recipientUsername}`
+      : `(${args.recipientClerkId.slice(0, 8)}...)`
     const senderDisplay = args.isAnonymous ? 'Anonymous' : args.senderUsername ? `@${args.senderUsername}` : 'Unknown'
-    const preview = args.questionPreview.length > 100 ? `${args.questionPreview.slice(0, 100)}...` : args.questionPreview
+    const preview =
+      args.questionPreview.length > 100 ? `${args.questionPreview.slice(0, 100)}...` : args.questionPreview
 
     await sendSlackMessage(webhookUrl, {
       text: `New question to ${recipientDisplay} from ${senderDisplay}`,
@@ -147,7 +150,9 @@ export const notifyNewAnswer = internalAction({
       return
     }
 
-    const answererDisplay = args.answererUsername ? `@${args.answererUsername}` : `(${args.answererClerkId.slice(0, 8)}...)`
+    const answererDisplay = args.answererUsername
+      ? `@${args.answererUsername}`
+      : `(${args.answererClerkId.slice(0, 8)}...)`
     const preview = args.answerPreview.length > 100 ? `${args.answerPreview.slice(0, 100)}...` : args.answerPreview
 
     await sendSlackMessage(webhookUrl, {
@@ -183,7 +188,9 @@ export const notifyQuestionDeleted = internalAction({
       return
     }
 
-    const userDisplay = args.recipientUsername ? `@${args.recipientUsername}` : `(${args.recipientClerkId.slice(0, 8)}...)`
+    const userDisplay = args.recipientUsername
+      ? `@${args.recipientUsername}`
+      : `(${args.recipientClerkId.slice(0, 8)}...)`
 
     await sendSlackMessage(webhookUrl, {
       text: `Question declined by ${userDisplay}`,
