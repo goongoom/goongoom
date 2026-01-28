@@ -1,6 +1,7 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
+import posthog from 'posthog-js'
 import { useCallback, useState } from 'react'
 import { Button } from '@/components/ui/button'
 
@@ -22,6 +23,7 @@ export function CopyLinkButton({ url, fullWidth = false, className, variant = 'g
       try {
         const fullUrl = `${window.location.origin}${url}`
         await navigator.clipboard.writeText(fullUrl)
+        posthog.capture('link_copied', { url })
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
       } catch {
@@ -33,6 +35,7 @@ export function CopyLinkButton({ url, fullWidth = false, className, variant = 'g
         textArea.select()
         document.execCommand('copy')
         document.body.removeChild(textArea)
+        posthog.capture('link_copied', { url })
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
       }

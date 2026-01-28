@@ -8,6 +8,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { enUS, ko } from 'date-fns/locale'
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
+import posthog from 'posthog-js'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -181,6 +182,13 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
         payload: { questionId: selectedQuestion.id },
       })
 
+      // Track answer creation in PostHog
+      posthog.capture('answer_created', {
+        question_id: selectedQuestion.id,
+        is_anonymous_question: selectedQuestion.isAnonymous,
+        answer_length: answer.trim().length,
+      })
+
       setDismissedQuestionIds((prev) => {
         const next = new Set(prev)
         next.add(selectedQuestion.id)
@@ -224,6 +232,12 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
         entityType: 'question',
         entityId: questionToDecline.id,
         success: true,
+      })
+
+      // Track question decline in PostHog
+      posthog.capture('question_declined', {
+        question_id: questionToDecline.id,
+        is_anonymous_question: questionToDecline.isAnonymous,
       })
 
       setDismissedQuestionIds((prev) => {

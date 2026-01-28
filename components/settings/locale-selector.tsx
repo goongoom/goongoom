@@ -3,6 +3,7 @@
 import { useAuth } from '@clerk/nextjs'
 import { useMutation } from 'convex/react'
 import { useLocale, useTranslations } from 'next-intl'
+import posthog from 'posthog-js'
 import { api } from '@/convex/_generated/api'
 import { type Locale, localeNames, locales } from '@/i18n/config'
 import { localeStore } from '@/i18n/locale-store'
@@ -17,6 +18,10 @@ export function LocaleSelector() {
 
   function handleLocaleChange(value: string) {
     const locale = value as Locale
+    posthog.capture('locale_changed', {
+      previous_locale: currentLocale,
+      new_locale: locale,
+    })
     localeStore.setLocale(locale)
     if (userId) {
       updateLocale({ clerkId: userId, locale })

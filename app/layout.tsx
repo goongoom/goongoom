@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
 import { AnalyticsLoader } from '@/components/analytics/analytics-loader'
 import { ClientProviders } from '@/app/client-providers'
-import { clientEnv } from '@/env'
+import { env } from '@/env.vercel'
 import { defaultLocale } from '@/i18n/config'
 import './globals.css'
 
@@ -30,7 +30,7 @@ const lineSeedJP = localFont({
 export const metadata: Metadata = {
   title: 'Goongoom',
   description: 'Ask anything and get honest answers.',
-  metadataBase: new URL(clientEnv.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+  metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
 }
 
 export const viewport: Viewport = {

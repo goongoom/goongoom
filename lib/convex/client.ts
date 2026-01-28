@@ -1,7 +1,7 @@
 import { ConvexReactClient } from 'convex/react'
-import { clientEnv } from '@/env'
+import { env } from '@/env.vercel'
 
-const convexUrl = clientEnv.NEXT_PUBLIC_CONVEX_URL
+const convexUrl = env.NEXT_PUBLIC_CONVEX_URL
 if (!convexUrl) {
   throw new Error('NEXT_PUBLIC_CONVEX_URL is not set')
 }

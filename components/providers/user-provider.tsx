@@ -1,9 +1,10 @@
 'use client'
 
-import { createContext, useContext, useMemo, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useMemo, useRef, type ReactNode } from 'react'
 import { useAuth } from '@clerk/nextjs'
 import { useQuery } from 'convex-helpers/react/cache/hooks'
 import { useConvexAuth } from 'convex/react'
+import posthog from 'posthog-js'
 import { api } from '@/convex/_generated/api'
 import { SignatureColorProvider } from '@/components/theme/signature-color-provider'
 
@@ -42,10 +43,28 @@ interface UserProviderProps {
 export function UserProvider({ children }: UserProviderProps) {
   const { userId } = useAuth()
   const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth()
+  const identifiedRef = useRef<string | null>(null)
 
   const dbUser = useQuery(api.users.getByClerkId, userId ? { clerkId: userId } : 'skip')
 
   const isLoading = isAuthLoading || (isAuthenticated && (dbUser === undefined || dbUser === null))
+
+  // Identify user in PostHog when authenticated
+  useEffect(() => {
+    if (dbUser && identifiedRef.current !== dbUser.clerkId) {
+      posthog.identify(dbUser.clerkId, {
+        username: dbUser.username,
+        firstName: dbUser.firstName,
+        fullName: dbUser.fullName,
+        locale: dbUser.locale,
+      })
+      identifiedRef.current = dbUser.clerkId
+    } else if (!isAuthenticated && identifiedRef.current) {
+      // Reset PostHog when user logs out
+      posthog.reset()
+      identifiedRef.current = null
+    }
+  }, [dbUser, isAuthenticated])
 
   const user = useMemo<CurrentUser | null>(() => {
     if (!dbUser) return null

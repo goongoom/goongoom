@@ -5,15 +5,16 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { useQuery } from 'convex-helpers/react/cache/hooks'
 import { useAction, useConvexAuth, useMutation } from 'convex/react'
 import { useTranslations } from 'next-intl'
+import posthog from 'posthog-js'
 import { useCallback, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { useIsClient } from 'usehooks-ts'
 import { api } from '@/convex/_generated/api'
-import { clientEnv } from '@/env'
+import { env } from '@/env.vercel'
 import { Button } from '../ui/button'
 import { Switch } from '../ui/switch'
 
-const VAPID_PUBLIC_KEY = clientEnv.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+const VAPID_PUBLIC_KEY = env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
 
 type PermissionState = 'granted' | 'denied' | 'default'
 
@@ -109,6 +110,9 @@ export function NotificationSettings({ clerkId }: { clerkId: string }) {
             p256dh: subscriptionJson.keys.p256dh ?? '',
             auth: subscriptionJson.keys.auth ?? '',
           })
+          posthog.capture('notification_settings_changed', {
+            action: 'subscribed',
+          })
           toast.success(t('notificationSettings.subscribeSuccess'))
         }
       } catch {
@@ -127,6 +131,9 @@ export function NotificationSettings({ clerkId }: { clerkId: string }) {
             await subscription.unsubscribe()
             await removeAllPush({ clerkId })
 
+            posthog.capture('notification_settings_changed', {
+              action: 'unsubscribed',
+            })
             toast.success(t('notificationSettings.unsubscribeSuccess'), {
               duration: 5000,
               action: {

@@ -4,6 +4,7 @@ import { MoreVerticalIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
+import posthog from 'posthog-js'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
@@ -113,6 +114,12 @@ export function ShareInstagramButton({ shareUrl, mode = 'icon', className }: Sha
       if (!file) {
         return
       }
+
+      // Track Instagram share initiation
+      posthog.capture('instagram_share_initiated', {
+        theme: resolvedTheme,
+        share_method: navigator.canShare?.({ files: [file] }) ? 'native_share' : 'download',
+      })
 
       await shareOrDownload(file)
     } catch (error) {

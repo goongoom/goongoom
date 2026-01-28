@@ -6,6 +6,7 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
+import posthog from 'posthog-js'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { PasskeySignInButton } from '@/components/auth/passkey-sign-in-button'
@@ -231,6 +232,13 @@ export function QuestionDrawer({
       const result = await submitAction(formData)
 
       if (result.success) {
+        posthog.capture('question_submitted', {
+          recipient_name: recipientName,
+          question_type: questionType,
+          is_anonymous: questionType === 'anonymous',
+          question_length: question.length,
+          is_signed_in: isSignedIn,
+        })
         toast.success(successMessage)
         setShouldRefreshOnClose(true)
         setOpen(false)
@@ -249,92 +257,97 @@ export function QuestionDrawer({
 
   return (
     <>
-    <SignupPromptModal onOpenChange={setShowSignupPrompt} open={showSignupPrompt} />
-    <Drawer onAnimationEnd={handleAnimationEnd} onOpenChange={setOpen} open={open} repositionInputs={false}>
-      <div className="pointer-events-none fixed inset-x-0 bottom-tab-bar z-40 bg-gradient-to-t from-background via-background/80 to-transparent p-4 md:left-(--sidebar-width)">
-        <button
-          aria-label={t('writeQuestion')}
-          className="pointer-events-auto flex min-h-12 w-full items-center justify-between gap-4 rounded-full border border-border/50 bg-background/80 px-5 py-3.5 ring-1 ring-foreground/5 backdrop-blur-md transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          onClick={() => setOpen(true)}
-          type="button"
-        >
-          <span className="font-medium text-muted-foreground/80 text-sm sm:text-base">{t('inputPlaceholder')}</span>
-          <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform duration-300 group-active:scale-95">
-            <HugeiconsIcon className="size-5" icon={SentIcon} strokeWidth={2.5} />
-          </div>
-        </button>
-      </div>
-      <DrawerContent className="pb-safe">
-        <div className="mx-auto w-full max-w-lg">
-          <DrawerHeader className="pb-2 text-left">
-            <DrawerTitle className="font-bold text-xl tracking-tight">
-              <span className="bg-gradient-to-r from-emerald to-emerald bg-clip-text text-transparent">
-                {recipientName}
-              </span>
-              <span className="text-foreground"> {t('toRecipient', { recipientName: '' })}</span>
-            </DrawerTitle>
-            <DrawerDescription className="text-base">{t('newQuestion')}</DrawerDescription>
-          </DrawerHeader>
-
-          <div className="max-h-[70vh] overflow-y-auto px-4 pb-8">
-            {requiresSignIn ? (
-              <SignInPrompt />
-            ) : (
-              <form className="space-y-6 py-2" onSubmit={handleSubmit} ref={formRef}>
-                <div className="space-y-2">
-                  <Textarea
-                    className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-emerald focus:bg-background focus:ring-2 focus:ring-emerald/20"
-                    name="question"
-                    onChange={(event) => setQuestion(event.target.value)}
-                    placeholder={t('inputPlaceholder')}
-                    required
-                    value={question}
-                  />
-                  <div className="flex justify-end">
-                    <span
-                      className={cn(
-                        'font-medium text-xs',
-                        question.length > CHAR_LIMITS.QUESTION ? 'text-destructive' : 'text-muted-foreground'
-                      )}
-                    >
-                      {question.length}/{CHAR_LIMITS.QUESTION}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <Label className="ml-1 font-semibold text-foreground/90 text-sm">{t('whoToAsk')}</Label>
-                  <QuestionTypeSelector
-                    avatarSeed={avatarSeed}
-                    canAskAnonymously={canAskAnonymously}
-                    canAskPublic={canAskPublic}
-                    onAnonymousClick={handleAnonymousClick}
-                    onPublicClick={handlePublicClick}
-                    questionType={questionType}
-                  />
-                  <input name="questionType" type="hidden" value={questionType} />
-                </div>
-
-                {isAnonymous && <input name="avatarSeed" type="hidden" value={avatarSeed} />}
-
-                <div className="space-y-3 pt-2">
-                  <SubmitButton overLimit={question.length > CHAR_LIMITS.QUESTION} pending={isSubmitting} />
-                  <p className="text-balance text-center text-muted-foreground text-xs leading-relaxed">
-                    {t.rich('termsAgreement', {
-                      link: (chunks) => (
-                        <Link className="underline" href="/terms">
-                          {chunks}
-                        </Link>
-                      ),
-                    })}
-                  </p>
-                </div>
-              </form>
-            )}
-          </div>
+      <SignupPromptModal onOpenChange={setShowSignupPrompt} open={showSignupPrompt} />
+      <Drawer onAnimationEnd={handleAnimationEnd} onOpenChange={setOpen} open={open} repositionInputs={false}>
+        <div className="pointer-events-none fixed inset-x-0 bottom-tab-bar z-40 bg-gradient-to-t from-background via-background/80 to-transparent p-4 md:left-(--sidebar-width)">
+          <button
+            aria-label={t('writeQuestion')}
+            className="pointer-events-auto flex min-h-12 w-full items-center justify-between gap-4 rounded-full border border-border/50 bg-background/80 px-5 py-3.5 ring-1 ring-foreground/5 backdrop-blur-md transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            onClick={() => {
+              setOpen(true)
+              posthog.capture('question_drawer_opened', {
+                recipient_name: recipientName,
+              })
+            }}
+            type="button"
+          >
+            <span className="font-medium text-muted-foreground/80 text-sm sm:text-base">{t('inputPlaceholder')}</span>
+            <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform duration-300 group-active:scale-95">
+              <HugeiconsIcon className="size-5" icon={SentIcon} strokeWidth={2.5} />
+            </div>
+          </button>
         </div>
-      </DrawerContent>
-    </Drawer>
+        <DrawerContent className="pb-safe">
+          <div className="mx-auto w-full max-w-lg">
+            <DrawerHeader className="pb-2 text-left">
+              <DrawerTitle className="font-bold text-xl tracking-tight">
+                <span className="bg-gradient-to-r from-emerald to-emerald bg-clip-text text-transparent">
+                  {recipientName}
+                </span>
+                <span className="text-foreground"> {t('toRecipient', { recipientName: '' })}</span>
+              </DrawerTitle>
+              <DrawerDescription className="text-base">{t('newQuestion')}</DrawerDescription>
+            </DrawerHeader>
+
+            <div className="max-h-[70vh] overflow-y-auto px-4 pb-8">
+              {requiresSignIn ? (
+                <SignInPrompt />
+              ) : (
+                <form className="space-y-6 py-2" onSubmit={handleSubmit} ref={formRef}>
+                  <div className="space-y-2">
+                    <Textarea
+                      className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-emerald focus:bg-background focus:ring-2 focus:ring-emerald/20"
+                      name="question"
+                      onChange={(event) => setQuestion(event.target.value)}
+                      placeholder={t('inputPlaceholder')}
+                      required
+                      value={question}
+                    />
+                    <div className="flex justify-end">
+                      <span
+                        className={cn(
+                          'font-medium text-xs',
+                          question.length > CHAR_LIMITS.QUESTION ? 'text-destructive' : 'text-muted-foreground'
+                        )}
+                      >
+                        {question.length}/{CHAR_LIMITS.QUESTION}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label className="ml-1 font-semibold text-foreground/90 text-sm">{t('whoToAsk')}</Label>
+                    <QuestionTypeSelector
+                      avatarSeed={avatarSeed}
+                      canAskAnonymously={canAskAnonymously}
+                      canAskPublic={canAskPublic}
+                      onAnonymousClick={handleAnonymousClick}
+                      onPublicClick={handlePublicClick}
+                      questionType={questionType}
+                    />
+                    <input name="questionType" type="hidden" value={questionType} />
+                  </div>
+
+                  {isAnonymous && <input name="avatarSeed" type="hidden" value={avatarSeed} />}
+
+                  <div className="space-y-3 pt-2">
+                    <SubmitButton overLimit={question.length > CHAR_LIMITS.QUESTION} pending={isSubmitting} />
+                    <p className="text-balance text-center text-muted-foreground text-xs leading-relaxed">
+                      {t.rich('termsAgreement', {
+                        link: (chunks) => (
+                          <Link className="underline" href="/terms">
+                            {chunks}
+                          </Link>
+                        ),
+                      })}
+                    </p>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </>
   )
 }

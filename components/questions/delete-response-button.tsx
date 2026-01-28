@@ -4,6 +4,7 @@ import { useAuth } from '@clerk/nextjs'
 import { useMutation } from 'convex/react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
+import posthog from 'posthog-js'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -36,6 +37,11 @@ export function DeleteResponseButton({ answerId, profileUrl }: DeleteResponseBut
       await softDeleteAnswer({
         id: answerId as AnswerId,
         recipientClerkId: userId,
+      })
+
+      // Track answer deletion in PostHog
+      posthog.capture('answer_deleted', {
+        answer_id: answerId,
       })
 
       router.prefetch(profileUrl)

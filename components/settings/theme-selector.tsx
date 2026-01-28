@@ -4,6 +4,7 @@ import { ComputerIcon, Moon02Icon, Sun03Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
+import posthog from 'posthog-js'
 import { useIsClient } from 'usehooks-ts'
 import { Label } from '../ui/label'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
@@ -61,7 +62,13 @@ export function ThemeSelector() {
 
       <RadioGroup
         className="grid w-full grid-cols-3 gap-2"
-        onValueChange={(value) => setTheme(value as Theme)}
+        onValueChange={(value) => {
+          setTheme(value as Theme)
+          posthog.capture('theme_changed', {
+            previous_theme: theme,
+            new_theme: value,
+          })
+        }}
         value={theme}
       >
         {themes.map((themeOption) => (

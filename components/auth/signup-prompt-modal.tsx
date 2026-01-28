@@ -4,7 +4,8 @@ import { SignUpButton } from '@clerk/nextjs'
 import { CheckmarkCircle02Icon, UserAdd01Icon, MessageQuestionIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import posthog from 'posthog-js'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { cn } from '@/lib/utils'
@@ -18,6 +19,13 @@ export function SignupPromptModal({ open, onOpenChange }: SignupPromptModalProps
   const t = useTranslations('signupPrompt')
   const tCommon = useTranslations('common')
   const [signedUp, setSignedUp] = useState(false)
+
+  // Track when signup prompt is shown
+  useEffect(() => {
+    if (open) {
+      posthog.capture('signup_prompt_shown')
+    }
+  }, [open])
 
   const handleDismiss = () => {
     onOpenChange(false)
