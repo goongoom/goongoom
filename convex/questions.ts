@@ -117,6 +117,21 @@ export const create = mutation({
       tag: `question-${id}`,
     })
 
+    const senderUser = args.senderClerkId
+      ? await ctx.db
+          .query('users')
+          .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.senderClerkId!))
+          .first()
+      : null
+
+    await ctx.scheduler.runAfter(0, internal.slackActions.notifyNewQuestion, {
+      recipientUsername: recipientUser.username,
+      recipientClerkId: args.recipientClerkId,
+      senderUsername: senderUser?.username,
+      isAnonymous: args.isAnonymous,
+      questionPreview: args.content,
+    })
+
     return await ctx.db.get(id)
   },
 })
@@ -146,6 +161,17 @@ export const softDelete = mutation({
       return { success: true }
     }
     await ctx.db.patch(args.id, { deletedAt: Date.now() })
+
+    const recipientUser = await ctx.db
+      .query('users')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.recipientClerkId))
+      .first()
+
+    await ctx.scheduler.runAfter(0, internal.slackActions.notifyQuestionDeleted, {
+      recipientUsername: recipientUser?.username,
+      recipientClerkId: args.recipientClerkId,
+    })
+
     return { success: true }
   },
 })

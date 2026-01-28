@@ -2,6 +2,7 @@ import { httpRouter } from 'convex/server'
 import { Webhook } from 'svix'
 import { internal } from './_generated/api'
 import { httpAction } from './_generated/server'
+import type { Id } from './_generated/dataModel'
 
 const CJK_REGEX = /^[\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\uAC00-\uD7AF\u1100-\u11FF]+$/
 
@@ -102,7 +103,7 @@ http.route({
       if (referrerUsername) {
         await ctx.runMutation(internal.referrals.recordReferral, {
           referrerUsername,
-          referredUserId: userId,
+          referredUserId: userId as Id<'users'>,
           referredClerkId: data.id,
           utmSource,
           utmMedium,
@@ -111,6 +112,12 @@ http.route({
           utmContent,
         })
       }
+
+      await ctx.scheduler.runAfter(0, internal.slackActions.notifyUserSignup, {
+        username: data.username ?? undefined,
+        clerkId: data.id,
+        referrerUsername,
+      })
     } else if (type === 'user.updated') {
       const firstName = data.first_name ?? undefined
       const fullName = buildFullName(data.first_name, data.last_name)
@@ -124,6 +131,12 @@ http.route({
     } else if (type === 'user.deleted') {
       await ctx.runMutation(internal.users.deleteFromWebhook, {
         clerkId: data.id,
+      })
+
+      await ctx.scheduler.runAfter(0, internal.slackActions.notifyUserDeleted, {
+        username: data.username ?? undefined,
+        clerkId: data.id,
+        source: 'webhook' as const,
       })
     }
 

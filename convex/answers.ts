@@ -88,8 +88,25 @@ export const create = mutation({
         url: notificationUrl,
         tag: `answer-${answerId}`,
       })
+
+      await ctx.scheduler.runAfter(0, internal.slackActions.notifyNewAnswer, {
+        answererUsername: answerAuthor?.username,
+        answererClerkId: question.recipientClerkId,
+        answerPreview: args.content,
+      })
     } else {
       await patchPromise
+
+      const answerer = await ctx.db
+        .query('users')
+        .withIndex('by_clerk_id', (q) => q.eq('clerkId', question.recipientClerkId))
+        .first()
+
+      await ctx.scheduler.runAfter(0, internal.slackActions.notifyNewAnswer, {
+        answererUsername: answerer?.username,
+        answererClerkId: question.recipientClerkId,
+        answerPreview: args.content,
+      })
     }
 
     return ctx.db.get(answerId)
@@ -125,6 +142,17 @@ export const softDelete = mutation({
 
     await ctx.db.patch(args.id, { deletedAt: Date.now() })
     await ctx.db.patch(answer.questionId, { answerId: null })
+
+    const answerer = await ctx.db
+      .query('users')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.recipientClerkId))
+      .first()
+
+    await ctx.scheduler.runAfter(0, internal.slackActions.notifyAnswerDeleted, {
+      answererUsername: answerer?.username,
+      answererClerkId: args.recipientClerkId,
+    })
+
     return { success: true, questionId: answer.questionId }
   },
 })

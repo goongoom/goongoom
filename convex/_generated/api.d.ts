@@ -19,6 +19,7 @@ import type * as push from "../push.js";
 import type * as pushActions from "../pushActions.js";
 import type * as questions from "../questions.js";
 import type * as referrals from "../referrals.js";
+import type * as slackActions from "../slackActions.js";
 import type * as types from "../types.js";
 import type * as users from "../users.js";
 
@@ -40,6 +41,7 @@ declare const fullApi: ApiFromModules<{
   pushActions: typeof pushActions;
   questions: typeof questions;
   referrals: typeof referrals;
+  slackActions: typeof slackActions;
   types: typeof types;
   users: typeof users;
 }>;
