@@ -1,25 +1,23 @@
 'use client'
 
-import { SignUpButton, useUser } from '@clerk/nextjs'
+import { useUser } from '@clerk/nextjs'
 import {
   Agreement01Icon,
   CustomerService01Icon,
   Home01Icon,
   InboxIcon,
-  Login01Icon,
   SecurityCheckIcon,
   Settings01Icon,
-  UserAdd01Icon,
   UserGroupIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { PasskeySignInButton } from '@/components/auth/passkey-sign-in-button'
+
 import { Ultralink } from '@/components/navigation/ultralink'
 import { cn } from '@/lib/utils'
 
-const guestTabItems = [
+const getGuestTabItems = () => [
   {
     titleKey: 'home' as const,
     href: '/',
@@ -46,6 +44,33 @@ const guestTabItems = [
   },
 ]
 
+const getLoggedInTabItems = (username?: string | null) => [
+  {
+    titleKey: 'home' as const,
+    href: username ? `/${username}` : '/',
+    icon: Home01Icon,
+    namespace: 'sidebar' as const,
+  },
+  {
+    titleKey: 'inbox' as const,
+    href: '/inbox',
+    icon: InboxIcon,
+    namespace: 'sidebar' as const,
+  },
+  {
+    titleKey: 'friends' as const,
+    href: '/friends',
+    icon: UserGroupIcon,
+    namespace: 'sidebar' as const,
+  },
+  {
+    titleKey: 'settings' as const,
+    href: '/settings',
+    icon: Settings01Icon,
+    namespace: 'sidebar' as const,
+  },
+]
+
 interface MobileTabBarProps {
   isLoggedIn?: boolean
 }
@@ -54,38 +79,10 @@ export function MobileTabBar({ isLoggedIn = false }: MobileTabBarProps) {
   const pathname = usePathname()
   const tSidebar = useTranslations('sidebar')
   const tFooter = useTranslations('footer')
-  const tCommon = useTranslations('common')
   const tUi = useTranslations('ui')
   const { user } = useUser()
 
-  const loggedInTabItems = [
-    {
-      titleKey: 'home' as const,
-      href: user?.username ? `/${user.username}` : '/',
-      icon: Home01Icon,
-      namespace: 'sidebar' as const,
-    },
-    {
-      titleKey: 'inbox' as const,
-      href: '/inbox',
-      icon: InboxIcon,
-      namespace: 'sidebar' as const,
-    },
-    {
-      titleKey: 'friends' as const,
-      href: '/friends',
-      icon: UserGroupIcon,
-      namespace: 'sidebar' as const,
-    },
-    {
-      titleKey: 'settings' as const,
-      href: '/settings',
-      icon: Settings01Icon,
-      namespace: 'sidebar' as const,
-    },
-  ]
-
-  const tabItems = isLoggedIn ? loggedInTabItems : guestTabItems
+  const tabItems = isLoggedIn ? getLoggedInTabItems(user?.username) : getGuestTabItems()
 
   const isActive = (href: string) => {
     if (href === '/') {
@@ -96,10 +93,6 @@ export function MobileTabBar({ isLoggedIn = false }: MobileTabBarProps) {
     }
     return pathname.startsWith(href)
   }
-
-  const tabButtonClass = cn(
-    'flex min-h-12 min-w-16 flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-muted-foreground transition-colors'
-  )
 
   return (
     <nav
@@ -124,22 +117,6 @@ export function MobileTabBar({ isLoggedIn = false }: MobileTabBarProps) {
             </Ultralink>
           )
         })}
-        {!isLoggedIn && (
-          <>
-            <PasskeySignInButton>
-              <button className={tabButtonClass} type="button">
-                <HugeiconsIcon icon={Login01Icon} size={22} strokeWidth={2} />
-                <span className="font-medium text-xs">{tCommon('login')}</span>
-              </button>
-            </PasskeySignInButton>
-            <SignUpButton mode="modal">
-              <button className={tabButtonClass} type="button">
-                <HugeiconsIcon icon={UserAdd01Icon} size={22} strokeWidth={2} />
-                <span className="font-medium text-xs">{tCommon('start')}</span>
-              </button>
-            </SignUpButton>
-          </>
-        )}
       </div>
     </nav>
   )
