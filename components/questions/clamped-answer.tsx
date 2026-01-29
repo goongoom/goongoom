@@ -44,13 +44,9 @@ export function ClampedAnswer({ content, gradientColors }: ClampedAnswerProps) {
       <p className="line-clamp-4 whitespace-pre-line leading-relaxed" ref={textRef}>
         {content}
       </p>
-      {isClamped && (
+      {isClamped && gradientColors && (
         <div
-          className={
-            gradientColors
-              ? 'pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-[var(--clamp-gradient-light)] dark:bg-[var(--clamp-gradient-dark)]'
-              : 'pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-emerald to-transparent'
-          }
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-[var(--clamp-gradient-light)] dark:bg-[var(--clamp-gradient-dark)]"
           style={gradientStyle}
         />
       )}

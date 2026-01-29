@@ -81,7 +81,6 @@ export function SignatureColorProvider({ children, signatureColor: initialColor 
 
   const colorOverrideCSS = `
     :root {
-      --emerald: ${colors.light.primary};
       --success: ${colors.light.primary};
       --primary: ${colors.light.primary};
       --primary-foreground: #ffffff;
@@ -91,7 +90,6 @@ export function SignatureColorProvider({ children, signatureColor: initialColor 
       ${hasExplicitColor ? `--selection-color: ${colors.light.primary};` : ''}
     }
     .dark {
-      --emerald: ${colors.dark.primary};
       --success: ${colors.dark.primary};
       --primary: ${colors.dark.primary};
       --primary-foreground: #ffffff;

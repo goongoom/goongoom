@@ -52,21 +52,21 @@ function getQuestionerAvatarUrl(
 export function AnsweredQuestionCard(props: AnsweredQuestionCardProps) {
   if (props.isLoading) {
     return (
-      <Card className="group relative">
+      <Card className="group relative h-full">
         <CardContent className="flex flex-col gap-4">
           <div className="flex w-full items-start gap-3">
-            <Skeleton className="size-10 rounded-full" />
-            <div className="flex flex-1 flex-col gap-2">
-              <Skeleton className="h-16 w-3/4 rounded-lg" />
-              <Skeleton className="h-3 w-24" />
+            <Skeleton className="size-10 flex-shrink-0 rounded-full" />
+            <div className="flex flex-col">
+              <Skeleton className="min-h-14 w-48 max-w-prose rounded-lg px-4 py-3 sm:w-64" />
+              <Skeleton className="mt-1 ml-1 h-3 w-24" />
             </div>
           </div>
           <div className="flex w-full items-start justify-end gap-3">
-            <div className="flex flex-1 flex-col items-end gap-2">
-              <Skeleton className="h-16 w-3/4 rounded-lg" />
-              <Skeleton className="h-3 w-24" />
+            <div className="flex flex-1 flex-col items-end">
+              <Skeleton className="min-h-14 w-48 max-w-prose rounded-lg px-4 py-3 sm:w-64" />
+              <Skeleton className="mt-1 mr-1 h-3 w-24" />
             </div>
-            <Skeleton className="size-10 rounded-full" />
+            <Skeleton className="size-10 flex-shrink-0 rounded-full" />
           </div>
         </CardContent>
       </Card>
@@ -98,18 +98,15 @@ export function AnsweredQuestionCard(props: AnsweredQuestionCardProps) {
   const questionerFallback = isAnonymous ? '?' : senderName?.[0] || '?'
   const imagesToPrefetch = [questionerAvatarUrl, avatarUrl].filter((url): url is string => Boolean(url))
 
-  const answerColors = signatureColor ? getSignatureColor(signatureColor) : null
-  const answerCardStyle = answerColors
-    ? ({
-        '--answer-bg-light': answerColors.light.primary,
-        '--answer-bg-dark': answerColors.dark.primary,
-        '--answer-border-light': answerColors.light.border,
-        '--answer-border-dark': answerColors.dark.border,
-      } as React.CSSProperties)
-    : undefined
+  const answerColors = getSignatureColor(signatureColor || 'zinc')
+  const answerCardStyle = {
+    '--answer-bg-light': answerColors.light.primary,
+    '--answer-bg-dark': answerColors.dark.primary,
+    '--answer-border-light': answerColors.light.border,
+    '--answer-border-dark': answerColors.dark.border,
+  } as React.CSSProperties
 
-  const showSenderColor = !isAnonymous && senderSignatureColor
-  const senderColors = showSenderColor ? getSignatureColor(senderSignatureColor) : null
+  const senderColors = !isAnonymous ? getSignatureColor(senderSignatureColor || 'zinc') : null
   const questionCardStyle = senderColors
     ? ({
         '--question-bg-light': senderColors.light.primary,
@@ -133,9 +130,9 @@ export function AnsweredQuestionCard(props: AnsweredQuestionCardProps) {
             <div className="flex flex-col">
               <Card
                 className={
-                  senderColors
-                    ? 'max-w-prose border ring-0 bg-[var(--question-bg-light)] px-4 py-3 text-white dark:bg-[var(--question-bg-dark)] border-[var(--question-border-light)] dark:border-[var(--question-border-dark)]'
-                    : 'max-w-prose ring-0 bg-muted/40 px-4 py-3'
+                    senderColors
+                      ? 'max-w-prose border ring-0 bg-[var(--question-bg-light)] px-4 py-3 text-white dark:bg-[var(--question-bg-dark)] border-[var(--question-border-light)] dark:border-[var(--question-border-dark)]'
+                      : 'max-w-prose border border-border/50 ring-0 bg-muted/40 px-4 py-3'
                 }
                 style={questionCardStyle}
               >
@@ -153,16 +150,12 @@ export function AnsweredQuestionCard(props: AnsweredQuestionCardProps) {
           <div className="flex w-full items-start justify-end gap-3">
             <div className="flex flex-1 flex-col items-end">
               <Card
-                className={
-                  signatureColor
-                    ? 'max-w-prose border ring-0 bg-[var(--answer-bg-light)] px-4 py-3 text-white dark:bg-[var(--answer-bg-dark)] border-[var(--answer-border-light)] dark:border-[var(--answer-border-dark)]'
-                    : 'max-w-prose border-none ring-0 bg-gradient-to-br from-emerald to-emerald px-4 py-3 text-white'
-                }
+                className="max-w-prose border ring-0 bg-[var(--answer-bg-light)] px-4 py-3 text-white dark:bg-[var(--answer-bg-dark)] border-[var(--answer-border-light)] dark:border-[var(--answer-border-dark)]"
                 style={answerCardStyle}
               >
                 <ClampedAnswer
                   content={answerContent}
-                  gradientColors={answerColors ? { light: answerColors.light.primary, dark: answerColors.dark.primary } : undefined}
+                  gradientColors={{ light: answerColors.light.primary, dark: answerColors.dark.primary }}
                 />
               </Card>
               <p className="mt-1 mr-1 text-muted-foreground text-xs">

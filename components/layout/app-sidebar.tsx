@@ -17,6 +17,7 @@ import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import type * as React from 'react'
 import { PasskeySignInButton } from '@/components/auth/passkey-sign-in-button'
+import { LocaleSwitcher } from '@/components/layout/locale-switcher'
 import { SidebarQuestionItem } from '@/components/layout/sidebar-question-item'
 import { Ultralink } from '@/components/navigation/ultralink'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -31,7 +32,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
 } from '@/components/ui/sidebar'
 
 interface RecentQuestion {
@@ -111,7 +111,7 @@ export function AppSidebar({ recentQuestions = [], ...props }: AppSidebarProps) 
   }
 
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -124,7 +124,7 @@ export function AppSidebar({ recentQuestions = [], ...props }: AppSidebarProps) 
                 <>
                   <Avatar className="size-8 rounded-lg">
                     <AvatarImage alt={user.firstName || user.username || ''} src={user.imageUrl} />
-                    <AvatarFallback className="rounded-lg bg-emerald text-emerald-foreground">
+                    <AvatarFallback className="rounded-lg bg-gradient-to-br from-pink-500 to-orange-500 text-white">
                       {user.firstName?.[0] || user.username?.[0] || 'U'}
                     </AvatarFallback>
                   </Avatar>
@@ -149,12 +149,12 @@ export function AppSidebar({ recentQuestions = [], ...props }: AppSidebarProps) 
         </SidebarMenu>
       </SidebarHeader>
       {!user && (
-        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+        <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
                 <PasskeySignInButton>
-                  <SidebarMenuButton tooltip={tCommon('login')}>
+                  <SidebarMenuButton>
                     <HugeiconsIcon icon={Login01Icon} />
                     <span>{tCommon('login')}</span>
                   </SidebarMenuButton>
@@ -162,11 +162,14 @@ export function AppSidebar({ recentQuestions = [], ...props }: AppSidebarProps) 
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SignUpButton mode="modal">
-                  <SidebarMenuButton tooltip={tCommon('start')}>
+                  <SidebarMenuButton>
                     <HugeiconsIcon icon={UserAdd01Icon} />
                     <span>{tCommon('start')}</span>
                   </SidebarMenuButton>
                 </SignUpButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <LocaleSwitcher />
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
@@ -181,7 +184,6 @@ export function AppSidebar({ recentQuestions = [], ...props }: AppSidebarProps) 
                   <SidebarMenuButton
                     isActive={isActive(item.url)}
                     render={<Ultralink href={item.url} />}
-                    tooltip={item.title}
                   >
                     <HugeiconsIcon icon={item.icon} />
                     <span>{item.title}</span>
@@ -193,7 +195,7 @@ export function AppSidebar({ recentQuestions = [], ...props }: AppSidebarProps) 
         </SidebarGroup>
 
         {user && recentQuestions.length > 0 && (
-          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+          <SidebarGroup>
             <SidebarGroupLabel>{tSidebar('recentQuestions')}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
@@ -207,7 +209,6 @@ export function AppSidebar({ recentQuestions = [], ...props }: AppSidebarProps) 
           </SidebarGroup>
         )}
       </SidebarContent>
-      <SidebarRail />
     </Sidebar>
   )
 }

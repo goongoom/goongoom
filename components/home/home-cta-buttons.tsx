@@ -25,7 +25,7 @@ export function HomeCTAButtons({
       <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-3">
         <Link
           href={profileUrl}
-          className="group relative inline-flex h-14 items-center justify-center overflow-hidden rounded-full bg-primary px-10 text-lg font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="group relative inline-flex h-14 items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-pink-500 to-orange-500 px-10 text-lg font-medium text-white shadow-lg shadow-pink-500/25 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
         >
           <span className="mr-2">{profileLabel}</span>
           <svg
@@ -47,7 +47,7 @@ export function HomeCTAButtons({
       <SignUpButton mode="modal">
         <button
           type="button"
-          className="group relative inline-flex h-14 items-center justify-center overflow-hidden rounded-full bg-primary px-10 text-lg font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="group relative inline-flex h-14 items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-pink-500 to-orange-500 px-10 text-lg font-medium text-white shadow-lg shadow-pink-500/25 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
         >
           <span className="mr-2">{startLabel}</span>
           <svg

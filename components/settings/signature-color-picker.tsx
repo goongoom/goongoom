@@ -45,7 +45,7 @@ export function SignatureColorPicker({ currentColor, labels }: SignatureColorPic
   )
 
   return (
-    <RadioGroup className="grid grid-cols-6 gap-2" defaultValue={currentColor} onValueChange={handleColorChange}>
+    <RadioGroup className="grid grid-cols-6 gap-2" value={currentColor} onValueChange={handleColorChange}>
       {colorNames.map((colorName) => {
         const colors = SIGNATURE_COLORS[colorName]
         return (

@@ -459,7 +459,7 @@ export function ProfileEditForm({
       <Card>
         <CardContent className="space-y-4">
           <div className="flex items-center gap-2">
-            <div className="flex size-8 items-center justify-center rounded-full bg-emerald/10 text-emerald">
+            <div className="flex size-8 items-center justify-center rounded-full bg-gradient-to-br from-pink-500/10 to-orange-500/10 text-pink-500">
               <HugeiconsIcon className="size-4" icon={UserIcon} />
             </div>
             <h3 className="font-semibold text-foreground text-sm">{t('profileSettings')}</h3>
@@ -470,7 +470,7 @@ export function ProfileEditForm({
               {t('bioLabel')}
             </FieldLabel>
             <Textarea
-              className="min-h-24 resize-none rounded-xl border border-border/50 bg-background transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
+              className="min-h-24 resize-none rounded-xl border border-border/50 bg-background transition-all focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20"
               id="bio"
               name="bio"
               onBlur={handleBioBlur}
@@ -505,7 +505,7 @@ export function ProfileEditForm({
                         <Input
                           autoCapitalize="none"
                           autoCorrect="off"
-                          className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
+                          className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20"
                           onBlur={handleSocialLinksBlur}
                           onChange={(event) =>
                             updateHandleAt(row.id, stripNonAscii(event.target.value), setInstagramRows)
@@ -546,7 +546,7 @@ export function ProfileEditForm({
                         <Input
                           autoCapitalize="none"
                           autoCorrect="off"
-                          className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
+                          className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20"
                           onBlur={handleSocialLinksBlur}
                           onChange={(event) =>
                             updateHandleAt(row.id, stripNonAscii(event.target.value), setTwitterRows)
@@ -587,7 +587,7 @@ export function ProfileEditForm({
                         <Input
                           autoCapitalize="none"
                           autoCorrect="off"
-                          className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
+                          className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20"
                           onBlur={handleSocialLinksBlur}
                           onChange={(event) =>
                             updateHandleAt(row.id, stripNonAscii(event.target.value), setYoutubeRows)
@@ -628,7 +628,7 @@ export function ProfileEditForm({
                         <Input
                           autoCapitalize="none"
                           autoCorrect="off"
-                          className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
+                          className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20"
                           onBlur={handleSocialLinksBlur}
                           onChange={(event) =>
                             updateCustomAt(row.id, 'handle', stripNonAscii(event.target.value), setGithubRows)
@@ -669,7 +669,7 @@ export function ProfileEditForm({
                         <Input
                           autoCapitalize="none"
                           autoCorrect="off"
-                          className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
+                          className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20"
                           onBlur={() => handleNaverBlogHandleBlur(row.id, row.handle)}
                           onChange={(event) =>
                             updateCustomAt(row.id, 'handle', stripNonAscii(event.target.value), setNaverBlogRows)
@@ -710,7 +710,7 @@ export function ProfileEditForm({
                         <Input
                           autoCapitalize="none"
                           autoCorrect="off"
-                          className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-emerald focus:ring-2 focus:ring-emerald/20"
+                          className="min-h-11 rounded-xl border border-border/50 bg-background pl-10 transition-all focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20"
                           onBlur={handleSocialLinksBlur}
                           onChange={(event) =>
                             updateHandleAt(row.id, stripNonAscii(event.target.value), setThreadsRows)
@@ -744,7 +744,7 @@ export function ProfileEditForm({
       <Card>
         <CardContent className="space-y-4">
           <div className="flex items-center gap-2">
-            <div className="flex size-8 items-center justify-center rounded-full bg-emerald/10 text-emerald">
+            <div className="flex size-8 items-center justify-center rounded-full bg-gradient-to-br from-pink-500/10 to-orange-500/10 text-pink-500">
               <HugeiconsIcon className="size-4" icon={LockIcon} />
             </div>
             <h3 className="font-semibold text-foreground text-sm">{t('anonymousRestriction')}</h3>
@@ -759,7 +759,7 @@ export function ProfileEditForm({
               }
               return (
                 <Label
-                  className="group relative flex cursor-pointer items-start gap-3 rounded-xl border-2 border-transparent bg-muted/30 p-3 transition-all has-data-checked:border-emerald/50 has-data-checked:bg-emerald/5"
+                  className="group relative flex cursor-pointer items-start gap-3 rounded-xl border-2 border-transparent bg-muted/30 p-3 transition-all has-data-checked:border-pink-500/50 has-data-checked:bg-pink-500/5"
                   key={level}
                 >
                   <RadioGroupItem
@@ -767,7 +767,7 @@ export function ProfileEditForm({
                     id={`qsl-${level}`}
                     value={level}
                   />
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted/80 text-muted-foreground transition-colors group-has-data-checked:bg-emerald/20 group-has-data-checked:text-emerald">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted/80 text-muted-foreground transition-colors group-has-data-checked:bg-pink-500/20 group-has-data-checked:text-pink-500">
                     <HugeiconsIcon className="size-5" icon={IconComponent} strokeWidth={2} />
                   </div>
                   <div className="flex flex-1 flex-col gap-0.5">
@@ -788,7 +788,7 @@ export function ProfileEditForm({
       <Card>
         <CardContent className="space-y-4">
           <div className="flex items-center gap-2">
-            <div className="flex size-8 items-center justify-center rounded-full bg-emerald/10 text-emerald">
+            <div className="flex size-8 items-center justify-center rounded-full bg-gradient-to-br from-pink-500/10 to-orange-500/10 text-pink-500">
               <HugeiconsIcon className="size-4" icon={PaintBrushIcon} />
             </div>
             <h3 className="font-semibold text-foreground text-sm">{t('signatureColor')}</h3>

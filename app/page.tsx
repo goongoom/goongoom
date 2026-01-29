@@ -78,7 +78,7 @@ export default async function Home() {
 
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             <div className="relative rounded-2xl border bg-card p-6">
-              <div className="absolute -top-3 left-6 flex size-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+              <div className="absolute -top-3 left-6 flex size-7 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-orange-500 text-xs font-bold text-white">
                 1
               </div>
               <h3 className="mt-3 text-base font-semibold text-foreground">{t('step1Title')}</h3>
@@ -86,7 +86,7 @@ export default async function Home() {
             </div>
 
             <div className="relative rounded-2xl border bg-card p-6">
-              <div className="absolute -top-3 left-6 flex size-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+              <div className="absolute -top-3 left-6 flex size-7 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-orange-500 text-xs font-bold text-white">
                 2
               </div>
               <h3 className="mt-3 text-base font-semibold text-foreground">{t('step2Title')}</h3>
@@ -94,7 +94,7 @@ export default async function Home() {
             </div>
 
             <div className="relative rounded-2xl border bg-card p-6">
-              <div className="absolute -top-3 left-6 flex size-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+              <div className="absolute -top-3 left-6 flex size-7 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-orange-500 text-xs font-bold text-white">
                 3
               </div>
               <h3 className="mt-3 text-base font-semibold text-foreground">{t('step3Title')}</h3>
@@ -114,7 +114,7 @@ export default async function Home() {
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {features.map((feature) => (
               <div key={feature.key} className="rounded-2xl border bg-card p-6">
-                <div className="mb-3 flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                <div className="mb-3 flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-orange-500 text-white">
                   <HugeiconsIcon icon={feature.icon} className="size-5" />
                 </div>
                 <h3 className="text-base font-semibold text-foreground">{t(`${feature.key}Title`)}</h3>
@@ -137,7 +137,7 @@ export default async function Home() {
               <div className="mt-8 space-y-5">
                 {useCases.map((useCase) => (
                   <div key={useCase.key} className="flex gap-3">
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-pink-500 to-orange-500 text-white">
                       <HugeiconsIcon icon={useCase.icon} className="size-4" />
                     </div>
                     <div>

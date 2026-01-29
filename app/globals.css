@@ -66,8 +66,7 @@
   --color-info-foreground: var(--info-foreground);
   --color-info: var(--info);
   --color-destructive-foreground: var(--destructive-foreground);
-  --color-emerald: var(--emerald);
-  --color-emerald-foreground: var(--emerald-foreground);
+
 }
 
 :root {
@@ -111,8 +110,6 @@
   --success-foreground: var(--color-emerald-700);
   --warning: var(--color-amber-500);
   --warning-foreground: var(--color-amber-700);
-  --emerald: #00ba7a;
-  --emerald-foreground: oklch(0.98 0 0);
 }
 
 .dark {
@@ -154,8 +151,6 @@
   --success-foreground: var(--color-emerald-400);
   --warning: var(--color-amber-500);
   --warning-foreground: var(--color-amber-400);
-  --emerald: oklch(0.75 0.16 162);
-  --emerald-foreground: oklch(0.98 0 0);
 }
 
 @layer base {
@@ -169,8 +164,8 @@
   }
   body {
     @apply bg-background text-foreground;
-    accent-color: var(--emerald);
-    caret-color: var(--emerald);
+    accent-color: var(--primary);
+    caret-color: var(--primary);
   }
   ::selection {
     background-color: color-mix(in oklch, var(--selection-color, #e1306c) 30%, transparent);
@@ -228,6 +223,89 @@
 }
 
 @layer utilities {
+  /* ============================================
+     Squircle Borders (CSS Borders Level 4 - 2026)
+     Uses corner-shape: squircle with SVG fallback
+     ============================================ */
+
+  /* Base squircle class - enables corner-shape for supported browsers */
+  .squircle {
+    /* Native CSS squircle for supported browsers (Chrome 139+, Edge 139+) */
+    corner-shape: squircle;
+  }
+
+  /* Squircle variants matching existing radius tokens */
+  .squircle-sm {
+    border-radius: var(--radius-sm);
+    corner-shape: squircle;
+  }
+
+  .squircle-md {
+    border-radius: var(--radius-md);
+    corner-shape: squircle;
+  }
+
+  .squircle-lg {
+    border-radius: var(--radius-lg);
+    corner-shape: squircle;
+  }
+
+  .squircle-xl {
+    border-radius: var(--radius-xl);
+    corner-shape: squircle;
+  }
+
+  .squircle-2xl {
+    border-radius: var(--radius-2xl);
+    corner-shape: squircle;
+  }
+
+  .squircle-3xl {
+    border-radius: var(--radius-3xl);
+    corner-shape: squircle;
+  }
+
+  .squircle-4xl {
+    border-radius: var(--radius-4xl);
+    corner-shape: squircle;
+  }
+
+  .squircle-full {
+    border-radius: 9999px;
+    corner-shape: squircle;
+  }
+
+  /* Feature detection for JS fallback */
+  @supports not (corner-shape: squircle) {
+    .squircle,
+    .squircle-sm,
+    .squircle-md,
+    .squircle-lg,
+    .squircle-xl,
+    .squircle-2xl,
+    .squircle-3xl,
+    .squircle-4xl,
+    .squircle-full {
+      /* Marker for JS to detect and apply SVG clip-path fallback */
+      --squircle-fallback: 1;
+    }
+  }
+
+  /* When native corner-shape is supported, remove any clip-path fallback */
+  @supports (corner-shape: squircle) {
+    .squircle,
+    .squircle-sm,
+    .squircle-md,
+    .squircle-lg,
+    .squircle-xl,
+    .squircle-2xl,
+    .squircle-3xl,
+    .squircle-4xl,
+    .squircle-full {
+      clip-path: none !important;
+    }
+  }
+
   .pt-safe {
     padding-top: env(safe-area-inset-top, 0px);
   }

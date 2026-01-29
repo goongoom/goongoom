@@ -34,11 +34,11 @@ export function ProfileCard(props: ProfileCardProps) {
     return (
       <Card className="mb-6">
         <CardContent className="flex items-center gap-6">
-          <Skeleton className="size-24 rounded-full" />
-          <div className="flex flex-1 flex-col gap-2">
-            <Skeleton className="h-6 w-32" />
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="mt-1 h-4 w-full" />
+          <Skeleton className="size-24 flex-shrink-0 rounded-full ring-2 ring-primary/30" />
+          <div className="flex flex-1 flex-col gap-1">
+            <Skeleton className="h-7 w-32" />
+            <Skeleton className="h-5 w-24" />
+            <Skeleton className="mt-1 h-5 w-full max-w-xs" />
           </div>
         </CardContent>
         <CardContent className="flex flex-wrap gap-2 pt-0">

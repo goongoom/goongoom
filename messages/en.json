@@ -80,7 +80,8 @@
     "noAnswersYet": "No answers yet.",
     "answerCreated": "Answer sent.",
     "answerDeleted": "Answer deleted.",
-    "answerRestored": "Answer restored."
+    "answerRestored": "Answer restored.",
+    "shareOnInstagram": "Share on Instagram"
   },
   "inbox": {
     "title": "Inbox",
@@ -159,7 +160,7 @@
     "feedTitle": "Goongoom stories",
     "feedEmptyTitle": "No stories yet.",
     "feedEmptyDescription": "Be the first to ask a question.",
-    "trustIndicator": "Honest conversations shared: {count}"
+    "trustIndicator": "{count} honest conversations shared"
   },
   "footer": {
     "terms": "Terms of Service",
@@ -291,7 +292,7 @@
     "heroTitle1": "Ask anything.",
     "heroTitle2": "Get honest answers.",
     "heroSubtitle": "Create your Q&A page. Receive anonymous or named questions from anyone. Share your link and start chatting.",
-    "trustIndicator": "Honest conversations shared: {count, number}",
+    "trustIndicator": "{count, number} honest conversations shared",
     "howItWorksTitle": "How It Works",
     "howItWorksSubtitle": "Three steps to get started.",
     "step1Title": "Create your page",

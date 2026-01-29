@@ -111,9 +111,9 @@ export default function SettingsPage() {
           }}
           type="button"
         >
-          <Avatar className="size-12 shrink-0 ring-2 ring-emerald/20">
+          <Avatar className="size-12 shrink-0 ring-2 ring-pink-500/20">
             {user?.imageUrl && <AvatarImage alt={user?.firstName || user?.username || '?'} src={user.imageUrl} />}
-            <AvatarFallback className="bg-emerald/10 font-semibold text-emerald">
+            <AvatarFallback className="bg-gradient-to-br from-pink-500/10 to-orange-500/10 font-semibold bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">
               {(user?.firstName || user?.username || '?')[0] || '?'}
             </AvatarFallback>
           </Avatar>

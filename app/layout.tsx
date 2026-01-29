@@ -15,6 +15,7 @@ const pretendard = localFont({
   variable: '--font-pretendard',
   display: 'swap',
   preload: true,
+  adjustFontFallback: 'Arial',
 })
 
 export const metadata: Metadata = {

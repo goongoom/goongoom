@@ -80,7 +80,8 @@
     "noAnswersYet": "まだ回答した質問はないよ。",
     "answerCreated": "回答を送ったよ。",
     "answerDeleted": "回答を削除したよ。",
-    "answerRestored": "回答を復元したよ。"
+    "answerRestored": "回答を復元したよ。",
+    "shareOnInstagram": "Instagramに共有"
   },
   "inbox": {
     "title": "受信箱",

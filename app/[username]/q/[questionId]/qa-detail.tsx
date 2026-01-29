@@ -132,18 +132,15 @@ export default function QADetailPage() {
     )
   }, [qa, tCommon])
 
-  const answerColors = dbUser?.signatureColor ? getSignatureColor(dbUser.signatureColor) : null
-  const answerCardStyle = answerColors
-    ? ({
-        '--answer-bg-light': answerColors.light.primary,
-        '--answer-bg-dark': answerColors.dark.primary,
-        '--answer-border-light': answerColors.light.border,
-        '--answer-border-dark': answerColors.dark.border,
-      } as React.CSSProperties)
-    : undefined
+  const answerColors = getSignatureColor(dbUser?.signatureColor || 'zinc')
+  const answerCardStyle = {
+    '--answer-bg-light': answerColors.light.primary,
+    '--answer-bg-dark': answerColors.dark.primary,
+    '--answer-border-light': answerColors.light.border,
+    '--answer-border-dark': answerColors.dark.border,
+  } as React.CSSProperties
 
-  const showSenderColor = qa && !qa.isAnonymous && qa.senderSignatureColor
-  const senderColors = showSenderColor ? getSignatureColor(qa.senderSignatureColor) : null
+  const senderColors = qa && !qa.isAnonymous ? getSignatureColor(qa.senderSignatureColor || 'zinc') : null
   const questionCardStyle = senderColors
     ? ({
         '--question-bg-light': senderColors.light.primary,
@@ -186,30 +183,30 @@ export default function QADetailPage() {
     return (
       <MainContent>
         <div className="mb-4">
-          <Skeleton className="h-10 w-48" />
+          <Skeleton className="h-10 w-48 rounded-md" />
         </div>
         <Skeleton className="mb-6 h-8 w-64" />
         <Card>
           <CardContent className="flex flex-col gap-4">
             <div className="flex w-full items-start gap-3">
-              <Skeleton className="size-10 rounded-full" />
-              <div className="flex flex-1 flex-col gap-2">
-                <Skeleton className="h-16 w-3/4 rounded-lg" />
-                <Skeleton className="h-3 w-24" />
+              <Skeleton className="size-10 flex-shrink-0 rounded-full" />
+              <div className="flex flex-col">
+                <Skeleton className="min-h-14 w-48 rounded-lg sm:w-64" />
+                <Skeleton className="mt-1 ml-1 h-3 w-24" />
               </div>
             </div>
             <div className="flex w-full items-start justify-end gap-3">
-              <div className="flex flex-1 flex-col items-end gap-2">
-                <Skeleton className="h-16 w-3/4 rounded-lg" />
-                <Skeleton className="h-3 w-24" />
+              <div className="flex flex-1 flex-col items-end">
+                <Skeleton className="min-h-14 w-48 rounded-lg sm:w-64" />
+                <Skeleton className="mt-1 mr-1 h-3 w-24" />
               </div>
-              <Skeleton className="size-10 rounded-full" />
+              <Skeleton className="size-10 flex-shrink-0 rounded-full" />
             </div>
           </CardContent>
         </Card>
         <div className="mt-6 flex flex-col gap-3">
-          <Skeleton className="h-14 w-full rounded-xl" />
-          <Skeleton className="h-14 w-full rounded-xl" />
+          <Skeleton className="h-14 w-full rounded-2xl" />
+          <Skeleton className="h-14 w-full rounded-2xl" />
         </div>
       </MainContent>
     )
@@ -251,7 +248,7 @@ export default function QADetailPage() {
                 className={
                   senderColors
                     ? 'max-w-prose border ring-0 bg-[var(--question-bg-light)] px-4 py-3 text-white dark:bg-[var(--question-bg-dark)] border-[var(--question-border-light)] dark:border-[var(--question-border-dark)]'
-                    : 'max-w-prose ring-0 bg-muted/40 px-4 py-3'
+                    : 'max-w-prose border border-border/50 ring-0 bg-muted/40 px-4 py-3'
                 }
                 style={questionCardStyle}
               >
@@ -270,11 +267,7 @@ export default function QADetailPage() {
           <div className="flex w-full items-start justify-end gap-3">
             <div className="flex flex-1 flex-col items-end">
               <Card
-                className={
-                  answerColors
-                    ? 'max-w-prose border ring-0 bg-[var(--answer-bg-light)] px-4 py-3 text-white dark:bg-[var(--answer-bg-dark)] border-[var(--answer-border-light)] dark:border-[var(--answer-border-dark)]'
-                    : 'max-w-prose border-none ring-0 bg-gradient-to-br from-emerald to-emerald px-4 py-3 text-white'
-                }
+                className="max-w-prose border ring-0 bg-[var(--answer-bg-light)] px-4 py-3 text-white dark:bg-[var(--answer-bg-dark)] border-[var(--answer-border-light)] dark:border-[var(--answer-border-dark)]"
                 style={answerCardStyle}
               >
                 <p className="whitespace-pre-line leading-relaxed">{answer.content}</p>

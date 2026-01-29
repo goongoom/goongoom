@@ -2,9 +2,12 @@
 
 import { SignUpButton, useUser } from '@clerk/nextjs'
 import {
+  Agreement01Icon,
+  CustomerService01Icon,
   Home01Icon,
   InboxIcon,
   Login01Icon,
+  SecurityCheckIcon,
   Settings01Icon,
   UserAdd01Icon,
   UserGroupIcon,
@@ -23,6 +26,24 @@ const guestTabItems = [
     icon: Home01Icon,
     namespace: 'sidebar' as const,
   },
+  {
+    titleKey: 'terms' as const,
+    href: '/terms',
+    icon: Agreement01Icon,
+    namespace: 'footer' as const,
+  },
+  {
+    titleKey: 'privacy' as const,
+    href: '/privacy',
+    icon: SecurityCheckIcon,
+    namespace: 'footer' as const,
+  },
+  {
+    titleKey: 'contact' as const,
+    href: '/contact',
+    icon: CustomerService01Icon,
+    namespace: 'footer' as const,
+  },
 ]
 
 interface MobileTabBarProps {
@@ -32,6 +53,7 @@ interface MobileTabBarProps {
 export function MobileTabBar({ isLoggedIn = false }: MobileTabBarProps) {
   const pathname = usePathname()
   const tSidebar = useTranslations('sidebar')
+  const tFooter = useTranslations('footer')
   const tCommon = useTranslations('common')
   const tUi = useTranslations('ui')
   const { user } = useUser()
@@ -87,6 +109,7 @@ export function MobileTabBar({ isLoggedIn = false }: MobileTabBarProps) {
       <div className="flex h-16 items-center justify-around">
         {tabItems.map((item) => {
           const active = isActive(item.href)
+          const t = item.namespace === 'footer' ? tFooter : tSidebar
           return (
             <Ultralink
               className={cn(
@@ -97,7 +120,7 @@ export function MobileTabBar({ isLoggedIn = false }: MobileTabBarProps) {
               key={item.href}
             >
               <HugeiconsIcon icon={item.icon} size={22} strokeWidth={active ? 2.5 : 2} />
-              <span className="font-medium text-xs">{tSidebar(item.titleKey)}</span>
+              <span className="font-medium text-xs">{t(item.titleKey)}</span>
             </Ultralink>
           )
         })}

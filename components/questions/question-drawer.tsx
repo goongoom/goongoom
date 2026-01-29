@@ -46,7 +46,7 @@ function SubmitButton({ pending, overLimit }: { pending: boolean; overLimit: boo
   const t = useTranslations('questions')
   return (
     <Button
-      className="h-14 w-full rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold transition-all disabled:opacity-70"
+      className="h-14 w-full rounded-2xl bg-gradient-to-r from-pink-500 to-orange-500 font-semibold transition-all disabled:opacity-70"
       disabled={pending || overLimit}
       size="lg"
       type="submit"
@@ -64,8 +64,8 @@ function SignInPrompt() {
   return (
     <div className="space-y-6 py-4">
       <div className="rounded-2xl border border-border/50 bg-muted/30 p-6 text-center">
-        <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-emerald/20 to-emerald/20">
-          <HugeiconsIcon className="size-7 text-emerald" icon={LockIcon} strokeWidth={2} />
+        <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-pink-500/20 to-orange-500/20">
+          <HugeiconsIcon className="size-7 text-pink-500" icon={LockIcon} strokeWidth={2} />
         </div>
         <p className="mb-1 font-semibold text-foreground">{tAuth('loginRequired')}</p>
         <p className="text-muted-foreground text-sm">{tRestrictions('anonymousLoginRequired')}</p>
@@ -78,7 +78,7 @@ function SignInPrompt() {
         </PasskeySignInButton>
         <SignUpButton mode="modal">
           <Button
-            className="h-14 flex-1 rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold"
+            className="h-14 flex-1 rounded-2xl bg-gradient-to-r from-pink-500 to-orange-500 font-semibold"
             size="lg"
           >
             {tCommon('start')}
@@ -118,7 +118,7 @@ function QuestionTypeSelector({
         className={`group flex flex-col items-center justify-center gap-2 rounded-2xl border border-border/50 bg-background p-4 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
           canAskAnonymously
             ? `cursor-pointer ${
-                isAnonymous ? 'border-emerald/50 bg-emerald/5 ring-2 ring-emerald/10' : 'border-border/50'
+                isAnonymous ? 'border-pink-500/50 bg-pink-500/5 ring-2 ring-pink-500/10' : 'border-border/50'
               }`
             : 'cursor-not-allowed border-border/20 opacity-50'
         }`}
@@ -126,7 +126,7 @@ function QuestionTypeSelector({
         onClick={onAnonymousClick}
         type="button"
       >
-        <Avatar className={`size-12 ring-2 ring-background transition-all ${isAnonymous ? 'ring-emerald/20' : ''}`}>
+        <Avatar className={`size-12 ring-2 ring-background transition-all ${isAnonymous ? 'ring-pink-500/20' : ''}`}>
           <AvatarImage alt={tCommon('anonymous')} src={getAvatarUrl(avatarSeed)} />
           <AvatarFallback>?</AvatarFallback>
         </Avatar>
@@ -134,7 +134,7 @@ function QuestionTypeSelector({
           <p className="font-bold text-foreground text-sm">{t('anonymousOption')}</p>
           <p
             className={`font-medium text-xs leading-relaxed ${
-              isAnonymous ? 'text-emerald' : 'text-muted-foreground/70'
+              isAnonymous ? 'bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent' : 'text-muted-foreground/70'
             }`}
           >
             {t('anonymousDescription')}
@@ -146,7 +146,7 @@ function QuestionTypeSelector({
         className={`group flex flex-col items-center justify-center gap-2 rounded-2xl border border-border/50 bg-background p-4 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
           canAskPublic
             ? `cursor-pointer ${
-                isAnonymous ? 'border-border/50' : 'border-emerald/50 bg-emerald/5 ring-2 ring-emerald/10'
+                isAnonymous ? 'border-border/50' : 'border-pink-500/50 bg-pink-500/5 ring-2 ring-pink-500/10'
               }`
             : 'cursor-not-allowed border-border/20 opacity-50'
         }`}
@@ -154,7 +154,7 @@ function QuestionTypeSelector({
         onClick={onPublicClick}
         type="button"
       >
-        <Avatar className={`size-12 ring-2 ring-background transition-all ${isAnonymous ? '' : 'ring-emerald/20'}`}>
+        <Avatar className={`size-12 ring-2 ring-background transition-all ${isAnonymous ? '' : 'ring-pink-500/20'}`}>
           {user?.imageUrl && <AvatarImage alt={user?.firstName || tCommon('you')} src={user.imageUrl} />}
           <AvatarFallback className="bg-gradient-to-br from-muted to-muted/50 font-semibold text-muted-foreground">
             {user?.firstName?.[0] || '?'}
@@ -164,7 +164,7 @@ function QuestionTypeSelector({
           <p className="font-bold text-foreground text-sm">{t('publicOption')}</p>
           <p
             className={`font-medium text-xs leading-relaxed ${
-              isAnonymous ? 'text-muted-foreground/70' : 'text-emerald'
+              isAnonymous ? 'text-muted-foreground/70' : 'bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent'
             }`}
           >
             {canAskPublic ? t('publicDescription') : tRestrictions('loginForPublic')}
@@ -282,7 +282,7 @@ export function QuestionDrawer({
             <DrawerHeader className="pb-2 text-left">
               <DrawerTitle className="font-bold text-xl tracking-tight">
                 <span className="text-foreground">{t('toRecipientPrefix')}</span>
-                <span className="bg-gradient-to-r from-emerald to-emerald bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">
                   {recipientName}
                 </span>
                 <span className="text-foreground">{t('toRecipientSuffix')}</span>
@@ -297,7 +297,7 @@ export function QuestionDrawer({
                 <form className="space-y-6 py-2" onSubmit={handleSubmit} ref={formRef}>
                   <div className="space-y-2">
                     <Textarea
-                      className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-emerald focus:bg-background focus:ring-2 focus:ring-emerald/20"
+                      className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-pink-500 focus:bg-background focus:ring-2 focus:ring-pink-500/20"
                       name="question"
                       onChange={(event) => setQuestion(event.target.value)}
                       placeholder={t('inputPlaceholder')}

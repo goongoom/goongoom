@@ -1,6 +1,7 @@
 'use client'
 
-import { AnonymousIcon, UserIcon } from '@hugeicons/core-free-icons'
+import { useUser } from '@clerk/nextjs'
+import { AnonymousIcon, InstagramIcon, UserIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { formatDistanceToNow } from 'date-fns'
 import { enUS, ko } from 'date-fns/locale'
@@ -46,6 +47,7 @@ export function SidebarQuestionItem({ question }: SidebarQuestionItemProps) {
   const tErrors = useTranslations('errors')
   const locale = useLocale()
   const router = useRouter()
+  const { user } = useUser()
   const [open, setOpen] = useState(false)
   const [answer, setAnswer] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -76,6 +78,22 @@ export function SidebarQuestionItem({ question }: SidebarQuestionItemProps) {
       setAnswer('')
       setOpen(false)
       router.refresh()
+
+      const qaDetailUrl = user?.username ? `/${user.username}/q/${question.id}` : null
+      toast.success(t('answerCreated'), {
+        duration: 5000,
+        action: qaDetailUrl
+          ? {
+              label: (
+                <span className="inline-flex items-center gap-1.5">
+                  <HugeiconsIcon className="size-4" icon={InstagramIcon} />
+                  {t('shareOnInstagram')}
+                </span>
+              ),
+              onClick: () => router.push(qaDetailUrl),
+            }
+          : undefined,
+      })
     } catch (err) {
       logAction({
         action: 'createAnswer',
@@ -117,14 +135,14 @@ export function SidebarQuestionItem({ question }: SidebarQuestionItemProps) {
 
         <div className="mt-4 rounded-xl border border-border/50 bg-muted/30 p-4 text-left text-foreground">
           <div className="mb-2 flex items-center gap-2">
-            <div className="flex size-6 items-center justify-center rounded-full bg-gradient-to-br from-emerald to-emerald/80">
+            <div className="flex size-6 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-orange-500">
               <HugeiconsIcon
                 className="size-3.5 text-white"
                 icon={question.isAnonymous ? AnonymousIcon : UserIcon}
                 strokeWidth={2.5}
               />
             </div>
-            <span className="font-semibold text-sm text-emerald">
+            <span className="font-semibold text-sm bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">
               {question.isAnonymous ? tCommon('anonymous') : question.senderName || tCommon('user')}
             </span>
           </div>
@@ -135,7 +153,7 @@ export function SidebarQuestionItem({ question }: SidebarQuestionItemProps) {
 
         <div className="mt-4 space-y-2">
           <Textarea
-            className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-emerald focus:bg-background focus:ring-2 focus:ring-emerald/20"
+            className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-pink-500 focus:bg-background focus:ring-2 focus:ring-pink-500/20"
             onChange={(e) => setAnswer(e.target.value)}
             placeholder={t('answerPlaceholder')}
             value={answer}
@@ -157,7 +175,7 @@ export function SidebarQuestionItem({ question }: SidebarQuestionItemProps) {
             {tCommon('cancel')}
           </DialogClose>
           <Button
-            className="h-14 flex-1 rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold transition-all disabled:opacity-70"
+            className="h-14 flex-1 rounded-2xl bg-gradient-to-r from-pink-500 to-orange-500 font-semibold transition-all disabled:opacity-70"
             disabled={!answer.trim() || isSubmitting || answer.length > CHAR_LIMITS.ANSWER}
             onClick={handleSubmit}
           >

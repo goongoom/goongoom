@@ -38,7 +38,7 @@ export function LocaleSelector() {
       <RadioGroup className="flex w-full gap-2" onValueChange={handleLocaleChange} value={currentLocale}>
         {locales.map((locale) => (
           <Label
-            className="group flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-border/50 bg-background px-4 py-3 transition-all disabled:opacity-50 has-data-checked:border-emerald/50 has-data-checked:bg-emerald/5"
+            className="group flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-border/50 bg-background px-4 py-3 transition-all disabled:opacity-50 has-data-checked:border-pink-500/50 has-data-checked:bg-pink-500/5"
             key={locale}
           >
             <RadioGroupItem id={`locale-${locale}`} value={locale} />

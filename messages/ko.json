@@ -80,7 +80,8 @@
     "noAnswersYet": "아직 답변한 질문이 없어요.",
     "answerCreated": "답변을 보냈어요.",
     "answerDeleted": "답변이 삭제됐어요.",
-    "answerRestored": "답변이 복원됐어요."
+    "answerRestored": "답변이 복원됐어요.",
+    "shareOnInstagram": "인스타그램에 공유"
   },
   "inbox": {
     "title": "받은 질문함",

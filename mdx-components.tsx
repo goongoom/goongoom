@@ -34,7 +34,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     },
     hr: () => <hr className="my-8 border-border" />,
     blockquote: ({ children }) => (
-      <blockquote className="border-emerald/50 border-l-4 pl-4 text-muted-foreground italic">{children}</blockquote>
+      <blockquote className="border-pink-500/50 border-l-4 pl-4 text-muted-foreground italic">{children}</blockquote>
     ),
     ...components,
   }

@@ -46,10 +46,10 @@ export function PasskeyNudge() {
 
   if (success) {
     return (
-      <Card className="relative my-6 overflow-hidden border-emerald/20 bg-emerald/10">
+      <Card className="relative my-6 overflow-hidden border-pink-500/20 bg-gradient-to-br from-pink-500/10 to-orange-500/10">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-lime/5 to-transparent" />
         <CardContent className="flex flex-col items-center justify-center gap-4 p-8 text-center">
-          <div className="flex size-12 items-center justify-center rounded-full bg-emerald/20 text-emerald">
+          <div className="flex size-12 items-center justify-center rounded-full bg-pink-500/20 text-pink-500">
             <HugeiconsIcon className="size-6" icon={CheckmarkCircle02Icon} />
           </div>
           <div className="space-y-1">
@@ -64,7 +64,7 @@ export function PasskeyNudge() {
   return (
     <Card className={cn('group relative my-6 overflow-hidden border-primary/20 bg-primary/5', 'text-foreground')}>
       <div className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 rounded-full bg-white/10 p-12 blur-3xl transition-colors duration-500" />
-      <div className="absolute bottom-0 left-0 -translate-x-1/3 translate-y-1/3 rounded-full bg-emerald/20 p-10 blur-2xl" />
+      <div className="absolute bottom-0 left-0 -translate-x-1/3 translate-y-1/3 rounded-full bg-orange-500/20 p-10 blur-2xl" />
 
       <CardHeader className="relative z-10 pb-2">
         <div className="flex items-start justify-between">

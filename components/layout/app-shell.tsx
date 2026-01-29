@@ -1,14 +1,8 @@
 'use client'
 
-import dynamic from 'next/dynamic'
+import { AppSidebar } from '@/components/layout/app-sidebar'
+import { MobileTabBar } from '@/components/layout/mobile-tab-bar'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-
-const AppSidebar = dynamic(() => import('@/components/layout/app-sidebar').then((mod) => mod.AppSidebar), {
-  ssr: false,
-})
-const MobileTabBar = dynamic(() => import('@/components/layout/mobile-tab-bar').then((mod) => mod.MobileTabBar), {
-  ssr: false,
-})
 
 interface RecentQuestion {
   id: string
@@ -27,7 +21,7 @@ interface AppShellProps {
 
 export function AppShell({ children, recentQuestions = [], isLoggedIn = false }: AppShellProps) {
   return (
-    <SidebarProvider defaultOpen>
+    <SidebarProvider>
       <AppSidebar recentQuestions={recentQuestions} />
       <SidebarInset className="pb-24 md:pb-0">{children}</SidebarInset>
       <MobileTabBar isLoggedIn={isLoggedIn} />

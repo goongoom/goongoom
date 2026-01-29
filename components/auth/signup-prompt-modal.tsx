@@ -40,7 +40,7 @@ export function SignupPromptModal({ open, onOpenChange }: SignupPromptModalProps
         )}
       >
         <div className="pointer-events-none absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 rounded-full bg-primary-foreground/10 p-20 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-0 left-0 -translate-x-1/3 translate-y-1/3 rounded-full bg-emerald/30 p-16 blur-2xl" />
+        <div className="pointer-events-none absolute bottom-0 left-0 -translate-x-1/3 translate-y-1/3 rounded-full bg-orange-500/30 p-16 blur-2xl" />
 
         <div className="relative z-10 flex flex-col items-center p-8 pt-12 text-center">
           {signedUp ? (

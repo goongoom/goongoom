@@ -1,7 +1,7 @@
 'use client'
 
 import { useUser } from '@clerk/nextjs'
-import { AnonymousIcon, ArrowRight01Icon, UserIcon } from '@hugeicons/core-free-icons'
+import { AnonymousIcon, ArrowRight01Icon, InstagramIcon, UserIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useMutation } from 'convex/react'
 import { formatDistanceToNow } from 'date-fns'
@@ -84,7 +84,7 @@ const InboxListItem = memo(function InboxListItem({
               {question.senderName[0] || '?'}
             </AvatarFallback>
           </Avatar>
-          <div className="absolute -right-0.5 -bottom-0.5 flex size-5 items-center justify-center rounded-full ring-2 ring-background bg-gradient-to-br from-emerald to-emerald/80">
+          <div className="absolute -right-0.5 -bottom-0.5 flex size-5 items-center justify-center rounded-full ring-2 ring-background bg-gradient-to-br from-pink-500 to-orange-500">
             <HugeiconsIcon
               className="size-3 text-white"
               icon={question.isAnonymous ? AnonymousIcon : UserIcon}
@@ -98,7 +98,7 @@ const InboxListItem = memo(function InboxListItem({
             {question.content}
           </p>
           <div className="flex items-center gap-2 text-muted-foreground text-xs">
-            <span className="font-medium text-emerald">{senderLabel}</span>
+            <span className="font-medium bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">{senderLabel}</span>
             <span className="text-muted-foreground/60">·</span>
             <span>
               {formatDistanceToNow(question.createdAt, {
@@ -109,7 +109,7 @@ const InboxListItem = memo(function InboxListItem({
           </div>
         </div>
 
-        <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-all group-hover:bg-emerald group-hover:text-emerald-foreground">
+        <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-all group-hover:bg-gradient-to-br group-hover:from-pink-500 group-hover:to-orange-500 group-hover:text-white">
           <HugeiconsIcon className="size-5" icon={ArrowRight01Icon} strokeWidth={2} />
         </div>
       </div>
@@ -200,7 +200,22 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
       })
       setShouldRefreshOnClose(true)
       setIsDrawerOpen(false)
-      toast.success(t('answerCreated'))
+
+      const qaDetailUrl = user?.username ? `/${user.username}/q/${selectedQuestion.id}` : null
+      toast.success(t('answerCreated'), {
+        duration: 5000,
+        action: qaDetailUrl
+          ? {
+              label: (
+                <span className="inline-flex items-center gap-1.5">
+                  <HugeiconsIcon className="size-4" icon={InstagramIcon} />
+                  {t('shareOnInstagram')}
+                </span>
+              ),
+              onClick: () => router.push(qaDetailUrl),
+            }
+          : undefined,
+      })
     } catch (error) {
       console.error('Failed to create answer:', error)
       logAction({
@@ -299,18 +314,17 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
             className="flex items-start gap-4 rounded-2xl border border-border/50 bg-background p-4"
           >
             <div className="relative flex-shrink-0">
-              <Skeleton className="size-12 rounded-full" />
-              <Skeleton className="absolute -right-0.5 -bottom-0.5 size-5 rounded-full" />
+              <Skeleton className="size-12 rounded-full ring-2 ring-background" />
+              <Skeleton className="absolute -right-0.5 -bottom-0.5 size-5 rounded-full ring-2 ring-background" />
             </div>
-            <div className="min-w-0 flex-1 space-y-2">
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
+            <div className="min-w-0 flex-1 space-y-1.5">
+              <Skeleton className="h-6 w-full max-w-xs" />
               <div className="flex items-center gap-2">
                 <Skeleton className="h-3 w-16" />
                 <Skeleton className="h-3 w-20" />
               </div>
             </div>
-            <Skeleton className="size-10 rounded-full" />
+            <Skeleton className="size-10 flex-shrink-0 rounded-full" />
           </div>
         ))}
       </div>
@@ -347,8 +361,8 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
                     <div
                       className={`flex size-6 items-center justify-center rounded-full ${
                         selectedQuestion.isAnonymous
-                          ? 'bg-gradient-to-br from-emerald to-emerald/80'
-                          : 'bg-gradient-to-br from-emerald to-emerald/80'
+                          ? 'bg-gradient-to-br from-pink-500 to-orange-500'
+                          : 'bg-gradient-to-br from-pink-500 to-orange-500'
                       }`}
                     >
                       <HugeiconsIcon
@@ -359,7 +373,7 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
                     </div>
                     <span
                       className={`font-semibold text-sm ${
-                        selectedQuestion.isAnonymous ? 'text-emerald' : 'text-emerald'
+                        selectedQuestion.isAnonymous ? 'bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent' : 'bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent'
                       }`}
                     >
                       {selectedQuestion.isAnonymous ? tCommon('anonymous') : selectedQuestion.senderName}
@@ -372,7 +386,7 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
 
             <div className="space-y-2 px-4">
               <Textarea
-                className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-emerald focus:bg-background focus:ring-2 focus:ring-emerald/20"
+                className="min-h-28 resize-none rounded-2xl border border-border/50 bg-muted/30 p-4 text-base transition-all focus:border-pink-500 focus:bg-background focus:ring-2 focus:ring-pink-500/20"
                 onChange={(e) => setAnswer(e.target.value)}
                 placeholder={t('answerPlaceholder')}
                 rows={4}
@@ -385,7 +399,7 @@ export function InboxList({ questions, isLoading }: InboxListProps) {
 
             <DrawerFooter className="gap-2 pt-4">
               <Button
-                className="h-14 w-full rounded-2xl bg-gradient-to-r from-emerald to-emerald/90 font-semibold transition-all disabled:opacity-70"
+                className="h-14 w-full rounded-2xl bg-gradient-to-r from-pink-500 to-orange-500 font-semibold transition-all disabled:opacity-70"
                 disabled={!answer.trim() || isSubmitting}
                 onClick={handleSubmit}
                 type="button"
