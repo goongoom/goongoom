@@ -1,103 +1,19 @@
-'use client'
-
-import { useAuth, useUser } from '@clerk/nextjs'
-import { useQuery } from 'convex-helpers/react/cache/hooks'
-import { useConvexAuth } from 'convex/react'
-import { useTranslations } from 'next-intl'
-import { useMemo } from 'react'
-import { MainContent } from '@/components/layout/main-content'
-import { ProfileEditForm } from '@/components/settings/profile-edit-form'
-import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
-import { Spinner } from '@/components/ui/spinner'
+import { auth } from '@clerk/nextjs/server'
+import { preloadQuery } from 'convex/nextjs'
+import { redirect } from 'next/navigation'
 import { api } from '@/convex/_generated/api'
-import { DEFAULT_SIGNATURE_COLOR, isValidSignatureColor } from '@/lib/colors/signature-colors'
-import type { QuestionSecurityLevel } from '@/lib/question-security'
+import { ProfileSettingsContent } from './profile-settings-content'
 
-export default function ProfileSettingsPage() {
-  const { userId: clerkId } = useAuth()
-  const { user, isLoaded: isUserLoaded } = useUser()
-  const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth()
+export default async function ProfileSettingsPage() {
+  const { userId, getToken } = await auth()
 
-  const t = useTranslations('settings')
-  const tSecurity = useTranslations('questionSecurity')
-
-  const dbUser = useQuery(api.users.getByClerkId, isAuthenticated && clerkId ? { clerkId } : 'skip')
-
-  const securityOptions = useMemo(
-    (): Record<QuestionSecurityLevel, { label: string; description: string }> => ({
-      anyone: {
-        label: tSecurity('anyoneLabel'),
-        description: tSecurity('anyoneDescription'),
-      },
-      verified_anonymous: {
-        label: tSecurity('verifiedLabel'),
-        description: tSecurity('verifiedDescription'),
-      },
-      public_only: {
-        label: tSecurity('publicOnlyLabel'),
-        description: tSecurity('publicOnlyDescription'),
-      },
-    }),
-    [tSecurity]
-  )
-
-  if (isAuthLoading || !isAuthenticated || !isUserLoaded) {
-    return (
-      <MainContent>
-        <div className="flex min-h-[50vh] items-center justify-center">
-          <Spinner className="size-8" />
-        </div>
-      </MainContent>
-    )
+  if (!userId) {
+    redirect('/sign-in')
   }
 
-  if (!user) {
-    return (
-      <MainContent>
-        <h1 className="mb-2 font-bold text-3xl text-foreground">{t('profileSettings')}</h1>
-        <Empty>
-          <EmptyHeader>
-            <EmptyTitle>{t('profileRequired')}</EmptyTitle>
-            <EmptyDescription>{t('profileRequiredDescription')}</EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      </MainContent>
-    )
-  }
+  const token = await getToken({ template: 'convex' })
 
-  const isLoading = dbUser === undefined
+  const preloadedUser = await preloadQuery(api.users.getByClerkId, { clerkId: userId }, { token: token! })
 
-  if (isLoading) {
-    return (
-      <MainContent>
-        <div className="flex min-h-[50vh] items-center justify-center">
-          <Spinner className="size-8" />
-        </div>
-      </MainContent>
-    )
-  }
-
-  const initialSocialLinks = dbUser?.socialLinks || null
-  const securityLevel = dbUser?.questionSecurityLevel || 'public'
-  const signatureColor =
-    dbUser?.signatureColor && isValidSignatureColor(dbUser.signatureColor)
-      ? dbUser.signatureColor
-      : DEFAULT_SIGNATURE_COLOR
-
-  return (
-    <MainContent>
-      <div className="mb-8 space-y-2">
-        <h1 className="font-bold text-3xl text-foreground">{t('profileSettings')}</h1>
-        <p className="text-muted-foreground text-sm">{t('profileSettingsDescription')}</p>
-      </div>
-
-      <ProfileEditForm
-        initialBio={dbUser?.bio || null}
-        initialQuestionSecurityLevel={securityLevel}
-        initialSignatureColor={signatureColor}
-        initialSocialLinks={initialSocialLinks}
-        securityOptions={securityOptions}
-      />
-    </MainContent>
-  )
+  return <ProfileSettingsContent preloadedUser={preloadedUser} />
 }

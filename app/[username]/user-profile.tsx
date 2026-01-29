@@ -1,8 +1,7 @@
 'use client'
 
 import { useAuth } from '@clerk/nextjs'
-import { useQuery } from 'convex-helpers/react/cache/hooks'
-import { useMutation } from 'convex/react'
+import { useMutation, Preloaded, usePreloadedQuery } from 'convex/react'
 import dynamic from 'next/dynamic'
 import { useParams, useSearchParams } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
@@ -21,6 +20,11 @@ import type { FunctionReturnType } from 'convex/server'
 import { useLogCollector } from '@/hooks/use-log-collector'
 import { DEFAULT_QUESTION_SECURITY_LEVEL } from '@/lib/question-security'
 
+interface UserProfilePageProps {
+  preloadedUser: Preloaded<typeof api.users.getByUsername>
+  preloadedQuestions: Preloaded<typeof api.questions.getAnsweredByRecipient>
+}
+
 type AnsweredQuestion = NonNullable<FunctionReturnType<typeof api.questions.getAnsweredByRecipient>>[number]
 type AnsweredQuestionWithAnswer = AnsweredQuestion & { answer: NonNullable<AnsweredQuestion['answer']> }
 type QuestionWithFirstAnswer = AnsweredQuestionWithAnswer & { firstAnswer: NonNullable<AnsweredQuestion['answer']> }
@@ -31,7 +35,7 @@ const QuestionDrawer = dynamic(
   { ssr: false }
 )
 
-export default function UserProfilePage() {
+export default function UserProfilePage({ preloadedUser, preloadedQuestions }: UserProfilePageProps) {
   const params = useParams<{ username: string }>()
   const searchParams = useSearchParams()
   const username = params.username
@@ -70,14 +74,10 @@ export default function UserProfilePage() {
   const tSocial = useTranslations('social')
   const tErrors = useTranslations('errors')
 
-  const dbUser = useQuery(api.users.getByUsername, { username })
+  const dbUser = usePreloadedQuery(preloadedUser)
+  const answeredQuestions = usePreloadedQuery(preloadedQuestions)
 
   const isOwnProfile = Boolean(viewerId && dbUser && viewerId === dbUser.clerkId)
-
-  const answeredQuestions = useQuery(
-    api.questions.getAnsweredByRecipient,
-    dbUser?.clerkId ? { recipientClerkId: dbUser.clerkId } : 'skip'
-  )
 
   const isLoading = dbUser === undefined
 

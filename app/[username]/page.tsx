@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { ConvexHttpClient } from 'convex/browser'
+import { preloadQuery, preloadedQueryResult } from 'convex/nextjs'
 import { getTranslations } from 'next-intl/server'
 import { api } from '@/convex/_generated/api'
 import { env } from '@/env.vercel'
@@ -40,6 +41,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default function Page() {
-  return <UserProfilePage />
+export default async function Page({ params }: PageProps) {
+  const { username } = await params
+
+  const preloadedUser = await preloadQuery(api.users.getByUsername, { username })
+  const user = preloadedQueryResult(preloadedUser)
+
+  const recipientClerkId = user?.clerkId || ''
+
+  const preloadedQuestions = await preloadQuery(api.questions.getAnsweredByRecipient, {
+    recipientClerkId,
+  })
+
+  return <UserProfilePage preloadedUser={preloadedUser} preloadedQuestions={preloadedQuestions} />
 }

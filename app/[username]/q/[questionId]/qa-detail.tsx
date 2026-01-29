@@ -1,7 +1,7 @@
 'use client'
 
 import { useAuth } from '@clerk/nextjs'
-import { useQuery } from 'convex-helpers/react/cache/hooks'
+import { Preloaded, usePreloadedQuery } from 'convex/react'
 import { formatDistanceToNow } from 'date-fns'
 import { enUS, ko } from 'date-fns/locale'
 import { useParams } from 'next/navigation'
@@ -22,6 +22,12 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { api } from '@/convex/_generated/api'
 import type { Id } from '@/convex/_generated/dataModel'
 import { getSignatureColor } from '@/lib/colors/signature-colors'
+
+interface QADetailPageProps {
+  preloadedUser: Preloaded<typeof api.users.getByUsername>
+  preloadedQA: Preloaded<typeof api.questions.getByIdAndRecipient>
+  preloadedQuestionNumber: Preloaded<typeof api.questions.getAnsweredNumber>
+}
 
 const localeMap = { ko, en: enUS } as const
 
@@ -93,7 +99,7 @@ function buildShareUrl({
   return `/api/instagram?${params.toString()}`
 }
 
-export default function QADetailPage() {
+export default function QADetailPage({ preloadedUser, preloadedQA, preloadedQuestionNumber }: QADetailPageProps) {
   const params = useParams<{ username: string; questionId: string }>()
   const { username, questionId: questionIdParam } = params
   const questionId = questionIdParam as Id<'questions'>
@@ -104,17 +110,11 @@ export default function QADetailPage() {
   const tProfile = useTranslations('profile')
   const tQuestions = useTranslations('questions')
 
-  const dbUser = useQuery(api.users.getByUsername, { username })
-  const qa = useQuery(
-    api.questions.getByIdAndRecipient,
-    dbUser?.clerkId ? { id: questionId, recipientClerkId: dbUser.clerkId } : 'skip'
-  )
-  const questionNumber = useQuery(
-    api.questions.getAnsweredNumber,
-    dbUser?.clerkId ? { questionId, recipientClerkId: dbUser.clerkId } : 'skip'
-  )
+  const dbUser = usePreloadedQuery(preloadedUser)
+  const qa = usePreloadedQuery(preloadedQA)
+  const questionNumber = usePreloadedQuery(preloadedQuestionNumber)
 
-  const isLoading = dbUser === undefined || qa === undefined || questionNumber === undefined
+  const isLoading = dbUser === undefined
 
   const isOwner = viewerId === dbUser?.clerkId
   const firstName = dbUser?.firstName || dbUser?.username || username
@@ -234,7 +234,9 @@ export default function QADetailPage() {
         </Button>
       </div>
 
-      <h1 className="mb-6 font-bold text-2xl">{tQuestions('questionNumber', { firstName, number: questionNumber })}</h1>
+      <h1 className="mb-6 font-bold text-2xl">
+        {tQuestions('questionNumber', { firstName, number: questionNumber || 0 })}
+      </h1>
 
       <Card>
         <CardContent className="flex flex-col gap-4">
