@@ -272,6 +272,7 @@ export const getByIdAndRecipient = query({
       senderUsername: sender?.username,
       senderFirstName: sender?.firstName,
       senderAvatarUrl: sender?.avatarUrl,
+      senderSignatureColor: sender?.signatureColor,
     }
   },
 })
@@ -364,6 +365,7 @@ export const getAnsweredByRecipient = query({
         senderUsername: sender?.username,
         senderFirstName: sender?.firstName,
         senderAvatarUrl: sender?.avatarUrl,
+        senderSignatureColor: sender?.signatureColor,
       }
     })
 

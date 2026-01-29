@@ -242,6 +242,7 @@ export default function UserProfilePage() {
               questionId={qa._id}
               senderAvatarUrl={qa.senderAvatarUrl ?? null}
               senderName={qa.senderFirstName || qa.senderUsername}
+              senderSignatureColor={qa.senderSignatureColor}
               signatureColor={dbUser.signatureColor}
               username={recipientUsername}
             />

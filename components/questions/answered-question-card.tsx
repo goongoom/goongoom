@@ -21,6 +21,7 @@ type AnsweredQuestionCardProps =
       anonymousAvatarSeed?: string
       senderName?: string
       senderAvatarUrl?: string | null
+      senderSignatureColor?: string | null
       questionCreatedAt: number
       answerContent: string
       answerCreatedAt: number
@@ -79,6 +80,7 @@ export function AnsweredQuestionCard(props: AnsweredQuestionCardProps) {
     anonymousAvatarSeed,
     senderName,
     senderAvatarUrl,
+    senderSignatureColor,
     questionCreatedAt,
     answerContent,
     answerCreatedAt,
@@ -96,11 +98,24 @@ export function AnsweredQuestionCard(props: AnsweredQuestionCardProps) {
   const questionerFallback = isAnonymous ? '?' : senderName?.[0] || '?'
   const imagesToPrefetch = [questionerAvatarUrl, avatarUrl].filter((url): url is string => Boolean(url))
 
-  const colors = signatureColor ? getSignatureColor(signatureColor) : null
-  const answerCardStyle = colors
+  const answerColors = signatureColor ? getSignatureColor(signatureColor) : null
+  const answerCardStyle = answerColors
     ? ({
-        '--answer-color-light': colors.light.primary,
-        '--answer-color-dark': colors.dark.primary,
+        '--answer-bg-light': answerColors.light.primary,
+        '--answer-bg-dark': answerColors.dark.primary,
+        '--answer-border-light': answerColors.light.border,
+        '--answer-border-dark': answerColors.dark.border,
+      } as React.CSSProperties)
+    : undefined
+
+  const showSenderColor = !isAnonymous && senderSignatureColor
+  const senderColors = showSenderColor ? getSignatureColor(senderSignatureColor) : null
+  const questionCardStyle = senderColors
+    ? ({
+        '--question-bg-light': senderColors.light.bg,
+        '--question-bg-dark': senderColors.dark.bg,
+        '--question-border-light': senderColors.light.border,
+        '--question-border-dark': senderColors.dark.border,
       } as React.CSSProperties)
     : undefined
 
@@ -116,7 +131,14 @@ export function AnsweredQuestionCard(props: AnsweredQuestionCardProps) {
               <AvatarFallback>{questionerFallback}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <Card className="max-w-prose bg-muted/40 px-4 py-3">
+              <Card
+                className={
+                  senderColors
+                    ? 'max-w-prose border bg-[var(--question-bg-light)] px-4 py-3 dark:bg-[var(--question-bg-dark)] border-[var(--question-border-light)] dark:border-[var(--question-border-dark)]'
+                    : 'max-w-prose bg-muted/40 px-4 py-3'
+                }
+                style={questionCardStyle}
+              >
                 <p className="whitespace-pre-line text-foreground leading-relaxed">{questionContent}</p>
               </Card>
               <p className="mt-1 ml-1 text-muted-foreground text-xs">
@@ -133,14 +155,14 @@ export function AnsweredQuestionCard(props: AnsweredQuestionCardProps) {
               <Card
                 className={
                   signatureColor
-                    ? 'max-w-prose border-none bg-[var(--answer-color-light)] px-4 py-3 text-white dark:bg-[var(--answer-color-dark)]'
+                    ? 'max-w-prose border bg-[var(--answer-bg-light)] px-4 py-3 text-white dark:bg-[var(--answer-bg-dark)] border-[var(--answer-border-light)] dark:border-[var(--answer-border-dark)]'
                     : 'max-w-prose border-none bg-gradient-to-br from-emerald to-emerald px-4 py-3 text-white'
                 }
                 style={answerCardStyle}
               >
                 <ClampedAnswer
                   content={answerContent}
-                  gradientColors={colors ? { light: colors.light.primary, dark: colors.dark.primary } : undefined}
+                  gradientColors={answerColors ? { light: answerColors.light.primary, dark: answerColors.dark.primary } : undefined}
                 />
               </Card>
               <p className="mt-1 mr-1 text-muted-foreground text-xs">

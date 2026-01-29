@@ -421,6 +421,7 @@ export const getFriendsAnswers = query({
           recipientSignatureColor: recipientUser?.signatureColor,
           senderFirstName: senderUser?.firstName,
           senderAvatarUrl: senderUser?.avatarUrl,
+          senderSignatureColor: senderUser?.signatureColor,
         }
       })
       .filter((item): item is NonNullable<typeof item> => item !== null)

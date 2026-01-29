@@ -21,6 +21,7 @@ import { Empty, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { Skeleton } from '@/components/ui/skeleton'
 import { api } from '@/convex/_generated/api'
 import type { Id } from '@/convex/_generated/dataModel'
+import { getSignatureColor } from '@/lib/colors/signature-colors'
 
 const localeMap = { ko, en: enUS } as const
 
@@ -131,6 +132,27 @@ export default function QADetailPage() {
     )
   }, [qa, tCommon])
 
+  const answerColors = dbUser?.signatureColor ? getSignatureColor(dbUser.signatureColor) : null
+  const answerCardStyle = answerColors
+    ? ({
+        '--answer-bg-light': answerColors.light.primary,
+        '--answer-bg-dark': answerColors.dark.primary,
+        '--answer-border-light': answerColors.light.border,
+        '--answer-border-dark': answerColors.dark.border,
+      } as React.CSSProperties)
+    : undefined
+
+  const showSenderColor = qa && !qa.isAnonymous && qa.senderSignatureColor
+  const senderColors = showSenderColor ? getSignatureColor(qa.senderSignatureColor) : null
+  const questionCardStyle = senderColors
+    ? ({
+        '--question-bg-light': senderColors.light.bg,
+        '--question-bg-dark': senderColors.dark.bg,
+        '--question-border-light': senderColors.light.border,
+        '--question-border-dark': senderColors.dark.border,
+      } as React.CSSProperties)
+    : undefined
+
   const instagramShareUrl = useMemo(() => {
     if (!qa?.answer || !dbUser) return null
 
@@ -225,7 +247,14 @@ export default function QADetailPage() {
               <AvatarFallback>{questioner.fallback}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <Card className="max-w-prose bg-muted/40 px-4 py-3">
+              <Card
+                className={
+                  senderColors
+                    ? 'max-w-prose border bg-[var(--question-bg-light)] px-4 py-3 dark:bg-[var(--question-bg-dark)] border-[var(--question-border-light)] dark:border-[var(--question-border-dark)]'
+                    : 'max-w-prose bg-muted/40 px-4 py-3'
+                }
+                style={questionCardStyle}
+              >
                 <p className="whitespace-pre-line text-foreground leading-relaxed">{qa.content}</p>
               </Card>
               <p className="mt-1 ml-1 text-muted-foreground text-xs">
@@ -240,7 +269,14 @@ export default function QADetailPage() {
           </div>
           <div className="flex w-full items-start justify-end gap-3">
             <div className="flex flex-1 flex-col items-end">
-              <Card className="max-w-prose border-none bg-gradient-to-br from-emerald to-emerald px-4 py-3 text-white">
+              <Card
+                className={
+                  answerColors
+                    ? 'max-w-prose border bg-[var(--answer-bg-light)] px-4 py-3 text-white dark:bg-[var(--answer-bg-dark)] border-[var(--answer-border-light)] dark:border-[var(--answer-border-dark)]'
+                    : 'max-w-prose border-none bg-gradient-to-br from-emerald to-emerald px-4 py-3 text-white'
+                }
+                style={answerCardStyle}
+              >
                 <p className="whitespace-pre-line leading-relaxed">{answer.content}</p>
               </Card>
               <p className="mt-1 mr-1 text-muted-foreground text-xs">
